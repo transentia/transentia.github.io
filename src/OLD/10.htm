@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <title>Transentia - transentia pty. ltd.; development, consulting, training at the leading-edge of technology</title>
+  <link rel="stylesheet" type="text/css" media="screen, print, handheld" href="wp-content/themes/transentia/css/site.css">
+</head>
+<body>
+  <div id="page">
+    <div id="header">
+      <p><a href="../index.htm"><img src="wp-content/uploads/widgets/transentia-logo-red-glow.gif" border="0"></a></p>
+      <p class="old-content">transentia's old content; click on the logo to return to the new content</p>
+      <p id="blog-description">transentia pty. ltd.; development, consulting, training at the leading-edge of technology</p>
+    </div><!-- #header -->
+    <div id="content">
+      <div class="pagination">
+        <span class="next"><a href="DUMMY">Next »</a></span> <span class="previous"><a href="DUMMY">« Previous</a></span>
+      </div>
+      <div class="post hentry">
+        <h1 class="entry-title">Grails/Ehcache Tip</h1>
+        <div class="entry-content">
+          <p>Another one to remember.</p>
+          <p>Ehcache (used by default in the later releases of Grails) has an update checker that apparently is on by default.</p>
+          <p>Innocuous but a bit of a pain: consider the potential adverse affects for a production box.</p>
+          <p>If that doesn't make you nervous…consider trying to investigate this [putatively unexplained] behaviour during a load testing session conducted in front of your [also putatively, nervous] manager (been there, wasn't pretty: "What's this
+          spike? What's <em>this</em> spike? What's <strong><em>this</em></strong> spike.")…</p>
+          <p>If that wasn't enough to get you sweating, well: according to Sven Lange in <a href="http://www.svenlange.co.za/?p=122">A web geek's blog</a>:</p>
+          <blockquote>
+            <p>UpdateChecker is not only looking for updates. In addition it also submits information about the applications environment to Terracotta by default. And this sucks in my opinion.</p>
+          </blockquote>
+          <p>It sucks in my opinion, too. This is why I want to keep this link hanging around.</p>
+          <p>(Found via the excellent <a href="">Groovyblogs</a>.)</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Grails, Programming</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Senator Conroy Must Go!</h1>
+        <div class="entry-content">
+          <p>(OK…this is my opinion, you're free to disagree…I assume. For now.).</p>
+          <p>A graphic illustration that Australia's Sen. Conroy doesn't subscribe to (notice I don't say "doesn't understand"…he understands it well enough to reject it, I am sure…) the idea of free speech and democratic discussion:</p>
+          <blockquote>
+            <p>The front page of Communications Minister Stephen Conroy's official website displays a list of topics connected to his portfolio, along with links to more information about each one.</p>
+            <p>All the usual topics are there - cyber safety, the national broadband network, broadcasters ABC and SBS, digital television and so on.</p>
+            <p>All except one.</p>
+            <p>It was revealed today a script within the minister's homepage deliberately removes references to internet filtering from the list.</p>
+            <p>In the function that creates the list, or "tag cloud", there is a condition that if the words "ISP filtering" appear they should be skipped and not displayed.</p>
+          </blockquote>
+          <p>Ridiculous…deliberately hiding a major (not un-concidentially really controversial) part of his portfolio to make it hard for interested parties to find out what he is doing.</p>
+          <p>Seriously: this guy is not fit to be a member of the nation's governing body. I've said it before: Senator Steven Conroy should go. And soon.</p>
+          <p>Here's the news.com.au source: <a href="http://www.news.com.au/technology/conroys-website-removes-references-to-filter/story-e6frfro0-1225834474153">Conroy's website removes references to filter</a>.</p>
+          <p>(Again…my opinion, YMMV).</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Rant</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Video Piracy For Dummies</h1>
+        <div class="entry-content">
+          <p>Saw this over on <a href="http://www.overclockers.com.au/">overclockers.com.au</a>.</p>
+          <p><img src="wp-content/uploads/2010/02/4.jpg" alt="4" title="4" width="800" height="825"></p>
+          <p>There is <em>definitiely</em>something wrong (with the product, please note) when the 'pirated' version of a product is actually better than the real thing.</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Rant</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">The Old (Groovy) Switch-eroo Again…</h1>
+        <div class="entry-content">
+          <p>Recently, I had the little task of looking at a string and deciding what to do based on the various values of an embedded prefix field.</p>
+          <p>I had to ask around a bit (thanks Paul!) to get the solution to my liking, but here's yet another example of my favourite Groovy construct, the switch statement:</p>
+          <pre>
+def days = [
+  "Monday:I could wait till Tuesday",
+  "Tuesday:must make up my mind",
+  "Wednesday:would be fine",
+  "Thursday:she's on my mind",
+  "Friday:give me time",
+  "Saturday:I could wait",
+  "Sunday:would be too late"
+]
+
+final MON = 'Monday:'
+final TUE = 'Tuesday:'
+final WED = 'Wednesday:'
+final THU = 'Thursday:'
+final FRI = 'Friday:'
+final SAT = 'Saturday:'
+final SUN = 'Sunday:'
+
+days.each { value -&gt;
+  switch(value) {
+    case ~/^${MON}.*$/:
+      println "$MON: ${value - MON}"
+      break
+    case ~/^${TUE}.*$/:
+      println "$TUE: ${value - TUE}"
+      break
+    case ~/^${WED}.*$/:
+      println "$WED: ${value - WED}"
+      break
+    case ~/^${THU}.*$/:
+      println "$THU: ${value - THU}"
+      break
+    case ~/^${FRI}.*$/:
+      println "$FRI: ${value - FRI}"
+      break
+    case ~/^${SAT}.*$/:
+      println "$SAT: ${value - SAT}"
+      break
+    case ~/^${SUN}.*$/:
+      println "$SUN: ${value - SUN}"
+      break
+  }
+}
+</pre>
+          <p>I know it's a <em>very</em> contrived example, but take a look at the case 'labels': regular expressions that reference properties found elsewhere in the code. Neat-o!</p>
+          <p>Apologies to Sting (did you get <a href="http://www.lyricsfreak.com/s/sting/seven+days_20132076.html">the song</a>?)!</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Groovy, Programming</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">It's A Two-Way Street</h1>
+        <div class="entry-content">
+          <p>Just because I keep the comment facility turned off on this site doesn't mean that I don't really appreciate comments (bouquets <em>or</em> brickbats..all feedback is good) so please: if you have something you want to get off your
+          chest, send me an old-fashioned email: <em>
+          <script type="text/javascript">
+
+                            // obfuscate this stuff...
+                            var who = 'contact';
+                            var a = 'transentia';
+                            var b = 'com';
+                            var c = 'au';
+                            var s = who + '@' + a + '.' + b + '.' + c;
+                            document.write(s)
+          </script></em></p>
+          <p>What prompted this? I just got a nice comment from Daniel saying "enjoying your website a lot. thought you'd like to know :-)"</p>
+          <p>I do like to know! Thanks Daniel.</p>
+        </div><!--/entry-content-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Happy (Lunar) New Year!</h1>
+        <div class="entry-content">
+          <p>It's the year of the Tiger.</p>
+          <p><img src="wp-content/uploads/2010/02/tigerchinese.gif"></p>
+          <p>I hope you manage to achieve the same degree of satisfaction in your life as my little tiger has achieved in hers:</p>
+          <p><img src="wp-content/uploads/2010/02/Furball-Pot.jpg" alt="Furball-Pot" title="Furball-Pot"></p>
+        </div><!--/entry-content-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">GroovyMag February 2010: Another Article By Yours Truly</h1>
+        <div class="entry-content">
+          <p>Another <a href="http://groovymag.com">GroovyMag</a> USD$4.99 blockbuster.</p>
+          <p>This time taking a look at the combination of <a href="http://www.grails.org">Grails</a>, <a href="http://griffon.codehaus.org/">Griffon</a> and a <a href="http://www.infoq.com/articles/rest-introduction">REST</a>-like interaction
+          style. It's all Good Stuff.</p>
+          <p><a href="wp-content/uploads/2010/02/gm16_400.jpg"><img src="wp-content/uploads/2010/02/gm16_400-231x300.jpg" alt="gm16_400" title="gm16_400" width="231" height="300"></a></p>
+          <p>Worth <em>every cent</em>.</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Grails, Griffon, Groovy, GroovyMag, Programming</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Copy Image From URL To File</h1>
+        <div class="entry-content">
+          <p>Just saving this away for a rainy day…something I concocted in response to <a href="http://groovy.markmail.org/message/yyzshsnzes5vgs75">a question</a> on the Groovy mailing list:</p>
+          <pre>
+new File("local.gif").withOutputStream { os -&gt;
+  new URL("remote.gif").withInputStream { is -&gt;
+    os &lt;&lt; is
+  }
+}
+</pre>
+          <p>The important thing to note here is the way the streams are carefully 'scoped' and maintained so that no leaks can occur even if exceptions or other sticky situations arise.</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Groovy, Programming</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">StarUML</h1>
+        <div class="entry-content">
+          <p>A while back I mentioned the Violet UML editor. My mate Alex from <a href="http://lexecorp.com/">Lexecorp</a> pointed out that <a href="http://staruml.sourceforge.net/en/index.php">StarUML</a> is another freebie:</p>
+          <blockquote>
+            <p>StarUML is an open source project to develop fast, flexible, extensible, featureful, and freely-available UML/MDA platform running on Win32 platform. The goal of the StarUML project is to build a software modeling tool and also
+            platform that is a compelling replacement of commercial UML tools such as Rational Rose, Together and so on.</p>
+          </blockquote>
+          <p>It looks slightly out of date, but is still worth remembering.</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Tools</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">The Groovy Internet Mood Meter in SVG</h1>
+        <div class="entry-content">
+          <p>This is yet another <a href="http://www.groovymag.com/">GroovyMag</a> article.</p>
+          <p>This one was published in September 2009 and is still running on Stax (just follow that last link to learn more).</p>
+          <p>Since the time of writing, Microsoft has <a href="http://blogs.msdn.com/ie/archive/2010/01/05/microsoft-joins-w3c-svg-working-group.aspx">announced</a> that it's joining the SVG working group (about bloody time!).</p>
+          <hr>
+          <a href="wp-content/uploads/2010/02/gm11_400.jpg"><img src="wp-content/uploads/2010/02/gm11_400-231x300.jpg" alt="gm11_400" title="gm11_400" width="231" height="300"></a><br>
+          <p><strong>The Groovy Internet Mood Meter in SVG<br>
+          Embedding and updating scalable vector graphics in XHTML</strong></p>
+          <hr>
+          <p><em>XML is a very effective tool promoting data interchange between disparate systems. It's a useful weapon that is slowly helping to quell the numerous "format wars" that have been fought throughout the history of IT. One of the
+          ongoing but lesser known skirmishes concerns graphics. The plethora of current formats is confusing, costly, and simply not appropriate for the needs of advanced web applications. With most current formats, intricate drawings are far too
+          large, difficult to produce and hard to use. Anyone who has battled with HTML image maps knows that the traditional image formats provide almost no opportunity for sophisticated scripting and interactivity. Scalable Vector Graphics (SVG)
+          is an application of XML that solves all of the previously mentioned problems and also provides an open, standards-based alternative to the common graphics formats in use today. GrIMMiS is a very small Grails application I have cooked up
+          that lets me use AJAX to dynamically update portions of an SVG drawing-and bring a peaceful end to the format wars.</em></p>
+          <h1>A brief overview</h1>
+          <p>This little dish has a bunch of tasty ingredients!  There's Grails, JavaScript (plain and using Grails' support for prototype/AJAX), SVG (with a small amount of declarative animation), and XHTML, all rolled into one neat little savory
+          package.</p>
+          <p>The Groovy Internet Mood Meter in SVG (GrIMMiS) itself is intentionally pretty simple: when you click on the smiley that best reflects your mood you influence the meter value, which is updated appropriately. The meter also periodically
+          updates to reflect the ongoing cumulative mood of "the Internet." With each update, GrIMMiS also retrieves a pithy saying or joke that varies depending on the overall mood.</p>
+          <p>Figure 1 shows GrIMMiS in all its glory running in Opera 10 beta 2, which currently (to me) seems to offer the best SVG support.</p>
+          <p><img src="wp-content/uploads/2009/09/GrIMMiS-300x282.png"></p>
+          <p>Figure 1: The GrIMMiS application</p>
+          <p>GrIMMiS mirrors the basics of a real SCADA HMI (Supervisory Control and Data Acquisition Human-Machine Interface) application that I developed for a client a long time ago-even before Jesse James Garrett's coined the term 'AJAX' in the
+          shower[1]. My original application was written in Java with plain JavaScript and had a fair amount of messy XML processing. In writing GrIMMiS, I wanted to see how Groovy and Grails would improve things. Of course, I found that the two
+          technologies made things a lot simpler.</p>
+          <h2>The SVG image</h2>
+          <p>In preparation for the upcoming HTML5 standard, most modern browsers are supporting SVG more and more faithfully with each release. SVG is now available as a standard feature in Opera, Firefox, Safari and Chrome. It is found everywhere
+          from JEE applications to mobile phone displays and frequently crops up in unexpected places. For example, much of the KDE4 Desktop's user interface has been styled with SVG, and SVG can also be used to render UML diagrams in Oracle's
+          JDeveloper IDE.</p>
+          <p>Notably absent is Microsoft's Internet Explorer [2]. In My (not-so) Humble Opinion, Redmond should be thoroughly ashamed of itself; SVG support is by far the most requested new feature for IE yet the community's pleas have continually
+          fallen on deaf ears. Adobe also should be ashamed of their "bait and switch" behavior in supplying the 'anointed' SVG plugin for IE and then unceremoniously pulling the plug, leaving the community high and dry with no alternative but to
+          move to proprietary systems like flash/flex, and indirectly opening the door for Silverlight. Even worse, Adobe still supports SVG in applications like Adobe Reader and many other products but will no longer provide that support for IE.
+          All is not lost however: there is evidence that Google is tiring of waiting for Microsoft to support SVG on IE and has launched its own SVG project called "SVG Web" [3]. Examotion is also developing the RENESIS plugin, which is intended to
+          be a re-engineering of the Adobe plugin [4].</p>
+          <p>Enough background chit-chat! Listing 1 shows the source for the meter portion of the image that is shown in Figure 1.</p>
+          <pre>&lt;svg xmlns="http://www.w3.org/2000/svg"
+     version="1.1"
+     width='600'
+     height='250'&gt;
+&lt;style type="text/css"&gt;
+  text {
+    font-size:12px;
+    text-anchor:middle;
+    font-family:sans-serif;
+  }
+  .bold {
+  font-weight:bold;
+  }
+&lt;/style&gt;
+&lt;g id='meterGroup'&gt;
+  &lt;circle cx="400" cy="25" r="10"
+          fill="white" stroke="black" stroke-width="1"&gt;
+    &lt;animateColor attributeName="fill"
+                  attributeType="CSS" values="white;white;blue;white"
+                  keyTimes="0;0.70;0.75;1.0"
+                  repeatCount="indefinite"
+                  dur="5s" /&gt;
+  &lt;/circle&gt;
+
+  &lt;path d="M 300,180 L 550,180 A 248 248 1 0 0 400,25"
+        fill="crimson" stroke="black" stroke-width="1" /&gt;
+  &lt;path d="M 300,180 L 400,25 A 220 220 1 0 0 200,25"
+        fill="lightGray" stroke="black" stroke-width="1" /&gt;
+  &lt;path d="M 300,180 L 200,25 A 248 248 1 0 0 50,180 L 300,180"
+        fill="RoyalBlue" stroke="black" stroke-width="1" /&gt;
+  &lt;g id='pointerGroup' transform="translate(300,180)"&gt;
+    &lt;g id='pointerRotateTransform' transform="rotate(-90)"&gt;
+      &lt;line x1='0' y1='0' x2='150' y2='0'
+           fill="yellow" stroke="yellow"
+           stroke-width="15" stroke-linecap="round" /&gt;
+    &lt;/g&gt;
+  &lt;/g&gt;
+  &lt;circle cx="300" cy="180" r="20" fill="black" stroke="darkGray"
+  stroke-width="3px" /&gt;
+  &lt;text x="300" y="220" id="reading" class="bold"&gt;90.0&lt;/text&gt;
+  &lt;text x="300" y="240" id="joke"&gt;&lt;/text&gt;
+&lt;/g&gt;
+&lt;/svg&gt;</pre>
+          <p>Listing 1: The SVG Meter Image source code</p>
+          <p>There are a number of points of interest in this code (it sounds a little weird talking about the source-code for an image, doesn't it, but that's what we have here).</p>
+          <p>First, SVG is an application of XML and therein lies one of its great strengths: there are many XML tools and techniques available for processing XML, and used with SVG as well, making it easy to create and process images
+          programmatically.</p>
+          <p>Secondly, the ability to use Cascading Style Sheets (CSS) is another great strength. Given that SVG is a first-class member of the large set of web technologies promulgated by the World Wide Web Consortium (W3C), one would expect
+          nothing less than that CSS and (as we will see) JavaScript work without hassle.</p>
+          <p>Various elements of the drawing are self explanatory: circle, line, text . Note that several elements have been given unique values for their id attribute: this will simplify later processing.</p>
+          <p>The g element introduces a group. The important point of interest here is that the g element allows the specification of a transform attribute. Transforms can be used to rotate, translate, scale and skew any portion of an image. In this
+          image, the line element within the 'pointerGroup' g element is initially defined as if it were at position 0,0 and pointing straight to the right, and then translated and rotated into its proper place and orientation. Although this may
+          seem strange at first, this facility allows complex images to be built up from independent sub-parts that are 'munged' into place as needed. The power of all this becomes apparent when one realizes that the various sub-parts may have been
+          produced in isolation, or perhaps generated as the result of a data query or other program action, without reference to any particular subsequent use. In this way, SVG is designed to make it easy to put together reusable 'clip-art'-style
+          libraries.</p>
+          <p>The three path elements draw the three wedges that make the dial of the meter. The key point of interest here is the mini "turtle graphics-style" language embedded into the d (path data) attribute. For example, the first line element
+          decodes as:</p>
+          <pre>M   absolute moveto         x, y
+
+L   absolute lineto             x, y
+
+A   absolute arc               rx ry x-axis-rotation short-or-long-way-flag clock-anticlock-flag x, y</pre>
+          <p>The first circle makes use of the declarative animation provided by SVG. This is actually another W3C-originated technology called Synchronized Multimedia Integration Language (SMIL; pronounced "smile"). The animation rule declared here
+          periodically manipulates the circle's CSS fill property to provide a 'busy' indicator: every 5 seconds the circle will flash blue for 1.2 seconds. Not every browser currently handles SVG declarative animation; for instance, most fairly
+          recent versions of Opera do but Firefox 3.5.1 does not.</p>
+          <p>The final point to note is the rule that defines z-order layering of the image elements: textually later elements appear on top of earlier ones.</p>
+          <p>If all this XML still leaves you unconvinced, consider this: the SVG document is less than 1.5Kb in size, while the equivalent PNG image is about 16Kb; more complex diagrams save even more. When you consider that Yahoo [5] estimated
+          that roughly 80% of its web traffic involves image downloads, savings of one or two orders of magnitude start to look really attractive.</p>
+          <h2>The XHTML 'Container' GSP page</h2>
+          <p>In GrIMMiS, the SVG image source shown in Listing 1 is itself embedded into an XHTML document.  This is the first true ingredient of the GrIMMiS Grails application because the XHTML is produced via a Groovy Server Pages (GSP) page,
+          shown as Listing 2.</p>
+          <pre>&lt; %@ page contentType="application/xhtml+xml" %&gt;
+&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+                      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"&gt;
+
+&lt;html xmlns="http://www.w3.org/1999/xhtml"
+      xml:lang="en" lang="en"&gt;
+&lt;head&gt;
+  &lt;title&gt;GrIMMiS&lt;/title&gt;
+
+  &lt;link rel="stylesheet" type="text/css" href="&lt;g:resource dir='css' file='grimmis.css' /&gt;" /&gt;
+
+  &lt;g:javascript library="prototype"/&gt;
+
+  &lt;script type="text/javascript"&gt;
+    //&lt;![CDATA[
+    var POLL_TIME = 5;
+    var PRTEL = 'pointerRotateTransform';
+    var JEL = 'joke';
+    var REL = 'reading';
+
+    function init() {
+      new PeriodicalExecuter(function(pe) {
+        new Ajax.Request('&lt;g:createLink controller="grIMMiS" action="poll" /&gt;', {
+          method: 'get',
+          onSuccess: onSuccessFunction
+        });
+      }, POLL_TIME);
+    }
+
+    function onSuccessFunction(e) {
+      var XML = e.responseXML
+      var rel = XML.getElementById(REL);
+      var n = $('meter').suspendRedraw(500);
+      var reading = $(REL);
+      reading.parentNode.replaceChild(rel, reading);
+      var prtel = XML.getElementById(PRTEL);
+      var pointerRotateTransform = $(PRTEL);
+      pointerRotateTransform.parentNode.replaceChild(prtel, pointerRotateTransform);
+      var jel = XML.getElementById(JEL);
+      var joke = $(JEL);
+      joke.parentNode.replaceChild(jel, joke);
+      $('meter').unsuspendRedraw(n);
+    }
+    //]]&gt;
+  &lt;/script&gt;
+&lt;/head&gt;
+&lt;body onload="init();"&gt;
+&lt;h1&gt;GrIMMiS-the Groovy Internet Mood Meter in SVG&lt;/h1&gt;
+
+&lt;table class="layout centered"&gt;
+  &lt;tr&gt;
+    &lt;td colspan="3"&gt;How is the Internet feeling today?&lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+    &lt;td colspan="3"&gt;
+      &lt;svg xmlns="http://www.w3.org/2000/svg"
+           version="1.1"
+           class="svg"
+           id='meter'&gt;
+        &lt;g:include controller="grIMMiS" action="svg"&gt;&lt;/g:include&gt;
+      &lt;/svg&gt;
+    &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+    &lt;td colspan="3"&gt;How are &lt;em&gt;you&lt;/em&gt; feeling today?&lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+    &lt;td&gt;&lt;g:remoteLink controller='grIMMiS' action='sad' onSuccess='onSuccessFunction(e);'&gt;
+      &lt;img src="images/nicubunu_Smiley_Cry.png" class="button" title="Sadder"/&gt;
+    &lt;/g:remoteLink&gt;
+    &lt;/td&gt;
+    &lt;td&gt;&lt;g:remoteLink controller='grIMMiS' action='neutral' onSuccess='onSuccessFunction(e);'&gt;
+      &lt;img src="images/nicubunu_Smiley_Puzzled.png" class="button" title="Neutraller"/&gt;
+    &lt;/g:remoteLink&gt;
+    &lt;/td&gt;
+    &lt;td&gt;&lt;g:remoteLink controller='grIMMiS' action='happy' onSuccess='onSuccessFunction(e);'&gt;
+      &lt;img src="images/nicubunu_Smiley_Laugh.png" class="button" title="Happier"/&gt;
+    &lt;/g:remoteLink&gt;
+    &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/table&gt;
+&lt;div class="footer"&gt;transentia pty. ltd.; 13/July/2009&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+          <p>Listing 2: The Container XHTML GSP page</p>
+          <p>Listing 2 has a number of ingredients worth noting.</p>
+          <p>Since this is a GSP, I am able to use Grails taglibs like &lt;g:resource&gt;, &lt;g:createLink&gt; and &lt;g:remoteLink&gt; to reference resources (such as grimmis.css) in a nice neat way, and to cleanly use AJAX to talk back to the
+          GrIMMiS controller's various actions. This allows me to manipulate the remote meter values or to update the local SVG drawing.</p>
+          <p>Note that the page retrieves the actual SVG image via the GrIMMiS controller's svg closure and includes it inline (by using &lt;g:include&gt;), rather than load it via a separate HTTP connection. This makes slightly more efficient use
+          of the network, and having the image included inline in this fashion gives a unified Document Object Model (DOM). This greatly simplifies DOM processing and helps with cross-browser compatibility.</p>
+          <p>I have also made use of SVG's ability to have nested SVG elements. This lets me build the actual image-without worrying how it might eventually be used in the page-while applying SVG-specific styling, and a unique ID to the outer SVG
+          element.</p>
+          <p>I am using Grails' prototype library for AJAX support and since I need the meter to regularly update to show the prevailing "mood out there," I am hand-crafting a small bit of JavaScript/prototype code: using Ajax.PeriodicalExecutor in
+          conjunction with a Ajax.Request for regularly (every POLL_TIME seconds) polling back to the GrIMMiS controller's poll closure.</p>
+          <p>Polling is initiated by the client's browser as it executes the XHTML page's onload handler.</p>
+          <p>The JavaScript callback function 'onSuccessFunction' is the meat of this little recipe. It is called after every successful AJAX operation to process the retrieved data. As expected, The GrIMMiS controller sends a small XML document to
+          the client in response to each AJAX request. onSuccessFunction takes this incoming document, extracts the relevant fragments from it (those that represent new values for the elements of the drawing that are to be updated), locates the
+          now-superseded original fragments in the SVG document and replaces them. The meter is automatically redrawn after being updated.</p>
+          <p>Note how onSuccessFunction uses the suspendRedraw/unSuspendRedraw functions to turn document redraw on and off during updates; this can greatly improve browser performance.</p>
+          <p>onSuccessFunction is slightly trickier than I would really like: it is able to use prototype's $('<em>element'</em>) syntax for addressing elements in the larger HTML document (and thus, the embedded SVG as well), but must use plain
+          JavaScript to work with the elements of the XML fragment received from Grails. This is slightly painful, but bearable, and the various workarounds that exist (such as adding the received document's elements into a hidden div and then
+          shuffling them into place) may be worse than the cure in terms of readability.</p>
+          <p>The final point of interest on this page concerns the use of Grails' &lt;g:remoteLink&gt; tag to handle AJAX-style interaction with the controller when activated by the smiley-face image buttons that  increase/decrease/'neutralize' the
+          meter's value.</p>
+          <h2>The Grails controller</h2>
+          <p>Listing 3 shows the single, very simple controller which is responsible for serving the SVG image and handling any interactions with the client browsers.</p>
+          <pre>class GrIMMiSController {
+
+  def drawingService
+
+  def index = { redirect(action: svg) }
+
+  // get full document
+  def svg = {
+    render(text: drawingService.svg(), contentType: 'image/svg+xml', encoding: 'UTF-8')
+  }
+
+  // get changes for document
+  def poll = {model = null -&gt;
+    render(text: drawingService.poll(), contentType: 'text/xml', encoding: 'UTF-8')
+  }
+
+  def happy = {
+    drawingService.happier()
+  }
+
+  def sad = {
+    drawingService.sadder()
+  }
+
+  def neutral = {
+    drawingService.neutraller()
+  }
+
+  // this interceptor means that happy, sad and neutral don't have to explicitly call poll()...DRY goodness
+  //
+  // must be elaborated after def poll = { } ... otherwise poll will be null
+  def afterInterceptor = [action: poll, only: ['happy', 'sad', 'neutral']]
+}</pre>
+          <p>Listing 3: The Grails controller</p>
+          <p>This controller is a thin adapter that mostly delegates to the injected drawingService instance.</p>
+          <p>The major point of interest here is the use of an afterInterceptor. Without this interceptor, each happy, sad and neutral smiley-face image buttons would need to look something like:</p>
+          <pre>def action = {
+
+// body
+
+poll()
+
+}</pre>
+          <p>With this interceptor in place, these actions are much simpler and more DRY.</p>
+          <p>Note that the poll action can be invoked either as a result of an incoming HTTP request as an action in its own right or as the callback closure associated with the defined afterInterceptor. In the former case, no parameter is passed
+          into the closure, while in the latter case a parameter is passed in by the actual interceptor code (although it isn't used in this example). The use of a default parameter value helps avoid redundancy.</p>
+          <p>The single tricky point here is that afterInterceptor must be declared after poll has been fully declared, otherwise poll will be null at the point of declaration, and Grails will complain when one of the designated actions is
+          invoked.</p>
+          <h2>The Grails service</h2>
+          <p>Most of the meat of the Grails application lives in the service class and a couple of small subsidiary classes.</p>
+          <p>Listing 4 shows the DrawingService.groovy file.</p>
+          <pre>import groovy.util.XmlNodePrinter
+
+class DrawingService {
+
+  boolean transactional = false
+
+  static scope = "singleton"
+
+  def jokeService
+
+  final MIN = 0
+  final MAX = 180
+  final QMAX = MAX / 4
+  final HMAX = MAX / 2
+  final BOTTOM_QUAD = MIN..&lt;QMAX
+  final LOW_QUAD = QMAX..&lt;HMAX
+  final HIGH_QUAD = HMAX + 1..&lt;(HMAX + QMAX)
+  final TOP_QUAD = (HMAX + QMAX)..MAX
+
+  final mood = new Mood(range: MIN..MAX)
+
+  def document
+
+  def pointerRotateTransform
+  def joke
+  def reading
+
+  def initialise = {file -&gt;
+    def start = System.currentTimeMillis()
+    log.debug "Initialise START: $file"
+    log.debug "Parsing..."
+    this.document = new XmlParser().parseText(new File(file).text)
+    log.debug "Isolating important elements for updating..."
+    this.pointerRotateTransform = document.g.g.g.find { it.'@id' == 'pointerRotateTransform' }
+    log.debug "Found pointerRotateTransform: $pointerRotateTransform"
+    this.joke = document.g.text.find { it.'@id' == 'joke' }
+    log.debug "Found joke: $joke"
+    this.reading = document.g.text.find { it.'@id' == 'reading' }
+    log.debug "Found reading: $reading"
+    log.debug "Initialise END; (${System.currentTimeMillis() - start}ms)"
+  }
+
+  // get full document
+  def svg = {-&gt;
+    synchronized (this) {
+      toSVG document
+    }
+  }
+
+  def poll = {-&gt;
+    synchronized (this) {
+      joke.value = message()
+      reading.value = fint(mood.value.current)
+      pointerRotateTransform.'@transform' = "rotate(-${fint(MAX - mood.value.current)})"
+      toSVGFragment pointerRotateTransform, joke, reading
+    }
+  }
+
+  def happier = {-&gt;
+    synchronized (this) {
+      mood.happier()
+    }
+  }
+
+  def sadder = {-&gt;
+    synchronized (this) {
+      mood.sadder()
+    }
+  }
+
+  def neutraller = {
+    synchronized (this) {
+      mood.neutraller()
+    }
+  }
+
+  private fint = { v -&gt;
+    String.format("%d", (int)v)
+  }
+
+  private message = {-&gt;
+    switch (mood.value.current) {
+      case TOP_QUAD: return "Wow...what's in the collective waters today :-)"
+      case HIGH_QUAD: return "The world seems to be going swimmingly...so far, anyway."
+      case HMAX: return "Keep on in that Groove, guys."
+      case LOW_QUAD: return "You need a joke: ${jokeService.joke()}"
+      case BOTTOM_QUAD: return "Oh dear! We all need a group session with a psycho-therapist, it seems."
+      default: return "???"
+    }
+  }
+
+  private toSVG = {n -&gt;
+    def writer = new StringWriter()
+    def xnp = new XmlNodePrinter(new PrintWriter(writer))
+    xnp.setNamespaceAware true
+    xnp.setPreserveWhitespace false
+    xnp.print(n)
+    writer.getBuffer().toString().trim()
+  }
+
+  private toSVGFragment = {Object ... elems -&gt;
+    def s = new StringBuilder("&lt;frag&gt;")
+    elems.each { s &lt;&lt; toSVG(it) }
+    s &lt;&lt; "&lt;/frag&gt;"
+    s
+  }
+}
+
+class Mood {
+  private final BIG_JUMP = 20
+  private final SMALL_JUMP = 10
+
+  private final randFromOne = RandomUtils.&amp;random.curry(1)
+  private final bigRandom = randFromOne.curry(BIG_JUMP)
+  private final smallRandom = randFromOne.curry(SMALL_JUMP)
+
+  final value
+
+  Mood(m) {
+    value = new RangedValue(range: m.range)
+  }
+
+  def happier = {-&gt;
+    value.current += bigRandom()
+  }
+
+  def sadder = {-&gt;
+    value.current -= bigRandom()
+  }
+
+  def neutraller = {-&gt;
+    // force value toward center
+    switch (value.current) {
+      case { it &gt; value.middle }: value.current -= smallRandom(); break
+      case { it &lt; value.middle }: value.current += smallRandom(); break
+      default: break /* do nothing */
+    }
+  }
+}
+
+class RangedValue {
+  final range
+  final middle
+  def current
+
+  RangedValue(m) {
+    this.range = m.range
+    this.middle = this.current = mid(m.range)
+  }
+
+  public void setCurrent(v) {
+    switch (v) {
+      case { it &gt; range.to }: current = range.to; break
+      case { it &lt; range.from }: current = range.from; break;
+      default: current = v; break
+    }
+  }
+
+  private static mid = {r -&gt;
+    return (r.to - r.from) / 2
+  }
+}</pre>
+          <p>Listing 4: The Grails service and associated classes</p>
+          <p>This service class has a number interesting points worth noting.</p>
+          <p>The initialise closure is defined to permit configuration of which SVG file to use via the Grails bootstrap, as shown in Listing 5.</p>
+          <pre>import org.codehaus.groovy.grails.commons.ApplicationHolder as AH
+
+class BootStrap {
+
+  def drawingService
+
+  def init = {servletContext -&gt;
+    def file = "${AH.application.parentContext.getResource('images/').file}${File.separatorChar}GrIMMiS.svg"
+
+    drawingService.initialise file
+  }
+  def destroy = {
+  }
+}</pre>
+          <p>Listing 5: The modified Grails Bootstrap.groovy class</p>
+          <p>Note the use of Grails' ApplicationHolder class, which lets us discover the location of the images folder. This is much better than using some hard-coded path.</p>
+          <p>The initialise closure also pre-resolves the various dynamic elements of the drawing so that they can be easily manipulated by other code later. I'll be the first to agree that this is a micro-level performance optimization, but one
+          that I found became important as the size of an image (and also the number of dynamic elements) increased.</p>
+          <p>As the saying goes [6]: "Nothing makes you want Groovy more than XML", and initialise lets you see Groovy's superb XML-handling capabilities first-hand. For example, the following navigates through the SVG document to find the unique g
+          element with id attribute value equal to 'pointerRotateTransform':</p>
+          <pre>document.g.g.g.find { it.'@id' == 'pointerRotateTransform' }</pre>
+          <p>The first of the two of the major methods in Listing 4 is svg. This method is responsible for writing the entire SVG document as a string (which is of course eventually returned to the client browser as part of the XHTML document
+          produced by the GSP shown in Listing 2).</p>
+          <p>Note that svg always writes the most up-to-date state of the SVG document so that a new client retrieves an accurate representation of the meter's value right from the start. The alternative approach would be to write the original
+          (as-stored-on-disk) image document to the client and then wait for a refresh to occur. Although possibly simpler and less server-side resource intensive, I have found this alternative to be a generally unsatisfactory approach. It becomes
+          even more so as the image increases in size and complexity (remember that GrIMMiS after all <em>is</em> only a trivial example application), or the drawing poll rate becomes longer.</p>
+          <p>The second major method in the service is poll. This method is responsible for updating the underlying SVG document to reflect the changing mood of "the Internet," as well as for generating an XML document fragment containing only the
+          updated elements of the image. An example of the document fragment produced is shown here:</p>
+          <pre>&lt;frag&gt;
+  &lt;g xmlns="http://www.w3.org/2000/svg" id="pointerRotateTransform" transform="rotate(-136)"&gt;
+    &lt;line x1="0" y1="0" x2="150" y2="0" fill="yellow" stroke="yellow" stroke-width="15" stroke-linecap="round"/&gt;
+  &lt;/g&gt;
+  &lt;text xmlns="http://www.w3.org/2000/svg" x="300" y="240" id="joke"&gt;
+    Oh dear! We all need a group session with a psycho-therapist, it seems.
+  &lt;/text&gt;
+  &lt;text xmlns="http://www.w3.org/2000/svg" x="300" y="220" id="reading" class="bold"&gt;
+    44
+  &lt;/text&gt;
+&lt;/frag&gt;</pre>
+          <p>The method poll makes use of a simple helper method called toSVGFragment. If you look at toSVGFragment, you can see that I have made good use of Groovy's simple varargs facility to define a method capable of handling an arbitrary number
+          of SVG elements in one invocation. This again helps the DRY-ness of the code and aids development and maintainability: the need to render an additional dynamic element is easily met by simply adding that element to the parameters passed
+          toSVGFragment. There is no need to take alternative, less direct, approaches such as passing parameters as lists or maps, or to define toSVGFragment to take some arbitrary number of (mostly default) parameters.</p>
+          <p>DrawingService makes effective use of Groovy's ranges. Listing 6 (excerpted from Listing 4) shows how I split the range from 0 to 180 into four equal-sized, non-overlapping subranges that corresponding to the angle of the meter's
+          pointer. These subranges are then used in conjunction with Groovy's excellent switch statement to determine an appropriate message to display.</p>
+          <pre>final MAX = 180
+final QMAX = MAX / 4
+final DMAX = MAX / 2
+final BOTTOM_QUAD = 0..&lt;QMAX
+final LOW_QUAD = QMAX..&lt;DMAX
+final HIGH_QUAD = DMAX + 1..&lt;(DMAX + QMAX)
+final TOP_QUAD = (DMAX + QMAX)..MAX
+
+private message = {-&gt;
+  switch (constrain(mood)) {
+    case TOP_QUAD: return "Wow...what's in the collective waters today :-)"
+    case HIGH_QUAD: return "The world seems to be going swimmingly...so far, anyway."
+    case DMAX: return "Keep on in that Groove, guys."
+    case LOW_QUAD: return "You need a joke: ${jokeService.joke()}"
+    case BOTTOM_QUAD: return "Oh dear! We all need a group session with a psycho-therapist, it seems."
+    default: return "???"
+  }
+}</pre>
+          <p>This excerpt also shows how the JokeService is used. Listing 6 shows this trivial class.</p>
+          <pre>class JokeService {
+
+  boolean transactional = false
+
+  private jokes = [
+          /Q: What's yellow and dangerous? A: shark-infested custard!/,
+          'The only culture in Australia is found in its youghurts.',
+          'When someone emigrates from NZ to Oz, the IQ of both countries goes up.'
+  ]
+
+  def joke = {-&gt;
+    return jokes[RandomUtils.random(0, jokes.size())]
+  }
+}</pre>
+          <p>Listing 6: The JokeService class</p>
+          <p>Of course, a more sophisticated implementation would pull jokes from a database or perhaps an Internet WebService.</p>
+          <p>Fancy some curry? In keeping with the slightly gastronomic theme to this article, the Mood class makes use of a technique called currying.</p>
+          <p>Currying is a functional programming technique that lets you create a new closure based on an existing closure where one parameter is pre-loaded and fixed with a given value (there is a long and very boring formal definition of currying
+          on Wikipedia [7], but this will do).</p>
+          <p>Rather than having calls to the general-purpose RandomUtils.random closure dotted around my code using (nearly) the same set of parameters at each call, you can see how I successively fix parameters in place to obtain a group of
+          specialized closures perfectly adapted for Mood's specific needs:</p>
+          <pre>final randFromOne = RandomUtils.&amp;random.curry(1)
+
+final bigRandom = randFromOne.curry(BIG_JUMP)
+
+final smallRandom = randFromOne.curry(SMALL_JUMP)</pre>
+          <p>The specialized closures are used throughout the DrawingService class. This is a very powerful technique that can help simplify your code and improve its readability.</p>
+          <p>Time for a bit of pop philosophy! The Mood class embodies GrIMMiS' business rules, such as they are. The philosophy embodied here is that although one is easily capable of saying "I am emotional," it is extremely hard to definitely
+          quantify emotion. Mood thus uses a random number for each operation. When a user hits the happy or sad smiley button, a value taken from a large random range is used (the thinking is that client <em>X</em> could be very happy, while client
+          <em>Y</em> only mildly sad). A user that presses the neutral smiley face is presumed to be less subject to wild "mood swings" and so the value used is taken from a smaller random range.</p>
+          <p>One more point of interest in this code is the use of Groovy's '&amp;' operator: this takes a reference to a method and treats it as a closure (so that it can be subsequently curried, for instance, as shown in the above excerpt).</p>
+          <p>For completeness, Listing 7 shows RandomUtils, a tiny helper class in src/groovy.</p>
+          <pre>public class RandomUtils {
+  private static final rg = new Random()
+
+  public static int random(off, lim) {
+    off + rg.nextInt(lim)
+  }
+}</pre>
+          <p>Listing 7: The RandomUtils class</p>
+          <p>The following snippet taken from the RangedValue class shows how I have used an explicit setter for the derived property current (the Groovy automatically-supplied getter continues to be used as normal). The supplied setter method
+          ensures that current is maintained within the bounds of the range defined for it at construction.</p>
+          <pre>
+def current
+
+public void setCurrent(v) {
+  switch (v) {
+    case { it &gt; range.to }: current = range.to; break
+    case { it &lt; range.from }: current = range.from; break
+    default: current = v; break
+  }
+}
+</pre>
+          <p>Both JokeService and DrawingService are marked as non-transactional. This is clearly appropriate and may help to conserve server-side resources.</p>
+          <p>The final point to note from Listing 4 concerns the various synchronized blocks that you will see in the code. In contrast to a controller, which typically has many active instances (usually one instance per request), a service by
+          default is a singleton: there is only one instance regardless of how many controllers are trying to use it. This is quite appropriate here: the drawingService should only maintain a single SVG drawing, regardless of however many clients
+          are using GrIMMiS. The singleton nature of drawingService does mean that many operations (such as updating the current mood value, or modifying the server-side SVG diagram to reflect that mood) should be carried out in a serialized manner
+          to avoid possible mis-correspondence of mood value and rotation transform value or message.</p>
+          <h1>Wrapping Up</h1>
+          <p>I hope you enjoyed taking a look at the recipe for this little entrée.</p>
+          <p>Recall that I started to make this dish because I wanted to see if Groovy and Grails would make it easier to build an application similar to one I built for a client several years ago using plain Java. It is clear that Groovy's superb
+          XML support and simpler file handling has improved things. It is also clear that features like varargs and currying have let me produce much more maintainable code. By providing a clean web-based environment, with interceptors and
+          effective support for JavaScript libraries (such as prototype), Grails has made it possible for me to write <em>much</em> better code than before. In general, even when taking into account the significantly smaller size and reduced
+          capabilities, this application has a cleaner, more comprehensible feel to it.</p>
+          <p>I wish I'd had these "Gr8 technologies" available to me many years ago!</p>
+          <h1>Learn More</h1>
+          <ol>
+            <li>The origin of the term 'AJAX', <a href="http://en.wikipedia.org/wiki/Ajax_(programming)">http://en.wikipedia.org/wiki/Ajax_(programming)</a>
+            </li>
+            <li>SVG support matrix for the various browsers, <a href="http://www.codedread.com/svg-support.php">http://www.codedread.com/svg-support.php</a>
+            </li>
+            <li>Google SVG Web, <a href="http://code.google.com/p/svgweb/">http://code.google.com/p/svgweb/</a>
+            </li>
+            <li>RENESIS SVG Plugin for IE, <a href="http://www.examotion.com/index.php?id=product_player">http://www.examotion.com/index.php?id=product_player</a>
+            </li>
+            <li>Yahoo User Interface Blog, <a href="http://yuiblog.com/blog/2006/11/28/performance-research-part-1/">http://yuiblog.com/blog/2006/11/28/performance-research-part-1/</a>
+            </li>
+            <li>Stuff I've learned recently, <a href="http://kousenit.wordpress.com/2008/03/12/nothing-makes-you-want-groovy-more-than-xml/">http://kousenit.wordpress.com/2008/03/12/nothing-makes-you-want-groovy-more-than-xml/</a>
+            </li>
+            <li>Wikipedia: Currying, <a href="http://en.wikipedia.org/wiki/Currying">http://en.wikipedia.org/wiki/Currying</a>
+            </li>
+          </ol>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Grails, Groovy, GroovyMag, Programming</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="pagination">
+        <span class="next"><a href="DUMMY">Next »</a></span> <span class="previous"><a href="DUMMY">« Previous</a></span>
+      </div>
+    </div>
+  </div><!--#page-->
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script> 
+  <script src="js/site.js"></script>
+</body>
+</html>

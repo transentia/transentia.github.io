@@ -1,0 +1,1178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="HTML Tidy for HTML5 for Windows version 5.6.0"><!-- Required meta tags -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Transentia - transentia pty. ltd.; development, consulting, training at the leading-edge of technology</title>
+  <link rel="stylesheet" type="text/css" media="screen, print, handheld" href="wp-content/themes/transentia/css/site.css">
+  <meta name="generator" content="Hand Hacked from Wordpress">
+</head>
+<body>
+  <div id="page">
+    <div id="header">
+      <p><a href="../index.htm"><img src="wp-content/uploads/widgets/transentia-logo-red-glow.gif" border="0"></a></p>
+      <p class="old-content">transentia's old content; click on the logo to return to the new content</p>
+      <p id="blog-description">transentia pty. ltd.; development, consulting, training at the leading-edge of technology</p>
+    </div><!-- #header -->
+    <div id="content">
+      <div class="pagination">
+        <span class="next"><a href="DUMMY">Next »</a></span>
+      </div>
+      <div class="post hentry">
+        <h1 class="entry-title">Queensland Dance Centre</h1>
+        <div class="entry-content">
+          <p><img src="http://qdc.dance/QDC/qdc-logo.png" alt="" width="320"></p>
+          <p>It's been an almost completely non-technology related (and thus, refreshing) activity but I have been helping some friends establish the <em>Queensland Dance Centre</em> in Sunnybank Hills Shoppingtown.</p>
+          <p><img src="http://qdc.dance/QDC/index/carousel/HB1.jpg" alt="Hao Bin and Ning Ning Dancing" width="640"></p>
+          <p>It's taken about two years to get this going…lots of hard work by lots of people!</p>
+          <p>Please <a href="http://qdc.dance">drop by their website</a> and take a look. <a href="http://qdc.dance/QDC/aboutus/Ningning/index.php">My</a> <a href="http://qdc.dance/QDC/aboutus/HaoBin/index.php">friends</a> are magnificent,
+          professional principal ballet dancers and are also excellent teachers. Not into ballet? NO worries…they have assembled a great selection of dance teachers covering all sorts of other styles…</p>
+          <p>So: fancy dancing? QDC is Brisbane's newest and best place to do it!</p>
+          <p>Me? <strong>I don't dance</strong>!</p>
+        </div><!--/entry-content-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">NZOUG14</h1>
+        <div class="entry-content">
+          <p>A big "thank you" to all who attended my presentations at this year's <a href="http://nzoug14.nzoug.org/">New Zealand Oracle User Group meeting</a> in Auckland.</p>
+          <p>This year, I gave two talks and the slide decks I used are now available:</p>
+          <ul>
+            <li>
+              <a href="wp-content/uploads/2014/11/Microservices.pdf">Microservices</a>
+            </li>
+            <li>
+              <a href="wp-content/uploads/2014/11/AsynchronousProcessing.pdf">Asynchronous Processing</a>
+            </li>
+          </ul>
+          <p>I was worried that the latter presentation might be a bit code-heavy, but I was heartened by the feedback from the audience who told me that they had come along to my session safe in the knowledge that they could get their code 'fix.'
+          It seems that it IS possible to get tired of overview slides and discussions of how the right index can make performance "<a href="http://horrible-histories.co.uk/">up to a bit percent better</a>"…</p>
+          <p>And to prove that I really <em>was</em> there:</p>
+          <blockquote class="twitter-tweet" lang="en">
+            <p><a href="https://twitter.com/hashtag/NZOUG14?src=hash">#NZOUG14</a> Bob Brown from Transentia Pty, Ltd. talking about Microservices. <a href="https://twitter.com/NZOUG">@NZOUG</a> <a href=
+            "http://t.co/s2eQQHl0Fb">pic.twitter.com/s2eQQHl0Fb</a></p>
+            <p>- Chad Wappes (@AskWhoopass) <a href="https://twitter.com/AskWhoopass/status/535230547287891968">November 20, 2014</a></p>
+          </blockquote>
+          <p>
+          <script async src="http://platform.twitter.com/widgets.js" charset="utf-8"></script></p>
+        </div><!--/entry-content-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Livin' On The Grid</h1>
+        <div class="entry-content">
+          <p>Another dive into the wonderful world of web technologies.</p>
+          <p>The requirement was simple: I needed an editable, pageable, grid backed by a REST-based resource.</p>
+          <p>This is what we are aiming at:</p>
+          <p><img src="wp-content/uploads/2014/07/gridCapture-1024x346.png" alt="" title="gridCapture" width="850"></p>
+          <p>Being supremely lazy (as <em>all developers should be</em>) I wanted the simplest possible solution.</p>
+          <p>I am looking at <a href="https://angularjs.org/">AngularJS</a> + <a href="http://angular-ui.github.io/ng-grid/">Ng-grid</a> + <a href="http://angular-ui.github.io/bootstrap/">Bootstrap directives</a> + <a href=
+          "http://coffeescript.org/">Coffeescript</a> for the front-end of the application, coupled with <a href="http://www.ratpack.io/">Ratpack</a> + <a href="http://groovy-lang.org/">Groovy</a> on the back-end. Plus, there's a smattering of
+          <a href="http://gradle.org">Gradle</a> for building and running the application, along with GVM and Lazybones.</p>
+          <p>Buzzwords galore!</p>
+          <p>Here's the <a href="wp-content/uploads/2014/07/ratpack-rest.zip">zipped-up project</a> for you. I know, I know…for maximum cool points, I really <em>should</em> use Github.</p>
+          <p>There's a lot to get through.</p>
+          <blockquote>
+            <p><em>"Begin at the beginning," the King said, very gravely, "and go on till you come to the end: then stop."</em><br>
+            - Lewis Carroll, Alice in Wonderland</p>
+          </blockquote>
+          <p>Sage words!</p>
+          <h3>HTML</h3>
+          <p>The beginning for any web application is surely the HTML page. Here it is (lightly edited):</p>
+          <pre>
+&lt;!doctype html&gt;
+&lt;html lang="en" ng-app="rest"&gt;
+&lt;head&gt;
+    ...
+&lt;/head&gt;
+
+&lt;body&gt;
+
+&lt;div class="container"&gt;
+    &lt;h1&gt;${model.title}&lt;/h1&gt;
+
+    &lt;p&gt;Brings all these components together to make a CRUD-dy grid&amp;hellip;&lt;/p&gt;
+
+    &lt;div ng-controller="ServantListCtrl"&gt;
+
+        &lt;div class="outer"&gt;
+            &lt;div class="gridStyle" ng-grid="gridOptions"&gt;&lt;/div&gt;
+
+            &lt;div class="inner"&gt;
+                &lt;div class="left"&gt;Total Items: {{totalItems}}&lt;/div&gt;
+                &lt;div ng-if="errorMessage" class="right animate-if error"&gt;{{errorMessage}}&lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;pagination items-per-page="itemsPerPage" total-items="totalItems" ng-model="currentPage"
+                    ng-change="getPagedDataAsync()" class="pagination-sm paginationOveride"
+                    boundary-links="true"&gt;&lt;/pagination&gt;
+
+    &lt;/div&gt;
+
+&lt;/div&gt;
+
+&lt;script type="text/ng-template" id="modalFormFields.tmpl"&gt;
+&lt;div class="form-group"&gt;
+    &lt;label for="name" class="control-label col-xs-2"&gt;Name&lt;/label&gt;
+
+    &lt;div class="col-xs-10"&gt;
+        &lt;input type="text" name="name" id="name" placeholder="Feline name" ng-model="row.name" class="form-control"/&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="form-group"&gt;
+    &lt;label for="name" class="control-label col-xs-2"&gt;Age&lt;/label&gt;
+
+    &lt;div class="col-xs-10"&gt;
+        &lt;input type="text" name="age" id="age" placeholder="Age" ng-model="row.age" class="form-control"/&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="form-group"&gt;
+    &lt;label for="name" class="control-label col-xs-2"&gt;Dead&lt;/label&gt;
+
+    &lt;div class="col-xs-10"&gt;
+        &lt;input type="text" name="dead" id="dead" placeholder="Dead" ng-model="row.deceased" class="form-control"/&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="form-group"&gt;
+    &lt;label for="name" class="control-label col-xs-2"&gt;Description&lt;/label&gt;
+
+    &lt;div class="col-xs-10"&gt;
+        &lt;input type="text" name="description" id="description" placeholder="Description" ng-model="row.description"
+               class="form-control"/&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+&lt;/script&gt;
+
+&lt;script type="text/ng-template" id="modalEditCreateForm.tmpl"&gt;
+&lt;div class="modal-header"&gt;
+    &lt;h3 class="modal-title"&gt;Servant&lt;/h3&gt;
+&lt;/div&gt;
+
+&lt;div class="modal-body"&gt;
+    &lt;form class="form-horizontal" role="form"&gt;
+
+        &lt;legend ng-switch on="modalMode"&gt;
+            &lt;span ng-switch-when="create"&gt;Create&lt;/span&gt;
+            &lt;span ng-switch-default&gt;Edit&lt;/span&gt;
+        &lt;/legend&gt;
+
+        &lt;div class="form-group" ng-if="modalMode != 'create'"&gt;
+            &lt;label for="name" class="control-label col-xs-2"&gt;ID&lt;/label&gt;
+
+            &lt;p class="form-control-static col-xs-10"&gt;{{row.id}}&lt;/p&gt;
+        &lt;/div&gt;
+
+        &lt;!--
+         Use a second template for the form fields. Why? Because!
+         Note single quotes: http://lostechies.com/gabrielschenker/2013/12/28/angularjspart-6-templates/
+         --&gt;
+        &lt;div ng-include="'modalFormFields.tmpl'"/&gt;
+
+    &lt;/form&gt;
+&lt;/div&gt;
+
+&lt;div class="modal-footer"&gt;
+    &lt;button class="btn btn-primary" ng-click="ok()"&gt;OK&lt;/button&gt;
+    &lt;button class="btn btn-warning" ng-click="cancel()"&gt;Cancel&lt;/button&gt;
+&lt;/div&gt;
+&lt;/script&gt;
+&lt;script type="text/ng-template" id="modalRmForm.tmpl"&gt;
+&lt;div class="modal-header"&gt;
+    &lt;h3 class="modal-title"&gt;Remove&lt;/h3&gt;
+&lt;/div&gt;
+
+&lt;div class="modal-body"&gt;
+    Remove record for item {{row.id}}? Cannot be undone.
+&lt;/div&gt;
+
+&lt;div class="modal-footer"&gt;
+    &lt;button class="btn btn-primary" ng-click="ok()"&gt;OK&lt;/button&gt;
+    &lt;button class="btn btn-warning" ng-click="cancel()"&gt;Cancel&lt;/button&gt;
+&lt;/div&gt;
+&lt;/script&gt;
+
+&lt;script src="..."&gt;&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</pre>
+          <p>There's quite a lot going on here and I'm not going to go through all this line by line but here are some highlights for you to watch out for:</p>
+          <ul>
+            <li>the main container DIV is pretty standard bootstrap-ese, even though bootstrap is being brought to you courtesy of the angular-ui bootstrap module.</li>
+            <li>lots of Angular bits
+              <ul>
+                <li>ng-app directive</li>
+                <li>ng-controller directive</li>
+                <li>data binding to/from the controller's scoped data with {{}}</li>
+                <li>ng-click</li>
+                <li>ng-model ng-if/ng-switch, ng-include</li>
+              </ul>
+            </li>
+            <li>even though ng-grid has a facility for pagination, I have chosen to do pagination courtesy of the bootstrap module. Why am I making life harder than I must? 'cos the ng-grid stuff looks <em>horrid</em> and is hard to restyle…that's
+            why.</li>
+            <li>the use of the angular-ui ng-grid module for providing a data-bound grid. Ng-grid appears reliable and flexible but seems a bit 'unsophisticated' when compared with likes of Kendo's grid.</li>
+            <li>Use of ng-template to extract repeated boilerplate</li>
+          </ul>
+          <p>The end result of all the shenanigans listed above is notably clean HTML. This is surely A Good Thing.</p>
+          <p>Now let's draw the HTML curtain away, to reveal…</p>
+          <h3>Angular</h3>
+          <p>For a long time, my mantra was: "Thou shalt not Javascript!" These days, I am likely to append "…<em>too much</em>" to the exhortation. Still, old habits die hard and for this application I have implemented all the requisite
+          functionality in Coffeescript: (IMHO) a <em>much</em> nicer language for doing anything other than "hello, world!."</p>
+          <p>First off is the definition of the Angular application 'rest.' This is the entry point that provisions the whole application and dependencies, and is initiated by the value of the ng-app attribute in the outer html tag:</p>
+          <pre>
+app = angular.module('rest', ['ui.bootstrap', 'ngGrid', 'rest.controllers'])
+    .config ($locationProvider) -&gt;
+        .html5Mode(true)
+</pre>
+          <p>Aside from expressing the module depdendency list, pretty much all this does is configure Angular to use HTML5-style 'pretty' URLs if it needs to generate or parse URLs. See <a href=
+          "http://scotch.io/quick-tips/js/angular/pretty-urls-in-angularjs-removing-the-hashtag">Pretty URLs in AngularJS</a> for more.</p>
+          <p>The real 'meat' of the application is to be found in the controller created within the 'rest.controllers' module. Viz:</p>
+          <pre>
+controllers = angular.module 'rest.controllers',  ['ngResource']
+
+controllers.controller 'ServantListCtrl', ($scope, $modal, $resource, $http, $log) -&gt;
+    resource = $resource('api/felines/:id', {}, {'update': { method:'PUT' }})
+    resource.fetchCount = () -&gt;
+        $http({method: 'GET', url: 'api/felines/count'})
+            .success((data) -&gt; $scope.totalItems = data.count)
+            .error((_, status) -&gt; setErrMsg("Get/Count ERROR: #{status}"))
+
+    $scope.errorMessage = undefined
+    clearErrMsg = -&gt; $scope.errorMessage = ""
+    setErrMsg = (m) -&gt; $scope.errorMessage = m
+
+    $scope.selectedRow = []
+
+    $scope.felines = []
+
+    $scope.totalItems = 0
+    $scope.currentPage = 1
+    $scope.itemsPerPage = 5
+
+    $scope.getPagedDataAsync = -&gt;
+        setTimeout(
+            -&gt; resource.query(
+                {offset: ($scope.itemsPerPage * ($scope.currentPage - 1)),
+                 max: $scope.itemsPerPage, sort: "id", order: "asc"}
+                (value) -&gt;
+                    $scope.felines = value
+                    resource.fetchCount()
+                (httpResponse) -&gt; setErrMsg("Query ERROR: #{httpResponse.statusText}")
+            )
+            10
+        )
+
+    cellTmpl = '''
+    &lt;div class="ngCellText ng-scope col0 colt0" ng-class="col.colIndex()"&gt;
+        &lt;span ng-cell-text="" class="ng-binding"&gt;
+            &lt;button type="button" class="btn btn-default btn-xs" ng-click="rm(row.entity)"&gt;
+                &lt;span class="glyphicon glyphicon-minus"&gt;&lt;/span&gt;
+            &lt;/button&gt;
+            &lt;button type="button" class="btn btn-default btn-xs" ng-click="edit(row.entity)"&gt;
+                &lt;span class="glyphicon glyphicon-pencil"&gt;&lt;/span&gt;
+            &lt;/button&gt;
+        &lt;/span&gt;
+    &lt;/div&gt;
+    '''
+
+    col0HeaderCellTemplate = '''
+    &lt;div class="ngHeaderSortColumn ngCellText {{col.headerClass}}""&gt;
+        &lt;span ng-cell-text="" class="ng-binding"&gt;
+            &lt;div&gt;
+                &lt;button type="button" class="btn btn-default btn-xs" ng-click="create()"&gt;
+                    &lt;span class="glyphicon glyphicon-plus"&gt;&lt;/span&gt;
+                &lt;/button&gt;
+            &lt;/div&gt;
+        &lt;/span&gt;
+    &lt;/div&gt;
+    '''
+
+    $scope.gridOptions = {
+        totalServerItems: 'totalServerItems'
+        data: 'felines'
+        columnDefs: [
+            {field:'', displayName: '', width: '64px', sortable: false, enableCellEdit: false,
+                resizable: false, cellTemplate: cellTmpl, headerCellTemplate: col0HeaderCellTemplate},
+            {field: 'id', displayName: 'ID', width: "**", resizable: false},
+            {field: 'name', displayName: 'Name', width: "***", resizable: false}
+            {field: 'age', displayName: 'Age', width: "*", resizable: false}
+            {field: 'deceased', displayName: 'Dead', width: "*", resizable: false}
+            {field: 'description', displayName: 'Description', width: "**********"}
+        ]
+        selectedItems: $scope.selectedRow
+        enableSorting: false
+        multiSelect: false
+        showFooter: false
+    }
+
+    $scope.getPagedDataAsync()
+
+    $scope.$on('ngGridEventData', -&gt; $scope.gridOptions.selectRow(0, true))
+
+    $scope.create = -&gt;
+        clearErrMsg()
+        modalInstance = $modal.open({
+          templateUrl: 'modalEditCreateForm.tmpl',
+          controller: ModalCreateEditCtrl,
+          resolve: {
+              modalMode: -&gt; 'create'
+              row: -&gt;
+                  {
+                  name: ""
+                  age: 0
+                  deceased: false
+                  description: ""
+                  }
+          }
+        })
+        modalInstance.result.then((e) -&gt;
+            resource.save e,
+                          (-&gt; $scope.getPagedDataAsync()),
+                          ((httpResponse) -&gt; setErrMsg("Save ERROR: #{httpResponse.statusText}"))
+        )
+
+    $scope.rm = (e) -&gt;
+      clearErrMsg()
+      modalInstance = $modal.open({
+          templateUrl: 'modalRmForm.tmpl',
+          controller: ModalRmCtrl,
+          resolve: { row: -&gt; e }
+      })
+      modalInstance.result.then((e) -&gt;
+          e.$remove {id: e.id},
+                    (-&gt; $scope.getPagedDataAsync()),
+                    ((httpResponse) -&gt; setErrMsg("Remove ERROR: #{httpResponse.statusText}"))
+
+      )
+
+    $scope.edit = (e) -&gt;
+        clearErrMsg()
+        modalInstance = $modal.open({
+          templateUrl: 'modalEditCreateForm.tmpl',
+          controller: ModalCreateEditCtrl,
+          resolve: {
+              modalMode: -&gt; 'edit'
+              row: -&gt; angular.copy(e)  # allows for 'cancel'
+          }
+        })
+        modalInstance.result.then((e) -&gt;
+            oldId = e.id
+            delete e[x] for x in ['class', 'felines', 'servant', 'id']
+            e.$update {id: oldId},
+                    (-&gt; $scope.getPagedDataAsync()),
+                    ((httpResponse) -&gt; setErrMsg("Edit ERROR: #{httpResponse.statusText}"))
+        )
+
+    ModalRmCtrl = ($scope, $modalInstance, row) -&gt;
+        $scope.row = row
+        $scope.ok = -&gt; $modalInstance.close(row)
+        $scope.cancel = -&gt; $modalInstance.dismiss('cancel')
+
+    ModalCreateEditCtrl = ($scope, $modalInstance, row, modalMode) -&gt;
+        $scope.row = row
+        $scope.modalMode = modalMode
+        $scope.ok = -&gt; $modalInstance.close(row)
+        $scope.cancel = -&gt; $modalInstance.dismiss('cancel')
+</pre>
+          <p>The main points of interest in the above include:</p>
+          <ul>
+            <li>the $scope.gridOptions object configures the ng-grid module. It's worth contrasting the way that ng-grid handles the need for cell/header templates to the way that the bootstrap module approaches templating. I really hope that
+            ng-grid adopts this same approach in the future.</li>
+            <li>the use of $scope to tie data into the controller, not the global scope</li>
+            <li>the use use of Angular's <a href="https://docs.angularjs.org/api/ngResource/service/$resource">$resource</a> to support a 'pure' restful interacation, and <a href="https://docs.angularjs.org/api/ng/service/$http">$http</a> for plain
+            HTTP GET
+            </li>
+            <li>the use of the angular bootstrap module's modal dialog, with associated controllers and HTML templates</li>
+          </ul>
+          <p>Asynchronous processing style is used as much as possible, <del>so that I can be as trendy as I can be</del> <ins>to keep the UI as 'live' as possible</ins> .</p>
+          <p>This means that success/fail callbacks are often seen in resource handling. Consider using a $resource for example:</p>
+          <pre>
+e.$update {id: oldId},
+          (-&gt; $scope.getPagedDataAsync()),
+          ((httpResponse) -&gt; setErrMsg("Edit ERROR: #{httpResponse.statusText}"))
+</pre>
+          <p>It's also worth looking at how $http's <a href="https://docs.angularjs.org/api/ng/service/$q">promise</a>-based API is dealt with in fetchCount().</p>
+          <p>A promise-style asynchronous approach is also seen with respect to modal dialog handling:</p>
+          <pre>
+modalInstance = $modal.open({...})
+modalInstance.result.then((e) -&gt; ...)
+</pre>
+          <p>$resource has a strange quirk. Although designed explicitly for REST-ful intereactions, it does not support the use of PUT for resource updates "out of the box." Heaven knows why! The fix is easy and given in the official documentation;
+          you can see it applied on the very first line of the controller.</p>
+          <p>As far as I can see (and I am the first to admit that I am not omniscient), Angular has an architectural "blind spot." Consider the following:</p>
+          <pre>
+$scope.edit = (e) -&gt;
+    clearErrMsg()
+    modalInstance = $modal.open({
+    ...
+    })
+    modalInstance.result.then((e) -&gt;
+        ...
+        e.$update ...
+                (-&gt; ...),
+                ((httpResponse) -&gt; setErrMsg("Edit ERROR: #{httpResponse.statusText}"))
+        )
+</pre>
+          <p>That clearErrMsg/setErrMsg pairing is seen all through this application…not very DRY.</p>
+          <p>I'd love to be able to centralise this processing, and I could IF $resource (or $http) allowed a PRE-invocation callback to be specified but here's the blind spot: there are various <em>post-facto</em> success/fail callbacks, but no
+          "let's get going" one.</p>
+          <p>The web is replete with solutions (<a href="http://lmgtfy.com/?q=angularjs+spinner+directive">LMGTFY</a>) for the superficially similar task of hiding/showing a "please wait" spinner but that's not sufficient for what is needed here.
+          It's a much simpler task, for one thing. A spinner has no need to access a controller's $scope or the request parameters at invocation time, or the call's success/failure status…my desire to provide success/failure UI feedback requires all
+          these things.</p>
+          <p>At first blush, <a href="https://docs.angularjs.org/api/ng/service/$http">$httpProvider.interceptors</a> looks promising, but once again, interceptors don't get access to a given controller's $scope and all the other Good Stuff.</p>
+          <p>And now I know why 99.99999% of all examples out there on the Interwebs don't show <strong>any</strong> error handling: 'cos it's too darned difficult to do correctly, and project deadlines have to be met, and… (and what could
+          <em>possibly</em> go wrong, anyway :-))</p>
+          <p>Onwards and upwards, what? To the server-side we go!</p>
+          <h3>Ratpack</h3>
+          <p>Keep It Simple, Stupid! In my desire to follow this mantra, I chose to build my server-side RESTful API using <a href="http://www.ratpack.io/">Ratpack</a> and Groovy. Ratpack is:</p>
+          <blockquote>
+            <p>"a simple, capable, toolkit for creating high performance web applications."</p>
+          </blockquote>
+          <p>How simple? Take a look:</p>
+          <pre>
+import rest.*
+
+import static ratpack.groovy.Groovy.groovyTemplate
+import ratpack.jackson.JacksonModule
+import static ratpack.jackson.Jackson.json
+import static ratpack.groovy.Groovy.ratpack
+import com.google.inject.AbstractModule
+import static com.google.inject.Scopes.SINGLETON
+
+ratpack {
+    bindings {
+        add new JacksonModule()
+        add new AbstractModule() {
+
+            @Override
+            protected void configure() {
+                bind(FelineStore).in(SINGLETON)
+            }
+        }
+
+        // a few fixtures
+        init { FelineStore felineStore -&gt;
+            felineStore.add(new Feline(id: 0, name: "Scotty", age: 5,
+                            description: "Active young(ish) male", deceased: Boolean.FALSE))
+            felineStore.add(new Feline(id: 1, name: "Furball", age: 5,
+                            description: "Fluffy!", deceased: Boolean.TRUE))
+            felineStore.add(new Feline(id: 2, name: "Blackie", age: 6,
+                            description: "Black and very affectionate!", deceased: Boolean.FALSE))
+            felineStore.add(new Feline(id: 3, name: "Midnight", age: 4,
+                            description: "Shy male!", deceased: Boolean.FALSE))
+            felineStore.add(new Feline(id: 4, name: "Julius", age: 6,
+                            description: "Can clearly say 'Hello!", deceased: Boolean.FALSE))
+            felineStore.add(new Feline(id: 5, name: "Meow Meow", age: 10,
+                            description: "Getting on a bit", deceased: Boolean.FALSE))
+
+            String.metaClass.safeParseAsLong = {
+                try {
+                    delegate as Long
+                }
+                catch (e) {
+                    null
+                }
+            }
+        }
+    }
+
+    handlers { FelineStore datastore -&gt;
+        get("api/felines/count") {
+            blocking {
+                datastore.size()
+            }
+            .then {
+                render json(count: it)
+            }
+        }
+        handler("api/felines/:id?") {
+            def id = pathTokens.id?.safeParseAsLong()
+            byMethod {
+                get {
+                    blocking {
+                        id ? datastore.get(id) : datastore.list(request.queryParams)
+                    }
+                    .then {
+                        if (it != null)
+                            render json(it)
+                        else {
+                            clientError(404)
+                        }
+                    }
+                }
+                post {
+                    blocking {
+                        def f = parse Feline
+                        datastore.add(f)
+                    }
+                    .then {
+                        render json(it)
+                    }
+                }
+                delete {
+                    blocking {
+                        id ? datastore.delete(id) : null
+                    }
+                    .then {
+                        clientError(it ? 204 : 404)
+                    }
+                }
+                put {
+                    blocking {
+                        def f = parse Feline
+                        f.id = id
+                        f.id ? datastore.update(f) : null
+                    }
+                    .then {
+                        clientError(it ? 204 : 404)
+                    }
+                }
+            }
+        }
+        get {
+            render groovyTemplate("grid.html", title: "AngularJS + Ng-grid + Bootstrap + Ratpack REST")
+        }
+
+        assets "public"
+    }
+}
+</pre>
+          <p>It should be pretty clear what's going on here. There are a few nice points of interest:</p>
+          <ul>
+            <li>JSON processing is much simplified, thanks to Ratpack's <a href="https://github.com/FasterXML/jackson">Jackson</a> module
+            </li>
+            <li>the REST API is clearly and cleanly enunciated in the code</li>
+            <li>handling of other request paths is also pretty clear</li>
+            <li>asynchronous processing is quite unceremonious</li>
+            <li>the use of safeParseAsLong</li>
+            <li>dependency injection makes life easy; for proof, look at how the FelineStore is instantiated, configured and injected</li>
+          </ul>
+          <p>A point to note regarding the various handlers…in the worlds of Luke Daly, Ratpack's creator:</p>
+          <blockquote>
+            <p><em>Order is crucially important, and this is very much intentional.</em></p>
+          </blockquote>
+          <p>It is interesting to note that Ratpack is <em>not</em> purely a Groovy technology. It is being built from the ground up to also<br>
+          take advantage of all the goodness available in Java 7 and 8. This should make it attractive to a very wide audience. Of course,<br>
+          Ratpack's Groovy DSL is still nicer to use than the pure Java API…</p>
+          <p>Be aware that I am deliberately ignoring the FelineStore here…it's in the project but it's only a silly little facade over a list.</p>
+          <p>Tying all this together is…</p>
+          <h3>Gradle</h3>
+          <p>Gradle is doing the neccessary dependency management, building and launching. As with most simple use-cases, the build.gradle is very clear:</p>
+          <pre>
+import org.gradle.plugins.javascript.coffeescript.CoffeeScriptCompile
+
+buildscript {
+  repositories {
+    jcenter()
+  }
+  dependencies {
+    classpath "io.ratpack:ratpack-gradle:0.9.5"
+  }
+}
+
+apply plugin: 'coffeescript-base'
+apply plugin: "ratpack-groovy"
+apply plugin: "idea"
+apply plugin: "eclipse"
+
+repositories {
+  jcenter()
+  maven {
+      url "http://repo.springsource.org/repo"  // for springloaded
+      }
+    maven {
+      url 'http://repo.gradle.org/gradle/javascript-public'// for coffeescript
+  }
+}
+
+dependencies {
+  // SpringLoaded enables runtime hot reloading.
+  // It is not part of the app runtime and is not shipped in the distribution.
+  springloaded "org.springsource.loaded:springloaded:1.1.5.RELEASE"
+
+  compile ratpack.dependency("jackson")
+
+  testCompile "org.spockframework:spock-core:0.7-groovy-2.0"
+}
+
+task compileCoffee(type: CoffeeScriptCompile) {
+    source fileTree('src/main/coffee')
+    destinationDir file('src/ratpack/public/app/js')
+}
+
+processResources {
+    from compileCoffee
+}
+</pre>
+          <p>It's worth looking at how coffeescript precompilation is handled, as well as how springloaded is used. Apart from this, all is boilerplate.</p>
+          <h3>The Rest</h3>
+          <p>A few other noteworthy bits and pieces: I used <a href="http://gvmtool.net/">gvm</a> to handle installs and <a href="https://github.com/pledbrook/lazybones">lazybones</a> to create the intial ratpack project.</p>
+          <h3>But Wait! There's More!</h3>
+          <p>Ratpack is cool and fairly clean, but one can arguably do better: Grails to the rescue!</p>
+          <p>Here's the Grails restful controller in its entirety:</p>
+          <pre>
+package rest
+
+import catsrest.Feline
+import grails.rest.RestfulController
+
+class FelinesRestController extends RestfulController&lt;Feline&gt; {
+
+    static responseFormats = ['json', 'xml']
+
+    FelinesRestController() {
+        super(Feline)
+    }
+
+    def count() {
+        respond([count: Feline.count()])
+    }
+}
+</pre>
+          <p>This corresponds pretty much completely to the Ratpack application shown earlier. It will happily service the same Angular application.</p>
+          <p>To work effectively, the Grails version requires a few URL Mappings to be created, thusly:</p>
+          <pre>
+"/api/felines/count"(controller: "felinesRest", action: 'count', method: 'GET')
+"/api/felines"(resources: "felinesRest")
+</pre>
+          <p>And that's really about all there is to it. Excellent stuff!</p>
+          <p>Of course, there is (much) more to Ratpack than is shown in this posting, so don't feel that I am being dismissive of it…that's not my intention at all!</p>
+          <p>And now I'll let you into a little secret: I originally developed the Angular stuff using the Grails backend shown here, then decided to "keep on playing" with a Ratpack-based alternative implementation…there's always something
+          <em>more</em> to learn, lurking just around the next corner!</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: AngularJS, Coffeescript, Gradle, Grails, Groovy, Javascript, Programming, Ratpack</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Off With Its Head!</h1>
+        <div class="entry-content">
+          <p>A little while ago I decided to relocate my Mac Mini server and run it 'headless': without a monitor.</p>
+          <p>Imagine my surprise when I found that screen sharing performance in decapitated mode was <em>substantially</em> less than normal.</p>
+          <p>A quick search around the internet turned up the fabulous <a href="http://blog.macminicolo.net/">macminicolo blog</a>. with the reason: in headless mode, the Mac Mini will not load its GPU drivers and so will undertake software-only
+          display rendering.</p>
+          <p>Not only did the site tell me what the issue was, it also gave a <a href="http://blog.macminicolo.net/post/33839671756/build-a-dummy-dongle-for-a-headless-mac-mini">solution</a> or <a href=
+          "http://blog.macminicolo.net/post/72706369716/an-hdmi-adapter-for-a-headless-mac-mini">two</a>.</p>
+          <p>A quick trip to Amazon and the recommended <a href="http://www.amazon.com/CompuLab-fit-Headless-Display-Emulator/dp/B00FLZXGJ6">CompuLab Display Emulator HDMI adapter</a> turned up on my doorstep.</p>
+          <p>Here's a pretty piccy:</p>
+          <p><img src="wp-content/uploads/2014/07/HDMIAdapter.png" alt="" title="CompuLab Display Emulator" width="200" height="137"></p>
+          <p>10 secs after arrival, the adapter was plugged in and went to work with no fuss or bother. Full speed, GPU-accelerated screen sharing FTW! I wish all technology worked as well.</p>
+          <p>All is once again rosy in Bob's Apple orchard.</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Tools</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Building The Perfect Beast</h1>
+        <div class="entry-content">
+          <p>Building object instances: soul-killing drudgery or trivial annoyance?</p>
+          <p>Are you one of those who, when asked to build an object with a large set of properties, gnash their teeth and wail "there must be a better use of my precious <a href="https://en.wikipedia.org/wiki/Life-Line">life-line</a> than this?" Do
+          you simply accept that when life throws a bunch of unset properties in your direction, all you can do is roll up your sleeves and get setting?</p>
+          <p>If you are in the former camp, rather than the latter, then Groovy 2.3 has something good for you!</p>
+          <p>Introducing the <a href="http://beta.groovy-lang.org/docs/groovy-2.3.0/html/gapi/groovy/transform/builder/package-summary.html">groovy.transform.builder</a> package…more ways to create an object than you can shake a mouse at!</p>
+          <p>Building complex objects is now as easy as pie, as the following little example shows.</p>
+          <pre>
+import groovy.transform.*
+import groovy.transform.builder.*
+
+// NB: 'true' Gb
+Long.metaClass.getGb = { -&gt; delegate.longValue() * 1024L * 1024L * 1024L }
+Double.metaClass.getInch = { -&gt; 2.54D * delegate.doubleValue() }
+
+@ToString(includeNames=true)
+@Builder
+class User {
+    String name
+    String extension
+}
+
+@ToString
+@Builder(builderStrategy=SimpleStrategy, prefix="", excludes=['id'])
+class Computer {
+    UUID id = UUID.randomUUID()
+    String vendor
+    String type
+    Double screen  // cm
+    Long ram       // bytes
+    Long disk      // bytes
+    User user
+}
+
+// need a class to embed logging into
+@groovy.util.logging.Log
+class Main {
+    void goForIt() {
+        def built = new Computer()
+                        .vendor("Apple")
+                        .type("Macbook Pro")
+                        .screen(15.6D.inch)
+                        .ram(16L.gb)
+                        .disk(512L.gb)
+                        .user(User.builder().name("Bob").extension("1234").build())
+    log.info built.toString()
+    }
+}
+
+new Main().goForIt()
+</pre>
+          <p>Take a good look at the above; there are actually two styles of builder in use here: Computer and User configure the builder facility in two different ways.</p>
+          <p>A picture paints a thousand words, as they say:</p>
+          <p><img src="wp-content/uploads/2014/06/builder.jpg" alt="" title="builder" width="874" height="375"></p>
+          <p>Choice is good, no?</p>
+          <p>This is only a quick overview of what is actually a very configurable facility that probably has enough in it to satisfy all but the most rabid properties setter hater.</p>
+          <p><em>Never again</em> should you write Groovy code like this:</p>
+          <pre>
+Thing t = new Thing()
+t.something('x')
+t.somethingElse(42)
+t.kill(8)
+t.me('now')
+</pre>
+          <p>I'll be watching!</p>
+          <p>It is worth taking a <a href="http://beta.groovy-lang.org/docs/groovy-2.3.0/html/documentation/#xform-Builder">look at the documentation</a> to see what else this new feature can do to help you reclaim your life and dignity.</p>
+          <p>Just for the hell of it, I have also thrown in the very useful <a href="http://beta.groovy-lang.org/docs/groovy-2.3.0/html/documentation/#xform-ToString">@ToString</a> and <a href=
+          "http://beta.groovy-lang.org/docs/groovy-2.3.0/html/documentation/#_logging_improvements">@Log</a> annotations…what fun!</p>
+          <p>I have also done a teeny-tiny bit of metaprogramming: take a look at how Long and Double are modified to give us a taste of DSL-y goodness.</p>
+          <p>And just to wrap things up neatly, be aware that Groovy has always had a few tools to make your life easier: the documentation specifically calls out the with statement (which I've raved about before) and <a href=
+          "http://groovy.codehaus.org/Extended+Guide+to+Method+Signatures">maps as named parameters</a>.</p>
+          <p>We're spoiled for choice, we really are!</p>
+          <p>PS: I took the title for this posting from the title of Don Henley's <a href="http://en.wikipedia.org/wiki/Building_the_Perfect_Beast">excelllent second album</a>. Music to angrily program by!</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Groovy, Programming</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Using Groovy's ConfigSlurper To Support External Configurations With JEE7's CDI</h1>
+        <div class="entry-content">
+          <p>Thought I'd investigate how to use Groovy's very nice <a href="http://groovy.codehaus.org/ConfigSlurper">ConfigSlurper</a> with JEE7's Contexts and Dependency Injection for the Java EE Platform.</p>
+          <p>Others have looked at using <a href="http://smokeandice.blogspot.com.au/2009/12/external-cdi-configuration-with.html">JNDI</a> and <a href=
+          "https://weblogs.java.net/blog/jjviana/archive/2010/05/18/applicaction-configuration-java-ee-6-using-cdi-simple-example">Properties files</a> for the same purpose (and let's not forget XML, via <a href=
+          "http://docs.jboss.org/seam/3/solder/latest/reference/en-US/html/introduction.html">Solder</a>: "a library of Generally Useful Stuff ™, particularly if you are developing an application based on CDI").</p>
+          <p>Still, I'm a Groovy Geek and would like to re-examine things in my own, imitable, fashion. Besides, ConfigSlurper is a nicer, more functional tool than any of the other alternatives.</p>
+          <p>Here's the config file we are going to work with:</p>
+          <pre>config {
+    envDependent = 422
+    greeting {
+        string = 'Cowabunga!'
+        stuff = 999
+    }
+}
+more.stuff = 'cow'
+environments {
+    dev {
+        config.envDependent = 888
+    }
+    test {
+        config.envDependent = 644
+    }
+    prod {
+        config.envDependent = 333
+    }
+}
+</pre>
+          <p>Standard Groovy goodness here.</p>
+          <p>Here's the application entry point:</p>
+          <pre>package cdi
+
+import cdi.config.ConfigSlurperConfiguration
+import cdi.config.ConfiguredByConfigSlurper
+import org.jboss.weld.environment.se.bindings.Parameters
+import org.jboss.weld.environment.se.events.ContainerInitialized
+
+import javax.enterprise.context.ApplicationScoped
+import javax.enterprise.event.Observes
+import javax.inject.Inject
+
+@ConfigSlurperConfiguration(source = "/Srvr.config")
+@ApplicationScoped
+class Srvr {
+    @Inject
+    @ConfiguredByConfigSlurper(key = "config.greeting.string")
+    private String greeting
+
+    @Inject
+    @ConfiguredByConfigSlurper(key = "config.greeting.stuff")
+    private Double val
+
+    @Inject
+    @ConfiguredByConfigSlurper(key = "config.envDependent")
+    private Integer envDependent
+
+    public void startSrvr(@Observes ContainerInitialized event, @Parameters List&lt;String&gt; parameters) {
+        println "${greeting}--val: ${val}"
+        println "${greeting}--envDependent: ${envDependent}"
+    }
+}
+</pre>
+          <p>It's not a standard Java/Groovy main class. I <em>could</em> have made one up, but the <a href="http://weld.cdi-spec.org/">Weld CDI RI</a> supplies <a href=
+          "http://docs.jboss.org/weld/reference/latest/en-US/html/environments.html#d0e5888">org.jboss.weld.environment.se.StartMain</a>: a nice (event-driven) bootstrapper class-cum-DI container that lets one cut out all that ceremonial stuff.</p>
+          <p>It should be fairly clear what CDI-related stuff is going on here. The ConfigSlurperConfiguration qualifier attribute defines the config source to use (and possibly the active environment); this can be a URL, of course. The
+          ConfiguredByConfigSlurper qualifier tells CDI which of the available configuration keys should be referenced during value injection.</p>
+          <p>Both of the CDI annotation definitions are pretty simple. There's not much to ConfigSlurperConfiguration:</p>
+          <pre>package cdi.config
+
+import javax.inject.Qualifier
+import java.lang.annotation.ElementType
+import java.lang.annotation.Retention
+import java.lang.annotation.RetentionPolicy
+import java.lang.annotation.Target
+
+@Qualifier
+@Retention(RetentionPolicy.RUNTIME)
+@Target([ElementType.TYPE, ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER])
+public @interface ConfigSlurperConfiguration {
+    String source()
+    String env() default ""
+}
+</pre>
+          <p>ConfiguredByConfigSlurper is slightly more interesting:</p>
+          <pre>package cdi.config
+
+import javax.enterprise.util.Nonbinding
+import javax.inject.Qualifier
+import java.lang.annotation.ElementType
+import java.lang.annotation.Retention
+import java.lang.annotation.RetentionPolicy
+import java.lang.annotation.Target
+
+@Qualifier
+@Retention(RetentionPolicy.RUNTIME)
+@Target([ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER])
+public @interface ConfiguredByConfigSlurper {
+    @Nonbinding String key() default "";
+    @Nonbinding boolean required() default true;
+}
+</pre>
+          <p>Note the use of @Nonbinding. Rick Hightower gives the clearest explanation of why this is required over at <a href="http://java.dzone.com/articles/cdi-di-p2">DZone's JavaLobby</a>:</p>
+          <blockquote>
+            <p>@Nonbinding: Required when using an annotation for both injection and configuration.</p>
+          </blockquote>
+          <p>That's certainly the case for ConfiguredByConfigSlurper, as you will see.</p>
+          <p>According to CDI: "A producer method acts as a source of objects to be injected…"</p>
+          <p>The requisite producer for ConfiguredByConfigSlurper is handled by the imaginatively-named ConfigSlurperProducer class:</p>
+          <pre>package cdi.config
+
+import cdi.events.ConfigSlurperInitEvent
+
+import javax.enterprise.context.ApplicationScoped
+import javax.enterprise.event.Observes
+import javax.enterprise.inject.Produces
+import javax.enterprise.inject.spi.InjectionPoint
+
+@ApplicationScoped
+class ConfigSlurperProducer {
+    private static final DEFAULT_ENV = System.properties['configslurperproducer.environment']
+
+    private Map flattenedConfig = null
+
+    public  void doInitialise(@Observes ConfigSlurperInitEvent event) {
+        def text = this.getClass().getResource(event.source)?.text
+
+        if (!text)
+            throw new RequiredConfigNotFoundException("Path=${path}, env=${env}")
+
+        def env = event.environment
+        if (!env) {
+            env = DEFAULT_ENV
+            if (!env)
+              throw new RequiredConfigNotFoundException("Path=${path}, env=(UNSPECIFIED)")
+        }
+
+        flattenedConfig = new groovy.util.ConfigSlurper(environment: env).parse(text).flatten();
+    }
+
+    @Produces
+    @ConfiguredByConfigSlurper
+    public String getConfigurationString(InjectionPoint ip) { get(ip) }
+
+    @Produces
+    @ConfiguredByConfigSlurper
+    public Double getConfigurationDouble(InjectionPoint ip) { get(ip) }
+
+    @Produces
+    @ConfiguredByConfigSlurper
+    public Integer getConfigurationInteger(InjectionPoint ip) { get(ip) }
+
+    // "Duck Typing" FTW!
+    private get(InjectionPoint ip) {
+        def (required, key) = ip.getAnnotated().getAnnotation(ConfiguredByConfigSlurper).with { a -&gt;
+            [a.required(), a.key()]
+        }
+
+        if (required &amp;& !flattenedConfig.containsKey(key))
+            throw new RequiredConfigKeyNotFoundException("'${key}'")
+
+        flattenedConfig.get(key)
+    }
+}
+</pre>
+          <p>This nice, concise class is responsible for defining the methods that correspond to the ConfiguredByConfigSlurper qualifier and for 'driving' ConfigSlurper accordingly. For each producer method, the InjectionPoint parameter provides
+          access to the specific parameters expressed in the source code. Interestingly, the actual name of the method is irrelevant, as long as it is unique (and nice for us dumb humans to comprehend). There is a separate producer method for each
+          different type of injection point. Groovy's 'Duck Typing' ability makes it easy to keep the class as DRY as possible. A pure Java version of this class would suffer from a fair bit of repetition.</p>
+          <p>ConfigSlurperProducer requires initialisation at app startup time. As I have written things (and I wrote things this way to deliberately learn how to get 'cooperating' annotations going) any initialisation parameters are specified in
+          parameters to the separate ConfigSlurperConfiguration qualifier annotation (which may reference the System properties). At runtime, ConfigSlurperConfiguration does its good stuff and raises an ConfigSlurperInitEvent event. The doInitialise
+          method responds to this event appropriately.</p>
+          <p>As far as I can see there aren't very many sources "out there" telling you how to get annotations cooperating with each other like this (ie I couldn't really find one at all) so pay attention to the next bit, children :-)</p>
+          <p>There is no Producer class for ConfigSlurperConfiguration. To get cooperating attributes going one needs a CDI <a href="http://docs.jboss.org/weld/reference/latest/en-US/html/extend.html">Portable Extension</a> and a bit of
+          jiggery-pokery.</p>
+          <pre>package cdi.config.extension
+
+import cdi.config.ConfigSlurperConfiguration
+import cdi.config.ConfigSlurperProducer
+import cdi.events.ConfigSlurperInitEvent
+
+import javax.enterprise.context.Dependent
+import javax.enterprise.event.Event
+import javax.enterprise.event.Observes
+import javax.enterprise.inject.spi.*
+import javax.inject.Inject
+
+@Dependent
+class EventExtension implements Extension {
+
+    private String source
+    private String env
+
+    @Inject
+    Event&lt;ConfigSlurperInitEvent&gt; initEvent;
+
+    public &lt;X&gt; void onProcessAnnotatedType(@Observes @WithAnnotations([ConfigSlurperConfiguration]) ProcessAnnotatedType&lt;X&gt; event) {
+        final AnnotatedType&lt;X&gt; type = event.getAnnotatedType()
+        type.getAnnotation(ConfigSlurperConfiguration).with { a -&gt;
+            source = a.source()
+            env = a.env()
+        }
+    }
+
+    public &lt;X&gt; void onAfterBeanDiscovery(@Observes AfterBeanDiscovery event, final BeanManager beanManager) {
+        Bean&lt;ConfigSlurperProducer&gt; bean = (Bean&lt;ConfigSlurperProducer&gt;) beanManager.resolve(beanManager.getBeans(ConfigSlurperProducer));
+        ConfigSlurperProducer configSlurperProducer = beanManager.getContext(bean.getScope()).get(bean, beanManager.createCreationalContext(bean));
+
+        beanManager.fireEvent(new ConfigSlurperInitEvent(source: source, environment: env), bean.getQualifiers()[0])
+    }
+}
+</pre>
+          <p>Note the two-step process going on here.</p>
+          <p>First off, the CDI container calls onProcessAnnotatedType (the name is not important but the fact that it observes ProcessAnnotatedType events is). Note how @WithAnnotations restricts the method's invocations. This ensures that
+          container startup remains as efficient as possible.</p>
+          <p>In the second step, <em>made after all beans have been discovered</em>, an application-specific ConfigSlurperInitEvent is created with the requisite parameters and fired at the ConfigSlurperProducer.</p>
+          <p>For completeness, here is the extremely simple ConfigSlurperInitEvent class:</p>
+          <pre>package cdi.events
+
+class ConfigSlurperInitEvent {
+  String source
+  String environment
+}
+</pre>
+          <p>It is a bit of a shame that all this couldn't be done in a single step, but such is life. <a href="https://github.com/tomivirkki/cdi-mvp/issues/1">Here is a bit of background on this</a>.</p>
+          <p><a href="https://issues.jboss.org/browse/WELD-1682">WELD-1682</a> describes why it is currently necessary to make the extension a Dependent class. In a nutshell: EventExtension would not be treated by CDI as a 'bean' without this
+          annotation and "Weld forbids a BeanManager lookup from classes that are not beans."</p>
+          <p>Want a demo? Your wish is my command:</p>
+          <p><img src="wp-content/uploads/2014/05/cdi1.png" alt="" title="cdi" width="75%" height="75%" class="alignnone"></p>
+          <p>Note that I passed "-Dconfigslurperproducer.environment=test" on the command line, so that a particular environment section was selected from the config file.</p>
+          <p>Good stuff, eh?!</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Groovy, JEE, Programming</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Misfiring Neurones</h1>
+        <div class="entry-content">
+          <p>Last night, I let my memory drive my mouth. Always a baaad idea. My memory tends to be…how to put it…imprecise. Whereas my mouth faithfully does whatever it is told; there's no auto-correct feature that might cut in when needed.</p>
+          <p>My naughty neurones told me that since Java 1.6 one could have the following:</p>
+          <pre>class Rubbish {
+    private Integer get() {
+        return 42;
+    }
+
+    private String get() {
+        return "42";
+    }
+
+    public static void main(String [] args) {
+        Rubbish r = new Rubbish();
+        Integer i = r.get();
+        String s = r.get();
+    }
+}</pre>
+          <p>I was thinking that the definition of a method's signature had been changed to include the return type.</p>
+          <p>Bzzzzzt! Wrong! Nonsense!</p>
+          <p>The <a href="http://docs.oracle.com/javase/specs/jls/se7/html/jls-8.html#jls-8.4.2">JLS</a> says:</p>
+          <blockquote>
+            <p>Two methods have the same signature if they have the same name and argument types.</p>
+          </blockquote>
+          <p>No mention of return type there.</p>
+          <p>Both IntelliJ and the Java compiler are more than happy to point out the numerous inadequacies of my naive neural noodlings:</p>
+          <p><img title="RubbishJava" src="wp-content/uploads/2014/05/RubbishJava-1024x308.png" alt="" width="850"></p>
+          <p>What was I thinking?</p>
+          <p>This…</p>
+          <p>Java 1.5(!) introduced a feature called "covariant return types." <a href="http://en.wikipedia.org/wiki/Covariant_return_type">Wikipedia says</a>:</p>
+          <blockquote>
+            <p>…a covariant return type of a method is one that can be replaced by a "narrower" type when the method is overridden in a subclass.</p>
+          </blockquote>
+          <p>Put <a href="http://www.java-tips.org/java-se-tips/java.lang/covariant-return-types.html">another way</a>:</p>
+          <blockquote>
+            <p>…a method in a subclass may return an object whose type is a subclass of the type returned by the method with the same signature in the superclass. This feature removes the need for excessive type checking and casting.</p>
+          </blockquote>
+          <p>This feature actually looks like this (thanks to Wikipedia again):</p>
+          <pre> // Classes used as return types:
+
+ class A {
+ }
+
+ class B extends A {
+ }
+
+ // "Class B is more narrow than class A"
+ // Classes demonstrating method overriding:
+
+ class C {
+     A getFoo() {
+         return new A();
+     }
+ }
+
+ class D extends C {
+//Overriding getFoo() in father class A
+     B getFoo() {
+         return new B();
+     }
+ }</pre>
+          <p><a href="http://www.snpp.com/episodes/1F06.html">The Simpsons</a> can be trusted to provide an apposite snippet for almost any situation, including this one:</p>
+          <p><strong>Homer's brain</strong>: <em>Wait! Are you sure that's how this sort of thing works?</em><br>
+          <strong><span style="color: #ffffff;">Homer's</span> Homer</strong>: <em>Shut up, brain, or I'll stab you with a Q-tip!</em></p>
+          <p>In a slight non-sequitur, I thought it would be interesting to look at how times change with respect to API definitions.</p>
+          <p>Here's two methods. The first is from JDBC, <a href="http://docs.oracle.com/javase/7/docs/api/java/sql/DriverManager.html">java.sql.DriverManager</a>, API originated ca. 1997:</p>
+          <pre>public static Connection getConnection(String url,
+                       String user,
+                       String password)
+                                throws SQLException
+Attempts to establish a connection to the given database URL.
+The DriverManager attempts to select an appropriate driver from the set of registered JDBC drivers.</pre>
+          <p>And the second API (the one that started the faux-pas for which I herein atone in the first place) from Java ME 8, <a href=
+          "http://docs.oracle.com/javame/config/cldc/opt-pkgs/api/dio-jmee8/api/jdk/dio/DeviceManager.html">jdk.dio.DeviceManager</a>, API ca. 2014:</p>
+          <pre>static &lt;P extends Device&lt;? super P&gt;&gt; P open(int id)
+Looks up and opens a Device instance for the provided numerical ID.</pre>
+          <p>Now, I'm GUESSING that these two methods do ROUGHLY the same thing: return an instance of some common-ish type based on some sort of lookup.</p>
+          <p>Look how "grown up" Java has become! Some might say that it is suffering from middle-aged spread.</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Java, java8</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Can't We All Just Get Along?</h1>
+        <div class="entry-content">
+          <p>At a recent meeting covering some really cool technology, I was interested to see the word 'hate' so often used.</p>
+          <p>Person A 'hated' Netbeans<br>
+          Person B 'hated' Eclipse<br>
+          Person C 'hated' IntelliJ<br>
+          Person D 'hated' Vi<br>
+          Person E 'hated' Emacs<br>
+          Person F 'hated' Java<br>
+          Persons G and H 'hated' Macs<br>
+          Persons I and J 'hated' Linux<br>
+          Persons K, L and M 'hated' Windows<br>
+          Person N 'hated' Windows running in VMWare on a Mac (ticks several boxes, that one!)</p>
+          <p>Everyone seemed happy to declaim loudly and often about what they 'hated', but no-one ever even said something as mildly positive as "I like <em>X</em>."</p>
+          <p>I came to the conclusion that this is a cultural thing. Whether it's an Australia-cultural thing or a younger-set-than-me-cultural thing I'm not sure.</p>
+          <p>I don't ask for Tom Cruise-style <a href="http://www.youtube.com/watch?v=GNrB6qpmNwg">histrionics</a>, but come on guys, can we lift our appreciation game, a little? Please?</p>
+          <p>I'm English…</p>
+          <p>We're the race that will stare lovingly into our soulmate's eyes and say "I quite like you." I'm of the ethnicity that came up with "<a href="http://en.wikipedia.org/wiki/Black_Knight_(Monty_Python)">it's just a flesh wound</a>." My mob
+          thinks that <em>cricket</em> is <em>exciting</em> for heavens' sake (oh wait…)!</p>
+          <p>However…</p>
+          <p>…I guess I'm not that thoroughly English after all: I was insanely happy to see my little project finally work, and I guess that most people ended up knowing just that!</p>
+          <p><em>[Edit]</em></p>
+          <p>S. postulates that perhaps it is a youth thing: that the young 'uns simply EXPECT everything to be excellent and so excellence is simply not noteworthy in and of itself. This means that all comments highlight real or supposed
+          imperfections.</p>
+          <p>A. puts forth the following: "Hmm, hate saves on expressing things more eloquently, so that in itself is perhaps what is sad, our laziness in the spoken word!?"</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Rant</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Thanks Angela!</h1>
+        <div class="entry-content">
+          <p>At last night's <a href="http://www.meetup.com/qldjvm/">Brisbane Java User Group</a> meeting, Oracle's <a href="https://blogs.oracle.com/acaicedo/">Angela Caicedo</a> gave a nice session on "How to become an embedded developer in
+          minutes" using the new Java ME 8.</p>
+          <p>We got to play with a <a href="http://www.raspberrypi.org/">Raspberry Pi</a> and <a href="http://java.oracle.com">Java</a>. My 'team' got our LED to flash! On Cue! Little things please little minds, it seems.</p>
+          <p>…and now I'm an embedded developer all tooled up for the forthcoming Internet of Things revolution. Bring it on!</p>
+          <p>It was good fun!</p>
+          <p>Thanks Angela!</p>
+          <p><em>Edit</em><br>
+          Here's a piccy of the group getting a briefing from Angela:</p>
+          <p><img src="wp-content/uploads/2014/05/jug.jpg" alt="" title="jug" width="518" height="346"></p>
+          <p>(copied from <a href="http://www.meetup.com/qldjvm/photos/22175242/368750962/?a=pu3.2_l">the qldjvm group's original</a>)</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Java, Programming</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Creating ConfigSlurper Files Programatically</h1>
+        <div class="entry-content">
+          <p>The question that <a href="http://groovy.329449.n5.nabble.com/Creating-ConfigSlurper-files-td5719077.html">arose on the Groovy mailing list</a> a while back was:</p>
+          <blockquote>
+            <p>Is it possible to use the ConfigSlurper object itself to create config files?</p>
+          </blockquote>
+          <p>I've just gotten around to thinking about this. The answer is…"sort of."</p>
+          <p>One does not actually use ConfigSlurper, but <a href="http://groovy.codehaus.org/gapi/groovy/util/ConfigObject.html">ConfigObject</a>, which has a writeTo method that "Writes this config object into a String serialized representation
+          which can later be parsed back using the parse() method."</p>
+          <p>A short example:</p>
+          <pre>
+def co = new ConfigObject()
+
+def strange = [string: 'hello', 'int': 42, 'double': 3.14]
+co.put('some', ['strange': strange])
+co.put('something.else', 'happy towel day')
+
+def sw = new StringWriter()
+co.writeTo(sw)
+
+println """Output from co.writeTo():
+
+---
+$sw
+---"""
+
+def cs = new ConfigSlurper('dev').parse(sw.toString())
+
+println """Output from cs.toString():
+
+---
+$cs
+---"""
+</pre>
+          <p>The above constructs the equivalent of:</p>
+          <pre>
+some {
+  strange {
+    string = 'hello'
+    int = 42
+    double = 3.14
+  }
+}
+something.else = 'happy towel day'
+</pre>
+          <p>But there is a slight wrinkle: writeTo doesn't write a file that is as beautiful as one that you or I might write.</p>
+          <p>The output from the example above shows this:</p>
+          <pre>
+Output from co.writeTo():
+
+---
+some=['strange':['string':'hello', 'int':42, 'double':3.14]]
+something.else='happy towel day'
+---
+Output from cs.toString():
+
+---
+[some:[strange:[string:hello, int:42, double:3.14]], something:[else:happy towel day]]
+---
+</pre>
+          <p>Nevertheless, one <em>can</em> "round trip" config files, if one needs to.</p>
+          <p>Hmmm…it is a bit of a shame that ConfigSlurper#toString() doesn't produce a round-trippable string in-and-of itself. (Might be worth a quick Jira…ah…<a href="https://issues.apache.org/jira/browse/GROOVY-5194">GROOVY-5194 already
+          exists</a> [but is not accurate?].)</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Groovy, Programming</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="pagination">
+        <span class="next"><a href="DUMMY">Next »</a></span>
+      </div>
+    </div>
+  </div><!--#page-->
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script> 
+  <script src="js/site.js"></script>
+</body>
+</html>

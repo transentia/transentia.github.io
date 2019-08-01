@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <title>Transentia - transentia pty. ltd.; development, consulting, training at the leading-edge of technology</title>
+  <link rel="stylesheet" type="text/css" media="screen, print, handheld" href="wp-content/themes/transentia/css/site.css">
+</head>
+<body>
+  <div id="page">
+    <div id="header">
+      <p><a href="../index.htm"><img src="wp-content/uploads/widgets/transentia-logo-red-glow.gif" border="0"></a></p>
+      <p class="old-content">transentia's old content; click on the logo to return to the new content</p>
+      <p id="blog-description">transentia pty. ltd.; development, consulting, training at the leading-edge of technology</p>
+    </div><!-- #header -->
+    <div id="content">
+      <div class="pagination">
+        <span class="next"><a href="DUMMY">Next »</a></span> <span class="previous"><a href="DUMMY">« Previous</a></span>
+      </div>
+      <div class="post hentry">
+        <h1 class="entry-title">String Micro-Benchmark</h1>
+        <div class="entry-content">
+          <p>I was having a discussion with a colleague a while ago. To whit: which is 'better', Groovy's GString interpolation or simple, brain-dead String concatenation?</p>
+          <p>In the grandest spirit of discovery, I said: "let's see."</p>
+          <p>A simple Groovy test 'framework':</p>
+          <pre>
+@Grab(group='commons-lang', module='commons-lang', version='2.6')
+import org.apache.commons.lang.time.StopWatch
+
+def concatenator = { i -&gt;
+  def i2 = i * 2
+  def iCubed = Math.pow(i, 3)
+  'i == ' + i + '; 2i == ' + i2 + '; i**3 == ' + iCubed
+}
+
+def interpolator = { i -&gt;
+  def i2 = i * 2
+  def iCubed = Math.pow(i, 3)
+  "i == ${i}; 2i == ${i2}; i**3 == ${iCubed}"
+}
+
+def interpolator2 = { i -&gt;
+  "i == ${i}; 2i == ${i * 2}; i**3 == ${Math.pow(i, 3)}"
+}
+
+def tmr(c) {
+  // warmup
+  for(i = 0; i &lt; 100; i ++)
+    c.call(i)
+
+  def timerS = new StopWatch()
+
+  timerS.start()
+
+  // work for real
+  for(i = 0; i &lt; 10000000; i ++)
+    c.call(i)
+
+  timerS.stop()
+
+  timerS.toString()
+}
+
+println "Concatenator: ${tmr(concatenator)}"
+println "Iterpolator: ${tmr(interpolator)}"
+println "Iterpolator2: ${tmr(interpolator2)}"
+</pre>
+          <p>And the result:</p>
+          <pre>
+Concatenator: 0:00:16.470
+Iterpolator: 0:00:04.406
+Iterpolator2: 0:00:04.380
+</pre>
+          <p>Probably not the most definitive investigation ever but as far as I am concerned: interpolation <a href="https://en.wikipedia.org/wiki/For_the_Win">FTW</a>!</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Groovy</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">January 2012 GroovyMag</h1>
+        <div class="entry-content">
+          <p>I completely forgot to publicise my <a href="http://www.groovymag.com/main.issues.description/id=44/">January 2012 GroovyMag article</a>! The topic "Testing and Evaluating a Simple Set of Classes" covers testing using Spock, CodeNarc
+          and Cobertura.</p>
+          <p><img src="wp-content/uploads/2012/05/gm-ed44_400.jpg" alt="" title="gm-ed44_400" width="400" height="518"></p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Groovy, GroovyMag, Programming</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">More Scribbling</h1>
+        <div class="entry-content">
+          <p>This time with HTML5′s &lt;canvas&gt; tag, jquery-1.7.2 and coffeescript-1.3.1.</p>
+          <pre>&lt;!DOCTYPE html&gt;
+    &lt;head&gt;
+        &lt;meta charset="utf-8" /&gt;
+        &lt;title&gt;CoffeeCanvasScribble&lt;/title&gt;
+        &lt;script src="js/jquery-1.7.2.js"&gt;&lt;/script&gt;
+        &lt;script src="js/coffee-script.js"&gt;&lt;/script&gt;
+        &lt;link rel="stylesheet" href="css/cs_scribble.css" /&gt;
+    &lt;/head&gt; 
+
+    &lt;body&gt;
+        &lt;canvas id="canvas" width="800" height="500"
+                style="width: 800px; height: 500px; border: 1px solid gray"&gt;&lt;/canvas&gt;
+        &lt;div id="buttons"&gt;
+          &lt;div&gt; &lt;/div&gt;
+          &lt;input type="button" id="clear" value="Clear" /&gt; 
+          &lt;input type="button" id="red" value="Red" /&gt; 
+          &lt;input type="button" id="green" value="Green" /&gt; 
+          &lt;input type="button" id="blue" value="Blue" /&gt; 
+          &lt;input type="button" id="black" value="Black" /&gt; 
+          &lt;input type="button" id="snapshot" value="Snapshot" /&gt;
+          &lt;div&gt; &lt;/div&gt;
+          &lt;div class="filler"&gt;&lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;div id="snapshotDiv"&gt; &lt;/div&gt;
+
+        &lt;script type="text/coffeescript"&gt;
+          canvas = $('#canvas')
+          offset = canvas.offset()
+          # this is the 'real/non-jquery' document.getElementByID:
+          canvasDoc = canvas[0]
+          context = canvasDoc.getContext '2d'
+
+          #
+          # canvas handling
+          #
+          button = null
+
+          # useful for debugging...
+          #
+          # usage: console.log dump(o)
+          # dump = (obj) -&gt;
+          #   str = ""
+          #   for own key, value of obj
+          #     str += "#{key} = #{obj[key]}\n"
+          #   str
+
+          $('#canvas').mousedown (e) -&gt;
+            button = e.button
+            x = e.pageX
+            y = e.pageY
+            x -= offset.left
+            y -= offset.top
+            context.beginPath()
+            context.moveTo x, y
+
+          $('#canvas').mouseup (e) -&gt;
+            button = null
+            context.closePath()
+
+          $('#canvas').mousemove (e) -&gt;
+            return unless (button?)
+            x = e.pageX
+            y = e.pageY
+            x -= offset.left
+            y -= offset.top
+            context.lineTo x, y
+            context.stroke()
+
+          #
+          # HTML button handling
+          #
+
+          # usage: logToMessage "((#{x}, #{y}))"
+          #
+          # needs &lt;div id="message"&gt; &lt;/div&gt; somewhere
+          #
+          # logToMessage = (message) -&gt;
+          #   $('#message').show().html message
+
+          $('#red').mousedown (e) -&gt;
+            context.strokeStyle = 'red'
+
+          $('#green').mousedown (e) -&gt;
+            context.strokeStyle = 'green'
+
+          $('#blue').mousedown (e) -&gt;
+            context.strokeStyle = 'blue'
+
+          $('#black').mousedown (e) -&gt;
+            context.strokeStyle = 'black'
+
+          $('#snapshot').mousedown (e) -&gt;
+            img = canvasDoc.toDataURL()
+            $('#snapshotDiv').show().html "&lt;img id='snapshotImg' src='#{img}'/&gt;"
+
+          $('#clear').mousedown (e) -&gt;
+            context.save()
+            # Use the identity matrix while clearing the canvas
+            context.setTransform 1, 0, 0, 1, 0, 0
+            context.clearRect 0, 0, context.canvas.width, context.canvas.height
+            # restore transform matrix
+            context.restore()
+            # clear any snapshot
+            $('#snapshotDiv').show().html '&amp;nbsp;'
+         &lt;/script&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</pre>
+          <p>And the 'beautiful' results, as shown in IE9:</p>
+          <p><img title="canvas" src="wp-content/uploads/2012/05/canvas.png" alt="" width="421" height="361"></p>
+          <p>It's actually slightly more beautiful in Safari, but one screenshot is quite enough.</p>
+          <p>Note the use of the data: URL.</p>
+          <p>I guess that this doesn't really show the power of coffeescript but it was fun to make, and adds another Scribble implementation to the JRuby versions already here.</p>
+        </div><!--/entry-content-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">A Tool For The WiFi Itinerants Among Us</h1>
+        <div class="entry-content">
+          <p>If you're the kind of person that travells the WiFi universe a fair bit, you'll probably appreciate <a href="http://www.mailutilities.com/ars/">Autoroute SMTP</a> as much as I do.</p>
+          <blockquote>
+            <p>Autoroute SMTP (ARS) is designed for automatic switching between SMTP servers depending on what network you are currently working in.</p>
+          </blockquote>
+          <p>The tool is tiny, unobtrusive and free, which are nice attributes.</p>
+          <p>Given that the maker, Emma Labs, seems to be all about "e-mail marketing professionals…our products allows you to create targeted mailing lists using essential data from communities and services required [sic] a membership." I can but
+          hope that it isn't siphoning all my sent mail off to somewhere undesirable!</p>
+          <p>I have never found any bad comments floating around out there…or any good ones, to be honest. <a href="http://www.nirsoft.net/utils/cports.html">CurrPorts</a> doesn't show any badness so for now, I'm keeping my head firmly stuck in the
+          sand…</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Tools</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">What The Flip Is Happening On My Network?</h1>
+        <div class="entry-content">
+          <p>A question I often find myself asking…and attempting to answer.</p>
+          <p>For Linux/OSX I use <a href="http://freecode.com/projects/iftop">iftop</a>. I just can <em>never</em> remember the name! Whenever anyone asks me the above question, I am always reduced to stammering and delaying while groping around in
+          my murky-at-the-best-of-times memory.</p>
+          <p>For Windows I use <a href="http://www.nirsoft.net/utils/cports.html">CurrPorts</a>. One of the many components comprising the excellent <a href="http://www.nirsoft.net/">Nirsoft Tools</a>.</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Tools</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">History</h1>
+        <div class="entry-content">
+          <p>Here is three generations of my family in one photo.</p>
+          <p><img src="wp-content/uploads/2012/03/Grandad.jpg" alt="" title="Grandad" width="568" height="514"></p>
+          <p>Left-right…my father: Charles Brown, my Grandfather: Robert Simmons and me: Robert Charles Brown. The dog's name was 'Patch.' For the life of me, I can't remember what we called The Rabbit (somehow sums up <a href=
+          "http://www.btinternet.com/~snapps/">the futility of life</a>!). The photo would have been taken around 1970 at the back of our house in <a href="http://en.wikipedia.org/wiki/Duston">Duston, Northampton, England</a>.</p>
+          <p>Which is just here:</p>
+          <p><iframe width="640" height="480" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src=
+          "http://maps.google.com.au/maps?gl=au&amp;ie=UTF8&amp;t=h&amp;ll=52.249853,-0.955605&amp;spn=0.000394,0.000858&amp;z=20&amp;output=embed"></iframe><br>
+          <small><a href="http://maps.google.com.au/maps?gl=au&amp;ie=UTF8&amp;t=h&amp;ll=52.249853,-0.955605&amp;spn=0.000394,0.000858&amp;z=20&amp;source=embed" style="color:#0000FF;text-align:left">View Larger Map</a></small></p>
+          <p>Not sure there is any other similar picture in existence, so I thought I'd give <a href="http://www.archive.org/web/web.php">The Wayback Machine</a> a chance to eventually preserve it for posterity.</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Retrospectives</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">More GroovyMag Verbosity</h1>
+        <div class="entry-content">
+          <p>Another article in <a href="http://www.groovymag.com/main.issues.description/id=42/">this month's (March 2012) GroovyMag</a>: "To Kill a Mocking Problem - Using Betamax to mock HTTP-based interactions."</p>
+          <p><img src="wp-content/uploads/2012/03/gm41_400.jpg" alt="" title="gm41_400" width="400" height="518"></p>
+          <p>Wherein I take <a href="http://freeside.co/betamax/">Rob Fletcher's very nice 'Betamax' tool</a> out for a spin along with friends <a href="http://gradle.org/">Gradle</a>, <a href="http://code.google.com/p/spock/">Spock</a> and <a href=
+          "http://www.gebish.org/">Geb</a>.</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Groovy, GroovyMag, Programming</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">JDBM</h1>
+        <div class="entry-content">
+          <p>A colleague recently came up to me with a problem: he had a trace file representing the history of several years' worth of <a href="http://en.wikipedia.org/wiki/Create,_read,_update_and_delete">CRUD</a> operations on many records.
+          Something resembling:</p>
+          <pre>
+1:create:hello
+123:create:xxx
+12345:create:hello
+123:update:uuu
+999:update:42
+123:delete
+1:update:xxx
+1:update:iuu
+12345:update:hello world
+1:delete
+</pre>
+          <p>The task at hand was to work out which records were active at the end of the trace and to determine the most up-to-date value each active record.</p>
+          <p>The expected result here is:</p>
+          <pre>
+Didn't find 999 to update. Creating new entry.
+Results:
+        12345 =&gt; hello world
+        999 =&gt; 42
+</pre>
+          <p>This instantly reminded me of a <a href="http://en.wikipedia.org/wiki/Concordancer">concordancing problem</a>.</p>
+          <p>The natural data structure for this is a Map. Thus we have the first potential solution for the problem:</p>
+          <pre>
+def m = [:]
+new File(/..\data.dat/).splitEachLine(':') { line -&gt;
+    def (id, op, data) = line
+    switch (op) {
+        case 'update':
+            if (!m.containsKey(id))
+                println "Didn't find ${id} to update. Creating new entry."
+        case 'create':
+            m.put(id, data)
+            break
+
+        case 'delete':
+            m.remove(id)
+            break
+    }
+}
+
+println "Results:"
+m.each { k,v -&gt;
+    println "\t${k} =&gt; ${v}"
+}
+</pre>
+          <p>This works nicely: it's clear and concise…all the things I like! Groovy makes it even nicer :-)</p>
+          <p>But (there's <em>always</em> a but…sadly) my colleague had <em>lots</em> of data to process. Too much to be realistically held in memory.</p>
+          <p>The tool I would normally reach for in this circumstance is a plain old database, but hey! this is the age of <a href="http://en.wikipedia.org/wiki/NoSQL">noSQL</a>.</p>
+          <p>Enter <a href="https://github.com/jankotek/JDBM3">JDBM3</a>:</p>
+          <blockquote>
+            <p>JDBM provides HashMap, TreeMap, HashSet, TreeSet and LinkedList backed up by disk storage. Now you can insert more than a billion records into collection without running out of memory. JDBM is probably the fastest pure Java
+            database.</p>
+          </blockquote>
+          <p>Ten minutes of hacking and version one had transformed into version two:</p>
+          <pre>
+import net.kotek.jdbm.*
+
+// uses JDBM3-alpha-2 from https://github.com/jankotek/JDBM3
+
+final path = /..\data/
+
+// start with non-existent database
+new File(path).eachFile { it.delete() }
+
+new DBMaker(path + /\ids/).build().with {  db -&gt;
+
+    db.createHashMap("ids").with { m -&gt;
+
+        new File(/..\data.dat/).splitEachLine(':') { line -&gt;
+            def (id, op, data) = line
+            switch (op) {
+                case 'update':
+                    if (!m.containsKey(id))
+                        println "Didn't find ${id} to update. Creating new entry."
+                case 'create':
+                    m.put(id, data)
+                    break
+
+                case 'delete':
+                    m.remove(id)
+                    break
+            }
+            db.commit()
+        }
+
+        m.each { k,v -&gt;
+            println "\t${k} =&gt; ${v}"
+        }
+    }
+
+    db.close()
+}
+</pre>
+          <p>Still nice, clear and concise…but now capable of dealing with a (few) billion records.</p>
+          <p>Even more to like!</p>
+          <p><em>Update</em>:<br>
+          It is now possible to simplify this further. After mentioning to the developer that:</p>
+          <blockquote>
+            <p>If there is one small thing I would like tidied up in the example code, it is this:</p>
+            <p>&gt; // start with non-existent database<br>
+            &gt; new File(path).eachFile { it.delete() }</p>
+            <p>Having to delete the database/files by hand, rather than just specifying a create-truncate mode of some sort 'feels' wrong.</p>
+          </blockquote>
+          <p>He responded within hours:</p>
+          <blockquote>
+            <p>…it is done now, check DBMaker.</p>
+          </blockquote>
+          <p>This means that one can now do:</p>
+          <pre>
+new DBMaker(path + /\ids/).build().deleteFilesAfterClose().with {  db -&gt;
+</pre>
+          <p>Open source <a href="http://www.urbandictionary.com/define.php?term=FTW">FTW</a>!</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Groovy, Programming</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Nokia with Windows Phone Training</h1>
+        <div class="entry-content">
+          <p>Just attended the Brisbane "Nokia with Windows Phone Training" event.</p>
+          <p>Thanks to Microsoft and Nokia for setting up this free two-day talkfest!</p>
+          <p>I got a good overview of the various new features and APIs comprising <a href="http://www.microsoft.com/windowsphone/en-au/default.aspx">Windows Phone</a>.</p>
+          <p>Thanks especially to the presenters Andy Wigley (<a href="http://appamundi.com/about/">http://appamundi.com/about/</a>) and Nick Randolph (<a href="http://nicksnettravels.builttoroam.com/">http://nicksnettravels.builttoroam.com/</a>).
+          They did a good job of showing the tools and APIs: got the right balance between diving deep and splashing around in the shallows.</p>
+          <p>I came away feeling quite upbeat.<br>
+          (…this could just be a reflection on how <a href=
+          "http://www.google.com.au/url?sa=t&amp;rct=j&amp;q=low%20down%20dirty%20%20mean&amp;source=web&amp;cd=3&amp;ved=0CDcQFjAC&amp;url=http%3A%2F%2Fwww.last.fm%2Fmusic%2FThe%2BAllman%2BBrothers%2BBand%2F_%2FLow%2BDown%2BDirty%2BMean&amp;ei=2vJRT_C1F8KSiAeGzfnXCw&amp;usg=AFQjCNEZxEc4QI6uJUy0jOizbaocB5obdg">
+          low-down dirty and mean</a> my current project is making me feel, but still…)</p>
+          <p>As Andy and Nick were speaking I was hacking (I think I was the <em>only</em> attendee nerdy enough to do so); keeping one ear/eye on the presentation and the other ranging between the program and the internet.</p>
+          <p>As a result, I would like to give you The Finger.</p>
+          <p><img title="TheFingerMontage" src="wp-content/uploads/2012/03/TheFingerMontage.jpg" alt="" width="702" height="643"></p>
+          <p>There's absolutely nothing special here, but it pleased me to be able to knock something together so easily (little things please little minds :-))</p>
+          <p>Starting from scratch, I worked/hacked out a fair bit:<br>
+          * the basic framework<br>
+          * standard pages, pivot pages<br>
+          * basic event handling<br>
+          * buttons and menus<br>
+          * animation with Expression Blend<br>
+          * icons, tiles<br>
+          * isolated storage<br>
+          * tombstoning<br>
+          * etc., etc.</p>
+          <p>Not too shabby!</p>
+          <p>Thanks to the wonders of the Internet and <a href="nuget.codeplex.com/">NuGet</a>, I was able to pick up the <a href="http://coding4fun.codeplex.com/">Coding4Fun</a> colour picker component. I also adopted the <a href=
+          "http://blog.spoongraphics.co.uk/freebies/free-cute-furry-monster-icons-for-mac-pc-and-web">Orange Monster</a> (a personal favourite) for the logo.</p>
+          <p>You can <a href='wp-content/uploads/2012/03/Finger.zip'>grab the VS solution</a> in all its raw, un-prettified glory!</p>
+          <p>The Finger follows an enduring Transentia tradition: I typically try to create a (David Flanagan) <a href="http://www.java2s.com/Code/Java/2D-Graphics-GUI/Scribble.htm">scribble</a>-style application in any new environment I come
+          across. On this site I already have <a href="wordpress/2009/04/26/java-groovy-javafx/">Java, Groovy, JavaFX</a> and JRuby versions. I have a mental image of a huntin' 'n fishin'-style trophy room with walls lined by scribble programs
+          mounted on shields…</p>
+          <p>I found WP7 substantially easier to program than the iPhone. Give me C# over Objective-C, Expression over Interface Builder and Visual Studio over XCode any day (it hurts me to say that but it's true, nevertheless). Microsoft have
+          always done good development environments/kits…</p>
+          <p>Now that the <a href=
+          "http://www.google.com.au/url?sa=t&amp;rct=j&amp;q=windws%208%20consumer%20release&amp;source=web&amp;cd=6&amp;ved=0CFkQFjAF&amp;url=http%3A%2F%2Fwindows.microsoft.com%2Fen-US%2Fwindows-8%2Fdownload&amp;ei=EvpRT_CHGoSYiAfMoezgCw&amp;usg=AFQjCNHQCTJpkiViq9cVVc9_ZEpENNZfhg">
+          Windows 8 Consumer Preview</a> has been released it is easy to see how Microsoft is trying to link the two platforms together. Both feature big bright tiles/buttons, a swipe-oriented interaction 'language' and a set of shared, cloudy
+          services, etc…. <a href="http://en.wikipedia.org/wiki/Welcome_Back_My_Friends_to_the_Show_That_Never_Ends..._Ladies_and_Gentlemen">Welcome back, my friends</a> to the Microsoft walled community.</p>
+          <p>Regardless of the technical or other merits of WP7, I predict a bright future: people are always looking for the Next New Thing and WP7 is different enough to be that Next New Thing. It may-just may-even become A Better Thing.</p>
+          <p>PS:<br>
+          Just came across <a href="http://electroblast.blogspot.com.au/">this blow-by-blow writeup</a> from a sister event in Melbourne.</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: C#, windows, windows phone, wp7</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">The Wheel Is Turning</h1>
+        <div class="entry-content">
+          <p>Perhaps?</p>
+          <p>Here's a great post that states the obvious: <a href="http://www.infoworld.com/d/data-center/homegrown-solutions-the-good-and-the-bad-181268">Homegrown solutions: The good and the bad</a>.</p>
+          <p>Gotta love an article that includes stuff like:</p>
+          <blockquote>
+            <p>"…nontechnical management gets the heebie-jeebies when presented with a plan that includes homegrown, self-supported solutions. Many executives would rather have a passel of slightly technical folks and vendor support than highly
+            skilled and highly paid technologists to keep the trains running on time. … you may be able to measure your savings in terms of the electrical bills and IT payroll, but the hidden costs can make those savings disappear. … When you need
+            to "make things happen," you simply can't - you get stuck in months of apathetic meetings and general buffoonery from every angle. That's not even touching the problems inherent with outsourcing help desk and general computing
+            tasks."</p>
+          </blockquote>
+          <p>I <em>wish</em> this didn't match my experiences so exactly, I really do!</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Rant</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="pagination">
+        <span class="next"><a href="DUMMY">Next »</a></span> <span class="previous"><a href="DUMMY">« Previous</a></span>
+      </div>
+    </div>
+  </div><!--#page-->
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script> 
+  <script src="js/site.js"></script>
+</body>
+</html>

@@ -1,0 +1,1564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <title>Transentia - transentia pty. ltd.; development, consulting, training at the leading-edge of technology</title>
+  <link rel="stylesheet" type="text/css" media="screen, print, handheld" href="wp-content/themes/transentia/css/site.css">
+</head>
+<body>
+  <div id="page">
+    <div id="header">
+      <p><a href="../index.htm"><img src="wp-content/uploads/widgets/transentia-logo-red-glow.gif" border="0"></a></p>
+      <p class="old-content">transentia's old content; click on the logo to return to the new content</p>
+      <p id="blog-description">transentia pty. ltd.; development, consulting, training at the leading-edge of technology</p>
+    </div><!-- #header -->
+    <div id="content">
+      <div class="pagination">
+        <span class="next"><a href="DUMMY">Next »</a></span> <span class="previous"><a href="DUMMY">« Previous</a></span>
+      </div>
+      <div class="post hentry">
+        <h1 class="entry-title">Getting Into (A) State With Java 8 Streams</h1>
+        <div class="entry-content">
+          <p>Hot on the heels of my earlier foray into Java 8's new shininess comes more playing.</p>
+          <p>The Oracle documentation <a href="http://docs.oracle.com/javase/8/docs/api/java/util/stream/package-summary.html#package.description">has this to say about state and streams</a>:</p>
+          <blockquote>
+            <p>Note also that attempting to access mutable state from behavioral parameters presents you with a bad choice with respect to safety and performance; if you do not synchronize access to that state, you have a data race and therefore
+            your code is broken, but if you do synchronize access to that state, you risk having contention undermine the parallelism you are seeking to benefit from. The best approach is to avoid stateful behavioral parameters to stream operations
+            entirely; there is usually a way to restructure the stream pipeline to avoid statefulness.</p>
+          </blockquote>
+          <p>All that accepted, nonetheless sometimes it <em>is</em> necessary for a stream operation to look around at the world. So the question naturally becomes: how?</p>
+          <p>Enter exhibit A. A toy application that, given a signal stream will determine it's phase: rising, level or falling.</p>
+          <pre>
+package jdk8;
+
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.DoubleStream;
+
+public class Phaser {
+    public static void main(String[] args) {
+        final int RESOLUTION = 20;
+        final int CYCLES = 2;
+
+        final AtomicReference&lt;Double&gt; history = new AtomicReference&lt;&gt;(0.0D);
+
+        // generate a few cycles of a nice sinusoidal signal
+        DoubleStream.iterate(0.0D, n -&gt; n + (2 * Math.PI) / RESOLUTION)
+                .limit(CYCLES * RESOLUTION)
+                .sequential()
+                .map(Math::sin)
+                .boxed()
+//                .map(d -&gt;
+//                                ((Function&lt;Double, SignalPair&gt;) next -&gt;
+//                                        new SignalPair(history.getAndSet(next), next)
+//                                ).apply(d)
+//
+                .map(d -&gt;
+                    new SignalPair(history.getAndSet(d), d)
+                )
+                .map(v -&gt; String.format("%f,%f,%d", v.getPrevious(), v.getCurrent(), v.getPhase()))
+                .forEachOrdered(System.out::println);
+    }
+}
+
+class SignalPair {
+    private final Double previous;
+    private final Double current;
+
+    public SignalPair(Double previous, Double current) {
+        this.previous = previous;
+        this.current = current;
+    }
+
+    public Double getCurrent() { return current; }
+
+    public Double getPrevious() { return previous; }
+
+    public int getPhase() {
+        return (int) Math.signum(current - previous);
+    }
+}
+</pre>
+          <p>Hipster-point earning features here include:</p>
+          <ul>
+            <li>Doublestream.iterate() presents an infinite generator for a sinusoidal double-valued signal with a specific resolution; it will be invoked a limited number of times (2 complete cycles in this case).</li>
+            <li>Processing a signal stream like this is inherently a sequential activity; hence .sequential()</li>
+            <li>It is easy to map a value x -&gt; SIN(x) or execute println(s) using <a href="http://docs.oracle.com/javase/tutorial/java/javaOO/methodreferences.html">method references</a>.
+            </li>
+            <li>It's also easy to map a SignalPair instance to a CSV-formatted String instance.</li>
+          </ul>
+          <p>The above are just small-denomination pieces of hipster currency, though. The real payoff can be seen in this drilldown:</p>
+          <pre>
+        final AtomicReference&lt;Double&gt; history = new AtomicReference&lt;&gt;(0.0D);
+
+        ...
+
+                        .map(d -&gt;
+                    new SignalPair(history.getAndSet(d), d)
+                )
+</pre>
+          <p>It's worth stating again that determining a signal's phase is inherently both sequential and differential in nature. To be correct, you MUST compare values <em>n</em> and <em>n-1</em> in the order that they arrived, not in some
+          parallel-friendly way.</p>
+          <p>The AtomicReference makes it possible to maintain state (a single Double instance, in this case) from one stream invocation/iteration to the next. The double indirection imposed by the use of AtomicReference is actually needed: map()
+          cannot simply update a reference to a Double but it can update the value stored in an instance to which it has access. A Map (or -old-school style-even an element of an array) would probably also work.</p>
+          <p>It's worth comparing the 'longhand' mapping code in comments with the shorter form. I originally wrote the former before realising that the latter was possible. The equivalence isn't made particularly clear in any documentation that I
+          have read, so for reference I kept the "new and shiny" version alongside the "new and even shinier" one.</p>
+          <p>Does it work? Yes. Here is an edited version of the output:</p>
+          <pre>
+0.000000,0.000000,0
+0.000000,0.309017,1
+0.309017,0.587785,1
+0.587785,0.809017,1
+0.809017,0.951057,1
+0.951057,1.000000,1
+1.000000,0.951057,-1
+0.951057,0.809017,-1
+0.809017,0.587785,-1
+0.587785,0.309017,-1
+...
+-1.000000,-0.951057,1
+...
+0.951057,1.000000,1
+1.000000,0.951057,-1
+...
+-0.951057,-1.000000,-1
+-1.000000,-0.951057,1
+...
+-0.587785,-0.309017,1
+</pre>
+          <p>On to Exhibit B. Another stateful algorithm: work out the area of a polygon, given the vertices of that polygon presented in sequential order.</p>
+          <pre>
+package jdk8;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+
+public class Area {
+    public static void main(String[] args) {
+
+        List&lt;Vertex&gt; polygon = new ArrayList&lt;Vertex&gt;() {{
+            add(new Vertex(0.0D, 0.0D));
+            add(new Vertex(0.0D, 2.0D));
+            add(new Vertex(2.0D, 2.0D));
+            add(new Vertex(2.0D, 0.0D));
+        }};
+
+        Vertex v0 = polygon.get(0);
+        polygon.add(v0);  // ensure closed polygon
+
+        AtomicInteger ai = new AtomicInteger(0);
+        double area = polygon.stream().limit(polygon.size() - 1).sequential()
+                .peek(System.out::println)
+                .mapToDouble(p -&gt; {
+                    Vertex nextV = polygon.get(ai.incrementAndGet());
+
+                    return (nextV.getX() - p.getX()) * (nextV.getY() + p.getY());
+                })
+                .sum() / 2;
+
+        System.out.printf("Area: %f\n", area);
+    }
+}
+
+class Vertex {
+    private final double x;
+    private final double y;
+
+    Vertex(double x, double y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    public double getX() { return x; }
+
+    public double getY() { return y; }
+
+    @Override
+    public String toString() {
+        return "Vertex{" +
+                "x=" + x +
+                ", y=" + y +
+                '}';
+    }
+}
+</pre>
+          <p>This is not so different, but has one new low-score hipster-point earning feature:</p>
+          <ul>
+            <li>.peek() is a useful 'debugging' tool.</li>
+          </ul>
+          <p>It is probably worth pointing out that the initialisation of the polygon ArrayList instance is just standard Java. It's not something that one often sees around but this feature has been a part of Java since anonymous inner classes and
+          <a href="http://docs.oracle.com/javase/tutorial/java/javaOO/initial.html">instance initialisers</a> were introduced in version 1.1.</p>
+          <p>I hear you asking "Does this do it's stuff?" Oh why do you doubt me so? Take a look:</p>
+          <pre>
+Vertex{x=0.0, y=0.0}
+Vertex{x=0.0, y=2.0}
+Vertex{x=2.0, y=2.0}
+Vertex{x=2.0, y=0.0}
+Area: 4.000000
+</pre>
+          <p>I feel obliged to include the disclaimer that all the above is not really anything that a true purveyor of Functional Goodness(™) would condone or be proud of. But what the heck, eh?! At least I'm not saying "<a href=
+          "http://blog.lahteenmaki.net/2013/04/java-streams-vs-c-linq-vs-java6.html">what's the point of it all?</a>", now am I?</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Java, java8, Programming</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">It's Java 8 Playtime!</h1>
+        <div class="entry-content">
+          <p>Today we are going to look at Java 8's shininess.</p>
+          <p>The task at hand is to implement a very simple, standalone HTTP server that would parse the query parameters from a GET request and return a trivial bit of JSON-formatted data.</p>
+          <p>A Java 8 "hello <em>name</em>" server, in other words.</p>
+          <p>I am also trying to see <del>how many new toys I can work into the project</del> <ins>how idiomatic I can make the solution</ins> so that I can get a 'feel' for the "New Java."</p>
+          <p>Without further ado:</p>
+          <pre>
+package jdk8;
+
+import com.sun.net.httpserver.Headers;
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpServer;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.InetSocketAddress;
+import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+public class Main {
+    public static void main(String[] args) throws IOException {
+        InetSocketAddress addr = new InetSocketAddress(8080);
+        HttpServer server = HttpServer.create(addr, 0);
+
+        server.createContext("/", (HttpExchange ex) -&gt; {
+            if ("GET".equalsIgnoreCase(ex.getRequestMethod())) {
+                Headers responseHeaders = ex.getResponseHeaders();
+                responseHeaders.set("Content-Type", "application/json");
+                ex.sendResponseHeaders(200, 0);
+
+                try (OutputStream responseBody = ex.getResponseBody()) {
+                    responseBody.write(generateResponse(extractParams("name", ex.getRequestURI().getQuery())).getBytes());
+                } catch (Exception e) {
+                    e.printStackTrace(System.err);
+                }
+            }
+        });
+        server.setExecutor(Executors.newCachedThreadPool());
+        server.start();
+        System.out.printf("Server created; listening on port %d\n", addr.getPort());
+    }
+
+    private static final String JOIN = " and ";
+    private static final String PFX = " ";
+    private static final String SFX = "!";
+    private static final String NOSTR = PFX + SFX;
+
+    private static String generateResponse(List&lt;String&gt; strings) {
+        String s = strings.stream()
+                .collect(Collectors.collectingAndThen(Collectors.joining(JOIN, PFX, SFX),
+                        (str) -&gt; NOSTR.equals(str) ? str.trim() : str));
+        return String.format("{greeting=\"hello%s\"}", s);
+    }
+
+    private static List&lt;String&gt; extractParams(String key, String s) {
+        // ("" + s): protect against s being null
+        return Stream.of(("" + s).split("&amp;"))
+                .map(line -&gt; line.split("="))
+                .filter(pair -&gt; pair.length == 2)
+                .filter(entry -&gt; entry[0].equalsIgnoreCase(key))
+                .map(entry -&gt; entry[1])
+                .collect(Collectors.toList());
+    }
+}
+</pre>
+          <p>There are a fair number of juicy tidbits here, including:</p>
+          <ul>
+            <li>The classes in com.sun.net.httpserver. Perfectly legal to use and not contained within one of the restricted APIs, contrary to popular belief. Available since Java 1.6.</li>
+            <li>Try-with-resources. A Java 7 feature, but still little known/used it seems.</li>
+            <li>Executors. An apparently little-known Java 1.5 facility.</li>
+            <li>Lambdas all over the place.</li>
+            <li>Streams and collectors all over the place.</li>
+          </ul>
+          <p>It seems to me that the <a href="http://docs.oracle.com/javase/8/docs/api/java/util/stream/Collectors.html">java.util.stream.Collectors</a> class is worthy of further study. There's a lot of niceness here, including
+          <em>Collectors.collectingAndThen()</em>, <em>Collectors.joining()</em> and <em>Collectors.toList()</em>. I'm pretty sure that the better I get to know this Class, the less I will end reinventing stuff.</p>
+          <p>Does all this new and shiny stuff work? Well…the proof, as they say, is in the pudding:</p>
+          <p><img src="wp-content/uploads/2014/05/curl.png" alt="" title="curl" width="677" height="121"></p>
+          <p>So there you go, a small HTTP server full of Functional Goodness(™). What more can a trendy nerd want?</p>
+          <p>I guess that IF I was prepared to sacrifice any 'coolness' that I may have just accumulated, I would ask something like "But is all that Functional Goodness giving me anything over and above what I would normally get from Java?" And IF
+          I was going to do that, I would be talking about code looking like:</p>
+          <pre>
+    private static List&lt;String&gt; extractParams(String key, String s) {
+        List&lt;String&gt; result = new ArrayList&lt;&gt;();
+        // ("" + s): protect against s being null
+        for (String param: ("" + s).split("&amp;")) {
+            String pair[] = param.split("=");
+            if ((pair.length == 2) &amp;& key.equalsIgnoreCase(pair[0]))
+              result.add(pair[1]);
+        }
+        return result;
+    }
+</pre>
+          <p>But I don't want' to sacrifice all that accrued 'coolness', so I certainly won't put forward the hypothetical question I just hypothetically posed…. In any case, I know all about the <em>potential</em> for parallelism implied by that
+          Functional Goodness, so it would have been silly of me to even <em>think</em> that question, wouldn't it ;-)</p>
+          <p>By <em>potential</em>, I mean (of course):</p>
+          <pre>
+    private static List&lt;String&gt; extractParams(String key, String s) {
+        // ("" + s): protect against s being null
+        return Stream.of(("" + s).split("&amp;"))
+                <em>.parallel()</em>
+                .map(line -&gt; line.split("="))
+                .filter(pair -&gt; pair.length == 2)
+                .filter(entry -&gt; entry[0].equalsIgnoreCase(key))
+                .map(entry -&gt; entry[1])
+                .collect(Collectors.toList());
+    }
+</pre>
+          <p>I've not really seen an example like this "out there", so I hope that the world is now a better place for having this code snippet in it!</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Java, java8, Programming</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Using Spock Configuration in Grails</h1>
+        <div class="entry-content">
+          <p>My Suite of Grails functional tests for one of my customers applications have been growing and I have recently added a few tests covering reports that are fairly…ponderous.</p>
+          <p>So I have decided to tag some of my tests as Slow, so that I can skip them at will, while still running the bulk of my tests.</p>
+          <p>Segregating one's tests is a fairly common thing to want and do, with a common solution; see for instance <a href="http://blog.proxerd.pl/article/segregating-spock-specifications-with-spockconfig-groovy-and-annotations">this blog
+          post</a>.</p>
+          <p>The Grails environment introduces a little wrinkle into the above scheme: as <a href="https://code.google.com/p/spock/issues/detail?id=184">Spock issue 184</a> so eloquently puts it: "When compiling a SpockConfig file in a Grails
+          project, classes in the project code are not visible. Classes from the project dependencies can be used."</p>
+          <p>Issue 184 provides a workaround: use a (class-level in my case, but not absolutely required) annotation that is supplied from a dependency but which has no other effect on the system under test, thus:</p>
+          <pre>
+import javax.annotation.Resource as Slow
+
+@Slow
+class MySpec extends GebReportingSpec {
+    ...
+</pre>
+          <p>It's worth noting how Groovy's "import … as …" helps keep the code a bit clearer and should make it easier to munge around if/when issue 184 is fixed.</p>
+          <p>The remaining issue: how to define whether or not to run Slow tests. Easily done…create the file test/functional/SpockConfig.groovy as shown:</p>
+          <pre>
+import javax.annotation.Resource as Slow
+
+runner {
+    if (System.properties['ios.tests.functional.exclude.Slow']) {
+        exclude {
+            annotation Slow
+        }
+    }
+}
+</pre>
+          <p>Since I am a happy <a href="http://www.jetbrains.com/idea/">IntelliJ</a> user, I set up a run configuration that looks like:</p>
+          <p><img src="wp-content/uploads/2014/04/SpockSlow.png" alt="" title="SpockSlow" width="533" height="430"></p>
+          <p>Of course, this same command line can be used away from Intellij if needed.</p>
+          <p>I'm now a happy and more productive tester.</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Geb, Grails, Groovy, Programming, Spock</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Artifactory and Grails</h1>
+        <div class="entry-content">
+          <p>A while back, a colleague asked me how <a href="http://www.jfrog.com/home/v_artifactory_opensource_overview">Artifactory</a> and <a href="http://grails.org">Grails</a> work together.</p>
+          <p>I couldn't point him to a really good resource on the 'web then and I didn't have a ready answer for him. But that was then, this is now. <a href="http://en.wikipedia.org/wiki/Tommy_Cooper">Let me tell you a story.</a></p>
+          <p>There are three parts.</p>
+          <p><a href="http://en.wikipedia.org/wiki/Listen_with_Mother">Are you sitting comfortably? Then I'll begin…</a></p>
+          <h3>Artifactory As A Repository Proxy</h3>
+          <p>Artifactory offers a <a href="http://www.jfrog.com/confluence/display/RTF/Configuring+Repositories#ConfiguringRepositories-TheDefaultVirtualRepository">Default Virtual Repository</a>. It is simplest to just use this.</p>
+          <p>Repositories are configured in BuildConfig.groovy.</p>
+          <p>All you need is:</p>
+          <pre>
+repositories {
+    inherits true // Whether to inherit repository definitions from plugins
+
+    mavenRepo id:"Artifactory" , url:"http://localhost:8081/artifactory/repo"
+}
+</pre>
+          <p>No other repositories need to be established here; Artifactory can deal with everything.</p>
+          <p>If you need special repositories , tell artifactory to <a href="http://www.jfrog.com/confluence/display/RTF/Configuring+Repositories">add them to its list of Remote Repositories</a>, rather than adding a new repository directly to
+          Grails.</p>
+          <p>To borrow a slogan: "<a href="http://en.wikipedia.org/wiki/List_of_Apple_Inc._slogans">it just works</a>."</p>
+          <h3>Publishing To Artifactory</h3>
+          <p>You cannot publish to Artifactory's Default Virtual Repository. Nor should you need or want to. It is easy and appropriate to <a href="https://www.jfrog.com/confluence/display/RTF/Local+Repositories">create a new Local Repository for
+          your work</a>. Like this:</p>
+          <p><img src="wp-content/uploads/2014/04/ArtifactoryLocalRepo.png" alt="" title="ArtifactoryLocalRepo" width="523" height="222"></p>
+          <p>Once you have your destination repository up and running, go back to BuildConfig.groovy and turn on the magic. Add the following to the top level (ie not nested within anything else) of the file:</p>
+          <pre>
+grails.project.repos.default = "AT"
+
+grails {
+    project {
+        repos {
+            AT {
+                url = "http://localhost:8081/artifactory/AT/"
+                username = "bob"
+                password = "MyUnguessablePassword"
+            }
+        }
+    }
+}
+
+grails.project.groupId = "org.bob"
+</pre>
+          <p>All pretty clear, I hope.</p>
+          <p>It is not strictly necessary to define a default repository in BuildConfig.groovy; one can be specified on the command line (as ‐‐repository=AT) but this can make life a little easier…and who doesn't want an easier life, eh?</p>
+          <p>Since we are working in a Maven-oriented world, it's fairly important to set the groupId. The associated artifactId and version information is picked up from the application.properties file.</p>
+          <p>Grails' <a href="http://grails.org/plugin/release">release</a> plugin does the heavy lifting, so add it to BuildConfig.groovy, thus:</p>
+          <pre>
+plugins {
+    ...
+
+    build ":release:3.0.1"
+}
+</pre>
+          <p>All that's needed now is to run:</p>
+          <pre>
+grails maven-deploy
+</pre>
+          <p>And Bob's your uncle, as they say.</p>
+          <p>The end result:</p>
+          <p><img src="wp-content/uploads/2014/04/Artifactory.png" alt="" title="Artifactory" width="638" height="389"></p>
+          <h3>Adding Manifest Data</h3>
+          <p>It's extremely common to want/need to put extra information into an application's META-INF/MANIFEST.MF file.</p>
+          <p>In a Grails application, this is most easily done by hooking into the build lifecycle in scripts/_Events.groovy.</p>
+          <p>I've Jenkins) or from a buildNumber.properties file, if such exists:</p>
+          <pre>
+import static grails.build.logging.GrailsConsole.instance as CONSOLE
+
+eventCompileStart = { kind -&gt;
+    grailsSettings.config['BUILD_NUMBER'] = determineBuildNumber()
+}
+
+// NB: Possible race condition here, but ignore for now
+//     Assumes BUILD_NUMBER is an integer
+private determineBuildNumber() {
+    def buildNumber = 0
+    def bnp = System.getenv('BUILD_NUMBER')
+    if (bnp)
+        buildNumber = val(bnp)
+    else
+        try {
+            def bnPropsFile = new File(grailsSettings.baseDir, "buildNumber.properties")
+            if (bnPropsFile.isFile() &amp;& bnPropsFile.canRead()) {
+                def properties = new Properties()
+                bnPropsFile.withReader { r -&gt;
+                    properties.load(r)
+                }
+                buildNumber = val(properties.getProperty('BUILD_NUMBER'))
+                if (bnPropsFile.canWrite()) {
+                    properties.setProperty('BUILD_NUMBER', "${buildNumber + 1}")
+                    bnPropsFile.withWriter { w -&gt;
+                        properties.store(w, null)
+                    }
+                }
+            }
+        }
+        catch (e) {
+            CONSOLE.warn("Exception when reading/writing 'buildNumber.properties'; assuming '0': " + e.getMessage())
+
+            buildNumber = 0
+        }
+
+    CONSOLE.info("Using BUILD_NUMBER=${buildNumber}")
+
+    buildNumber
+}
+
+private val(String bn) {
+    try {
+        Integer.parseInt(bn)
+    } catch (ignore) {
+        CONSOLE.warn("Could not parse presented BUILD_NUMBER '${bn}' as Integer; assuming '0'")
+        0
+    }
+}
+
+eventCreateWarEnd = { warName, stagingDir -&gt;
+    ant.jar(destfile: warName, update: true) {
+        manifest {
+            attribute(name: 'BUILD_NUMBER', value: grailsSettings.config['BUILD_NUMBER'])
+            attribute(name: 'Built-By', value: System.properties['user.name'])
+            attribute(name: 'Build-Host', value: InetAddress.getLocalHost().getHostName())
+        }
+    }
+}
+</pre>
+          <p>Refer back to the previous picture to see the results of all this.</p>
+          <p>As an aside, I really appreciate Groovy's easy integration of Ant. I probably could have used Ant to better effect in determineBuildNumber() but that may be the subject of a later story.</p>
+          <p>Now you have it, Grails and Artifactory, sitting in a tree…not quite K.I.S.S.I.N.G., but getting together pretty closely.</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Grails, Groovy, Programming</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Grabbing A Library That Is Not In Maven</h1>
+        <div class="entry-content">
+          <p>Some commercial vendors (I'm thinking of ones whose names start with 'O' in particular) haven't quite got the concept of making their developer community's lives easy and don't publish their library files into any maven-accessible
+          repository.</p>
+          <p>Putting aside for the moment the thought that perhaps such vendors might not deserve to have their software used, it may well happen that life (or your <a href="http://dilbert.wikia.com/wiki/Pointy-Haired_Boss">PHB</a>) conspires
+          against you and forces you to dance with the devil.</p>
+          <p>As a <a href="http://docs.groovy-lang.org/latest/html/Grape">Groovy Grapes</a> user (you are, aren't you?), what are you to do?</p>
+          <p>You could start/populate your own <a href="http://www.jfrog.com/home/v_artifactory_opensource_overview">Artifactory</a> repository but that may be considered to be inappropriate for the userbase or might be too heavyweight for a
+          quick-and-dirty script. What to do..what to do?</p>
+          <p>The answer lies <a href="http://stackoverflow.com/questions/6003609/make-groovy-script-grab-a-jar-off-the-filesystem-like-grape">in this stackoverflow question/answer session</a>. I am recreating it here, for posterity…who knows, the
+          link may go away one day…such is the way of the 'net.</p>
+          <p>This is the sort of script fragment that I am considering:</p>
+          <pre>
+@Grapes([
+    @Grab('com.oracle:ojdbc6:11.2.0.3.0'),
+    @GrabConfig(systemClassLoader=true, initContextClassLoader=true)
+])
+import groovy.sql.Sql
+
+def oracleSql = Sql.newInstance("jdbc:oracle:thin:@192.168.1.64:1521:xe", "user", "password",
+                      "oracle.jdbc.OracleDriver")
+...
+</pre>
+          <p>The trick is to manually create a grapes-compatible repository entry, mimicking what the grapes system would normally do.</p>
+          <p>Two things are required:</p>
+          <ul>
+            <li>a compatible filesystem structure within your .groovy/grapes directory</li>
+            <li>an <a href="https://ant.apache.org/ivy/">ivy</a> config descriptor
+            </li>
+          </ul>
+          <p>The first looks like this:<br>
+          <img src="wp-content/uploads/2014/02/Groovy-Grapes-Tree.png" alt="" title="Groovy-Grapes-Tree" width="403" height="218"></p>
+          <p>The second looks like this:</p>
+          <pre>
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;ivy-module version="2.0"&gt;
+        &lt;info organisation="com.oracle"
+                module="ojdbc6"
+                revision="11.2.0.3.0"
+                status="release"
+                publication="20140216144306"
+                default="true"
+        /&gt;
+        &lt;configurations&gt;
+                &lt;conf name="default" visibility="public"/&gt;
+        &lt;/configurations&gt;
+        &lt;publications&gt;
+                &lt;artifact name="ojdbc6" type="jar" ext="jar" conf="default"/&gt;
+        &lt;/publications&gt;
+&lt;/ivy-module&gt;
+</pre>
+          <p>Once this is all <a href="http://english.stackexchange.com/questions/66211/whats-the-meaning-of-squared-away-here">squared away</a> Grape will Grab the specified jar quite happily.</p>
+          <p>Simple, when you know how.</p>
+          <p>Took me quite a while to track down though!</p>
+          <p>I extend my thanks to all those who contributed on stackoverflow.</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Groovy, Programming</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">New & Improved: Getting A Hibernate SessionFactory</h1>
+        <div class="entry-content">
+          <p>Hibernate 4.3.0 changes and deprecates a few things. One of these 'things' that changes is probably the very first 'thing' that a hibernate application developer needs to do: obtain a SessionFactory.</p>
+          <p>Without further ado, what follows is the shiny new way of doing this:</p>
+          <pre>
+package main;
+
+import org.hibernate.HibernateException;
+import org.hibernate.SessionFactory;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.hibernate.cfg.Configuration;
+
+public class HibernateUtil {
+        private static SessionFactory configureSessionFactory()
+                        throws HibernateException {
+                Configuration configuration = new Configuration().configure();
+                StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder()
+                                .applySettings(configuration.getProperties());
+                return configuration.buildSessionFactory(builder.build());
+        }
+
+        public static SessionFactory getSessionFactory() {
+                return configureSessionFactory();
+        }
+}
+</pre>
+          <p>My thanks go to Krishna Srinivasan over at <a href="http://www.javabeat.net/session-factory-hibernate-4/">JavaBeat's Java Dev Zone</a> who provided the correct mechanism, even while the mighty participants at StackOverflow couldn't
+          agree as to how this should be done.</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Hibernate, Programming, Tools</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Keeping Up With The Joneses</h1>
+        <div class="entry-content">
+          <p>Everybody's doing it, so it must be good…'it' in this case being Google's AngularJS, the "Superheroic JavaScript <a href="https://code.google.com/p/dark-matter-data/wiki/MVWOverview">MVW</a> Framework."</p>
+          <p>Who am I to disagree?</p>
+          <p>To keep up with <a href="http://en.wikipedia.org/wiki/Stand_on_Zanzibar">Mr & Mrs Everywhere</a> I set myself the task of making a simple AJAX/REST-based cascading select form. And to ensure that my coolness factor doesn't shoot way off
+          the scale, I also set myself the task of building the REST componentry with JEE7, rather than <a href="http://blog.modulus.io/nodejs-and-express-create-rest-api">something</a> <a href=
+          "http://grails.org/doc/latest/guide/webServices.html#REST">else</a>/<a href="http://dropwizard.codahale.com/">better</a>.</p>
+          <p>Why this task? Because I found very little true guidance on how to do it "out there." There exists a fair bit of "oh, it's easy" handwaving but no concrete example. Time to rectify that.</p>
+          <p>Along the way, I'll throw in a few toys like <a href="http://www.miredot.com/">MireDot</a> and <a href="http://www.mongodb.org/">MongoDB</a>. Because I can, that's why!</p>
+          <p>To get us started, here's the form in all it's Bootstrap-py glory:</p>
+          <p><img src="wp-content/uploads/2013/12/CascadingSelects.png" alt="" title="CascadingSelects" width="640"></p>
+          <p>It's easy to see what is going on, I hope: the form uses AJAX (via AngularJS' data binding and services facilities) to hit a REST resource that serves up a list of Australia's capital cities, and bind that list to the origin select form
+          control. Use the selection from that control to go back to the resource to get another list of destination cities (I'm assuming that our shipping company is pretty small and doesn't cover all of Australia). Once one has the origin and
+          destination, and a given quantity of 'things' to be shipped, hit a second REST resource to do the calculation.</p>
+          <p>I guess that I'm not <em>really</em> that cool, because I'm going to take a traditional 3-tier view of the application: Database, Server-side and Client-side. Works for me, anyway.</p>
+          <h3>Database Tier</h3>
+          <p>MongoDB is the storage engine for this application.</p>
+          <p>The database is a collection of documents like:</p>
+          <pre>
+[
+{_id: 1, "origin": "Brisbane", "destination": [
+    {"city": "Brisbane", "cost": 0.00},
+    {"city": "Hobart", "cost":88.88 },
+    {"city": "Canberra", "cost":22.22},
+    {"city": "Darwin", "cost":44.44},
+    {"city": "Sydney", "cost":111.11}
+    ]},
+{_id: 2, "origin": "Hobart", "destination": [
+    {"city": "Brisbane", "cost": 88.88},
+    ...
+    ]},
+...
+]
+</pre>
+          <p>In one of those nasty old-fashioned uncool SQL databases, one would model this sort of master/detail structure and implicit 'contains' constraint with a one-to-many relationship. I could do that in MongoDB as well, but MongoDB makes it
+          possible to use an embedded sub-model, as shown above. This is somewhat cleaner and might well be more performant for certain queries.</p>
+          <p>For this example, I desire to load the data into a collection called 'cities' in a database called 'cities.'</p>
+          <p>MongoDB naturally supplies a loader tool to make this happen:</p>
+          <pre>
+mongoimport.exe --host localhost --port 30000 --db cities --collection cities --file "cities.mongo" --jsonArray
+</pre>
+          <p>For completeness' sake, here's a few queries and useful miscellaneous commands that can be issued to the database:</p>
+          <pre>
+&gt; <strong>use cities</strong>
+switched to db cities
+
+&gt; <strong>show databases</strong>
+cats    0.203125GB
+cities  0.203125GB
+local   0.078125GB
+
+&gt; <strong>show collections</strong>
+cities
+system.indexes
+&gt;
+
+&gt; <strong>var x = db.cities.findOne({"destination.city": "Sydney"}, {"destination.$": 1})</strong>
+&gt; <strong>x</strong>
+{
+        "_id" : ObjectId("52a908d43780d39488948586"),
+        "destination" : [
+                {
+                        "city" : "Sydney",
+                        "cost" : 111.11
+                }
+        ]
+}
+&gt; <strong>x.destination[0].cost</strong>
+111.11
+&gt;
+
+&gt; <strong>db.cities.find().forEach(printjson)</strong>
+{
+        "_id" : 1,
+        "origin" : "Brisbane",
+        "destination" : [
+                {
+                        "city" : "Brisbane",
+                        "cost" : 0
+                },
+                {
+                        "city" : "Hobart",
+                        "cost" : 88.88
+                },
+                {
+                        "city" : "Canberra",
+                        "cost" : 22.22
+                },
+                {
+                        "city" : "Darwin",
+                        "cost" : 44.44
+                },
+                {
+                        "city" : "Sydney",
+                        "cost" : 111.11
+                }
+        ]
+}
+...
+&gt;
+
+&gt; <strong>db.getCollection('cities').drop();</strong>
+true
+&gt;
+</pre>
+          <p>At this trivial level of use, MongoDB is pretty straightforward.</p>
+          <p>The coding is, as expected, low-level.</p>
+          <pre>
+// <a href="https://raw.github.com/jvmisc22/mongo-jndi/master/src/main/java/com/mongodb/MongoCitiesDatabase.java">https://raw.github.com/jvmisc22/mongo-jndi/master/src/main/java/com/mongodb/MongoCitiesDatabase.java</a>
+package mongodb;
+
+import com.mongodb.*;
+import rest.InvalidDataException;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.logging.Logger;
+
+public class MongoCitiesDatabase {
+
+    public static Set&lt;String&gt; findAllCities() throws InvalidDataException {
+        DBObject fields = new BasicDBObject();
+        fields.put("origin", 1);
+        fields.put("_id", 0);
+        DBObject project = new BasicDBObject("$project", fields);
+
+        final Set&lt;String&gt; ss = new HashSet&lt;&gt;();
+        MongoClient mc = MongoSingleton.INSTANCE.getMongoClient();
+        DB db = null;
+        try {
+            db = mc.getDB("cities");
+
+            // <a href="http://docs.mongodb.org/ecosystem/drivers/java-concurrency/">http://docs.mongodb.org/ecosystem/drivers/java-concurrency/</a>
+            db.requestStart();
+            db.requestEnsureConnection();
+
+            DBCollection cities = db.getCollection("cities");
+
+            AggregationOutput output = cities.aggregate(project);
+            if (!output.getCommandResult().ok())
+                throw new InvalidDataException("No Cities found.");
+
+            for (DBObject r : output.results()) {
+                String s = (String) r.get("origin");
+                ss.add(s);
+            }
+        } finally {
+            try {
+                db.requestDone();
+            } catch (NullPointerException e) {
+                /* SQUELCH!*/
+            }
+        }
+        return ss;
+    }
+
+    public static Set&lt;String&gt; findDestinationsBySource(String source) throws InvalidDataException {
+        DBObject match = new BasicDBObject("$match", new BasicDBObject("origin", source));
+
+        DBObject fields = new BasicDBObject();
+        fields.put("destination.city", 1);
+        fields.put("_id", 0);
+        DBObject project = new BasicDBObject("$project", fields);
+
+        final Set&lt;String&gt; destinations = new HashSet&lt;&gt;();
+
+        MongoClient mc = MongoSingleton.INSTANCE.getMongoClient();
+        DB db = null;
+        try {
+            db = mc.getDB("cities");
+
+            db.requestStart();
+            db.requestEnsureConnection();
+
+            DBCollection cities = db.getCollection("cities");
+
+            AggregationOutput output = cities.aggregate(match, project);
+            if (!output.getCommandResult().ok())
+                throw new InvalidDataException(String.format("/{source: %1$s}/destinations. Source not found.", source));
+
+            for (DBObject r : output.results()) {
+                BasicDBList destination = (BasicDBList) r.get("destination");
+                for (Object d : destination) {
+                    BasicDBObject o = (BasicDBObject) d;
+                    String c = (String) o.get("city");
+                    destinations.add(c);
+                }
+            }
+        } finally {
+            try {
+                db.requestDone();
+            } catch (NullPointerException e) {
+                /* SQUELCH!*/
+            }
+        }
+        return destinations;
+    }
+
+    // <a href="http://www.mkyong.com/mongodb/java-mongodb-query-document/">http://www.mkyong.com/mongodb/java-mongodb-query-document/</a>
+    public static BigDecimal findCostBySourceAndDestination(String source, String dest) throws InvalidDataException {
+        DBObject unwind = new BasicDBObject("$unwind", "$destination");
+
+        BasicDBObject andQuery = new BasicDBObject();
+        List&lt;basicdbobject&gt; obj = new ArrayList&lt;&gt;();
+        obj.add(new BasicDBObject("origin", source));
+        obj.add(new BasicDBObject("destination.city", dest));
+        andQuery.put("$and", obj);
+
+        DBObject match = new BasicDBObject("$match", andQuery);
+
+        DBObject fields = new BasicDBObject();
+        fields.put("destination.cost", 1);
+        fields.put("_id", 0);
+        DBObject project = new BasicDBObject("$project", fields);
+
+        MongoClient mc = MongoSingleton.INSTANCE.getMongoClient();
+        DB db = null;
+        try {
+            db = mc.getDB("cities");
+
+            db.requestStart();
+            db.requestEnsureConnection();
+
+            DBCollection cities = db.getCollection("cities");
+
+            AggregationOutput output = cities.aggregate(unwind, match, project);
+            if (!output.getCommandResult().ok())
+                throw new InvalidDataException(String.format("{source: %1$s} or {destination: %2$s} not found.", source, dest));
+
+            for (DBObject r : output.results()) {
+                BasicDBObject destination = (BasicDBObject) r.get("destination");
+                return new BigDecimal((Double) destination.get("cost")).setScale(2, RoundingMode.CEILING);
+            }
+        } finally {
+            try {
+                db.requestDone();
+            } catch (NullPointerException e) {
+                /* SQUELCH!*/
+            }
+        }
+
+        // should not happen!
+        throw new InvalidDataException(String.format("Given ({source: %1$s}, {destination: %2$s}); no data.", source, dest));
+    }
+
+    // Joshua Bloch's Java 1.5+ Singleton Pattern
+    // <a href=
+"http://books.google.com.au/books?id=ka2VUBqHiWkC&amp;pg=PA17&amp;lpg=PA17&amp;dq=singleton+bloch&amp;source=bl&amp;ots=yYKmLgv1R-&amp;sig=fRzDz11i4NnvspHOlooCHimjh2g&amp;hl=en&amp;sa=X&amp;ei=xvOwUsLVAuSOiAeVyYHoAQ&amp;ved=0CDgQ6AEwAg#v=onepage&amp;q=singleton%20bloch&amp;f=false">http://books.google.com.au/books?id=ka2VUBqHiWkC&amp;pg=PA17&amp;lpg=PA17&amp;dq=singleton+bloch&amp;source=bl&amp;ots=yYKmLgv1R-&amp;sig=fRzDz11i4NnvspHOlooCHimjh2g&amp;hl=en&amp;sa=X&amp;ei=xvOwUsLVAuSOiAeVyYHoAQ&amp;ved=0CDgQ6AEwAg#v=onepage&amp;q=singleton%20bloch&amp;f=false</a>
+    private enum MongoSingleton {
+        INSTANCE;
+        private static final Logger log = Logger.getLogger(MongoSingleton.class.getName());
+        private MongoClient mongoClient = null;
+
+        MongoClient getMongoClient() {
+            MongoClientOptions options = MongoClientOptions.builder()
+                    .connectionsPerHost(25)
+                    .build();
+
+            if (mongoClient == null)
+                try {
+                    ServerAddress serverAddress = new ServerAddress("localhost", 30000);
+                    mongoClient = new MongoClient(serverAddress, options);
+                } catch (UnknownHostException uhe) {
+                    String msg = "getMongoClient(); configuration issue. UnknownHostException: " + uhe.getMessage();
+                    log.severe(msg);
+                    throw new RuntimeException(msg, uhe);
+                }
+
+            return mongoClient;
+        }
+    }
+}
+</pre>
+          <p>This is quite reminiscent of straight JDBC coding. Assembly language coding for the database. Shudder. If I had to do this again, I would have gone for something like <a href="http://jongo.org/">Jongo</a> to make life somewhat
+          easier.</p>
+          <p>There are a few points of interest here:</p>
+          <ul>
+            <li>The use of the db.request{Start,EnsureConnection,End} sequence to ensure that the MongoClient Java driver handles concurrency in a manner more compatible with server-side requirements than normal.</li>
+            <li>The use of <a href="http://docs.mongodb.org/manual/reference/operator/aggregation/unwind/">$unwind</a>, which "Peels off the elements of an array individually, and returns a stream of documents." and allows for search within the
+            embedded 'destinations' array.
+            </li>
+            <li>(A standard Java trick) the use of Enum to provide a singleton. Yes, I do know that "<a href="http://c2.com/cgi/wiki?SingletonsAreEvil">singletons are evil</a>." In this case I just couldn't be bothered messing with Wildfly's innards
+            to get an objectfactory asserted into the JNDI, etc. <em>You</em> should! See <a href="https://github.com/juanlmelo/mongo-java-driver/blob/master/src/main/com/mongodb/jndi/MongoJndiObjectFactoryBean.java">here</a> and <a href=
+            "https://docs.jboss.org/author/display/WFLY8/JNDI+Reference">here</a>.
+            </li>
+            <li>RuntimeException-based exception handling makes life easy (and see later)</li>
+          </ul>
+          <h3>Server Tier</h3>
+          <p>I am 'exploring' JAX-RS in JEE7. No doubt as the result of a long exposure, JBoss seems to be somewhere down "in my DNA" and thus I will eschew Glassfish 4 (which now has a <a href=
+          "http://www.zdnet.com/oracle-abandons-commercial-support-for-glassfish-jee-server-7000022945/">decidedly uncertain future</a>, anyway) and go with <a href="http://wildfly.org/">Wildfly</a> 8 CR1.</p>
+          <p>I'm aiming to build a couple of REST resources. Nothing too fancy, level 2 of the <a href="http://martinfowler.com/articles/richardsonMaturityModel.html">Richardson REST Maturity Model</a> seems a happy place to be. The resources will
+          be: Cities and Shipping. No prizes for guessing what each is for, so without further ado…</p>
+          <h5>Cities</h5>
+          <pre>
+package rest;
+
+import mongodb.MongoCitiesDatabase;
+
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.logging.Logger;
+
+@Path("/cities")
+@Produces(MediaType.APPLICATION_JSON)
+public class Cities {
+
+    private static final Logger log = Logger.getLogger(Cities.class.getName());
+
+    @GET
+    public Map&lt;String, Set&lt;String&gt;&gt; getDefault() {
+        log.info("getDefault()");
+
+        return sources();
+    }
+
+    @GET
+    @Path("/sources")
+    public Map&lt;String, Set&lt;String&gt;&gt; sources() {
+        log.info("sources()");
+
+        return new HashMap&lt;String, Set&lt;String&gt;&gt;() {{
+            put("sources", MongoCitiesDatabase.findAllCities());
+        }};
+    }
+
+    @GET
+    @Path("/{source}/destinations")
+    public Map&lt;String, Set&lt;String&gt;&gt; destination(@PathParam("source") final String source) {
+        log.info(String.format("/{source: %1$s}/destinations", source));
+
+        return new HashMap&lt;String, Set&lt;String&gt;&gt;() {{
+            put("destinations", MongoCitiesDatabase.findDestinationsBySource(source));
+        }};
+    }
+}
+</pre>
+          <p>A pretty straightforward, read-only resource.</p>
+          <p>While not strictly necessary, I tend to ensure that my JSON objects all encapsulated as a single entry in a top-level container map. Maybe it's the XML-induced OCD surfacing through my psyche ("thou shalt have but a single root to a
+          document") but <em>I</em> believe that this makes life a teeny-weeny bit nicer. Most examples over at <a href="http://www.json.org/">JSON.org</a> are like this, too. There's another reason to encapsulate a response like this: it is
+          ridiculous that JEE7 (via JAX-RS) makes it less-than-straightforward (ie: hard) to just return plain old List&lt;String&gt;. Don't believe me? <a href="http://www.lmgtfy.com/?q=jax-rs+List%3CString%3E">LMGTFY</a>.</p>
+          <h5>Shipping</h5>
+          <p>Shipping is an "<a href="http://en.wikipedia.org/wiki/Resource-oriented_architecture">Algorithmic Resource</a>." To a degree, referring to this as a resource represents REST doublethink. To us oldies, it is clearly a plain old
+          service.</p>
+          <pre>
+package rest;
+
+import mongodb.MongoCitiesDatabase;
+
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.logging.Logger;
+
+/**
+ * An "Algorithmic REST Resource" that determines the cost of shipping items around the capital cities of Australia.
+ *
+ * @servicetag Cities
+ *
+ * @author Bob
+ */
+
+@Path("/shipping")
+public class Shipping {
+
+    private static final Logger log = Logger.getLogger(Shipping.class.getName());
+
+    /**
+     * Determines the cost of shipping items around the capital cities of Australia.
+     *
+     * @param  origin Where to ship from
+     * @param destination Where to ship to
+     * @param quantity how many to ship
+     * @return The cost of shipping items
+     * @throws CityNotFoundException leading to a 404 return status.
+     * @statuscode 404 If any of the origin or destination parameters can't be found.
+     */
+    @Produces(MediaType.APPLICATION_JSON)
+    @GET
+    @Path("/calculate")
+    public Map&lt;String, Map&lt;String, BigDecimal&gt;&gt; calculate(@QueryParam("origin") String origin, @QueryParam("destination") String destination,
+                                                          @DefaultValue("1") @QueryParam("quantity") Integer quantity) {
+        log.info(String.format("calculate():: Origin: %1$s; Destination: %2$s; Quantity: %3$d", origin, destination, quantity));
+
+        BigDecimal costPer = MongoCitiesDatabase.findCostBySourceAndDestination(origin, destination);
+        final BigDecimal res = costPer.multiply(BigDecimal.valueOf(quantity).setScale(2, RoundingMode.CEILING));
+
+        final Map&lt;String , BigDecimal&gt; resMap = new HashMap&lt;String, BigDecimal&gt;() {{
+            put("result", res);
+        }};
+
+        return new HashMap&lt;String, Map&lt;String, BigDecimal&gt;&gt;() {{
+            put("calculate", resMap);
+        }};
+    }
+}
+</pre>
+          <p>There's a bit of Javadoc here, which I'll talk about later on, but otherwise, there's nothing special to see here.</p>
+          <h5>Exception Handling</h5>
+          <p>If you refer back to the MongoCitiesDatabase class, you will note that application exceptions are signalled via the InvalidDataException class.</p>
+          <p>You should also note that none of the client code explicitly handles such exceptions (a benefit of making the class a descendent of the unchecked RuntimeException, rather than plain old-and some would say evil-compiler-checked
+          Exception). This is possible because we use an "exception mapper" to ensure that exceptions are handled and mutated into acceptable REST behaviour:</p>
+          <pre>
+package rest;
+
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.ext.ExceptionMapper;
+import javax.ws.rs.ext.Provider;
+
+@Provider
+public class InvalidDataMapper implements ExceptionMapper&lt;InvalidDataException&gt; {
+
+    @Override
+    public Response toResponse(InvalidDataException ide) {
+        return Response.status(Response.Status.BAD_REQUEST).entity(ide.getMessage()).type(MediaType.TEXT_PLAIN_TYPE).build();
+
+    }
+}
+</pre>
+          <p>This mapper ensures that a BAD_REQUEST (404) response is issued to the client, bundled with a plain-text message.</p>
+          <h5>Application</h5>
+          <p>JAX-RS likes to know how all the various resources are linked together. The simplest way to let it know what's what is to provide an Application class. For this project, the requisite class is:</p>
+          <pre>
+package rest;
+
+import javax.ws.rs.ApplicationPath;
+import javax.ws.rs.core.Application;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
+@ApplicationPath("/rest")
+@SuppressWarnings("unused")
+public class ApplicationConfig extends Application {
+    public Set&lt;Class&lt;?&gt;&gt; getClasses() {
+        return new HashSet&lt;Class&lt;?&gt;&gt;(Arrays.asList(Shipping.class, Cities.class, InvalidDataMapper.class));
+    }
+}
+</pre>
+          <h5>JSON Vulnerability Protection</h5>
+          <p>AngularJS has a built-in mechanism for consuming JSON-formatted data that is protected against misuse. The servlet filter given below shows how to create protected data suitable for AngularJS' use by prepending all JSON data with a
+          syntactically illegally fragment of JSON. While angularJS knows to automatically remove this standard 'nasty' prefix from any data given to it, the assumption is that a "baddie's" application won't know that it has to do this and so will
+          encounter JSON parse errors, rendering the protected data inaccessible. Google (they use a <a href="http://stackoverflow.com/questions/2669690/why-does-google-prepend-while1-to-their-json-responses">slightly different/nastier
+          approach</a>), Facebook and many other big sites do this sort of thing, so it must be A Good Thing to do, right…</p>
+          <pre>
+package rest;
+
+import javax.servlet.*;
+import javax.servlet.annotation.WebFilter;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletResponseWrapper;
+import javax.ws.rs.core.MediaType;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
+@WebFilter(filterName = "AngularJSJSONVulnerabilityProtectionFilter",
+        urlPatterns = {"/rest/*"})
+public class AngularJSJSONVulnerabilityProtectionFilter implements Filter {
+
+    // JSON Vulnerability protection in angular
+    // see: <a href="http://docs.angularjs.org/api/ng.$http">http://docs.angularjs.org/api/ng.$http</a>
+    private static final String AngularJSJSONVulnerabilityProtectionString = ")]}',\n";
+
+    @Override
+    public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
+
+        HttpServletResponse response = (HttpServletResponse) res;
+
+        StringResponseWrapper responseWrapper = new StringResponseWrapper(response);
+
+        chain.doFilter(req, responseWrapper);
+
+        String content = responseWrapper.toString();
+
+        // turn on AngularJS' JSON vulnerability protection feature
+        // ignore mapped exceptions and anything else not 'Kosher'
+        if (MediaType.APPLICATION_JSON.equals(responseWrapper.getHeader("Content-Type")))
+            content = String.format("%1$s%2$s", AngularJSJSONVulnerabilityProtectionString, content);
+
+        byte[] bytes = content.getBytes();
+
+        response.setContentLength(bytes.length);
+        response.getOutputStream().write(bytes);
+    }
+
+    @Override
+    public void init(FilterConfig config) throws ServletException {
+    }
+
+    @Override
+    public void destroy() {
+    }
+
+    // <a href=
+"http://stackoverflow.com/questions/1302072/how-can-i-get-the-http-status-code-out-of-a-servletresponse-in-a-servletfilter/1302165#1302165">http://stackoverflow.com/questions/1302072/how-can-i-get-the-http-status-code-out-of-a-servletresponse-in-a-servletfilter/1302165#1302165</a>
+    private class StringResponseWrapper
+            extends HttpServletResponseWrapper {
+
+        private StringWriter writer;
+
+        public StringResponseWrapper(HttpServletResponse response) {
+            super(response);
+            writer = new StringWriter();
+        }
+
+        @Override
+        public PrintWriter getWriter() {
+            return new PrintWriter(writer);
+        }
+
+        @Override
+        public ServletOutputStream getOutputStream() {
+            return new StringOutputStream(writer);
+        }
+
+        @Override
+        public String toString() {
+            return writer.toString();
+        }
+    }
+
+    private class StringOutputStream extends ServletOutputStream {
+        private StringWriter stringWriter;
+
+        public StringOutputStream(StringWriter stringWriter) {
+            this.stringWriter = stringWriter;
+        }
+
+        public void write(int c) {
+            stringWriter.write(c);
+        }
+
+        public boolean isReady() {
+            return true;
+        }
+
+        public void setWriteListener(WriteListener writeListener) {
+        }
+    }
+}
+</pre>
+          <p>This is all much more cumbersome than I would like to see. Sadly, JEE7 continues to be a rather verbose beastie.</p>
+          <h3>Client Side Tier</h3>
+          <p>This is a simple AngularJS application. Rather than build from scratch, I am using <a href="https://github.com/angular/angular-seed">Angular Seed</a>.</p>
+          <p>I am also using Twitter <a href="http://getbootstrap.com/">bootstrap</a> to give me some basic prettiness. I'm not using any of Bootstrap's Javascript-based componentry. It is apparently too much to expect these two big lumps of
+          Javascript to play well together. There are a couple of projects aiming to "reimplement" the missing components: <a href="http://angular-ui.github.io/bootstrap/">this</a> and <a href="http://mgcrea.github.io/angular-strap/">this</a>. Both
+          are quite low fidelity attempts and so neither are truly Bootstrap. This may or may not matter to you and rather than rant about how imperfect the world is, I'll just swallow my bile and just get on with life…</p>
+          <p>There are four basic Points Of Interest, so let's take a look.</p>
+          <h5>app.js</h5>
+          <p>This is where angular creates routes, assigns controllers and does the rest of its housekeeping. For this app, it is fairly simple:</p>
+          <pre>
+'use strict';
+
+// Declare app level module which depends on filters, and services
+angular.module('cascadeSelects', [
+  'ngRoute',
+  'cascadeSelects.filters',
+  'cascadeSelects.services',
+  'cascadeSelects.directives',
+  'cascadeSelects.controllers'
+]).
+config(['$routeProvider', '$httpProvider', function($routeProvider, $httpProvider) {
+  $routeProvider.when('/', {templateUrl: 'partials/cascadeSelectsPartial.html', controller: 'CascadeSelectsController'});
+  $routeProvider.otherwise({redirectTo: '/'});
+}]);
+</pre>
+          <p>I am following the angular-seed convention of using a template along with views/partials for content even though for this application there is only 1 view. So sue me, I am too lazy to hack anything more specific!</p>
+          <h5>HTML</h5>
+          <p>Leaving aside the very basics of AngularJS, as embodied in the template index.html file, it is worth taking a quick look at the file 'partials/cascadeSelectsPartial.html.'</p>
+          <p>This embodies an HTML form, with added AngularJS goodness:</p>
+          <pre>
+&lt;form class="form-horizontal" role="form"&gt;
+    &lt;fieldset&gt;
+        &lt;legend&gt;Calculator:&lt;/legend&gt;
+
+        &lt;div class="form-group"&gt;
+            &lt;label for="originSelect" class="col-sm-2 control-label"&gt;Origin&lt;/label&gt;
+
+            &lt;div class="col-sm-6"&gt;
+                &lt;select id="originSelect" class="form-control" ng-model="cities.chosen"
+                        ng-options="src for src in cities.sources"&gt;
+                &lt;/select&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;div class="form-group"&gt;
+            &lt;label for="destinationSelect" class="col-sm-2 control-label"&gt;Destination&lt;/label&gt;
+
+            &lt;div class="col-sm-6"&gt;
+                &lt;select id="destinationSelect" class="form-control" ng-model="destinations.chosen"
+                        ng-options="dest for dest in destinations.destinations"&gt;
+                &lt;/select&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;div class="form-group"&gt;
+            &lt;label for="quantityInput" class="col-sm-2 control-label"&gt;Quantity&lt;/label&gt;
+
+            &lt;div class="col-sm-6"&gt;
+                &lt;input type="number" name="input" id="quantityInput" ng-model="shipping.quantity" min="1" required&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;div class="form-group"&gt;
+            &lt;label for="shippingButton" class="col-sm-2 control-label"&gt; &lt;/label&gt;
+
+            &lt;div class="col-sm-6"&gt;
+                &lt;button id="shippingButton" ng-click="shipping.calculateShipping()" class="btn1"&gt;Calculate&lt;/button&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;div class="form-group"&gt;
+            &lt;label for="shippingButton" class="col-sm-2 control-label"&gt; &lt;/label&gt;
+
+            &lt;div class="col-sm-8" ng-if="shipping.calculateShippingResponse" ng-animate="'example'"&gt;
+                {{shipping.quantity}} item(s), shipping from {{cities.chosen}} to {{destinations.chosen}}:
+                ${{shipping.calculateShippingResponse}}
+            &lt;/div&gt;
+            &lt;div class="col-sm-8" ng-if="error" ng-animate="'example'"&gt;
+                {{error}}
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/fieldset&gt;
+&lt;/form&gt;
+</pre>
+          <p>The salient points:</p>
+          <ul>
+            <li>The two select controls show AngularJS data binding to collections originating from REST. The first collection is 'cities.sources' and the second cascades from the chosen city ('cities.chosen') into 'destinations.destinations.'</li>
+            <li>The 'Calculate' button shows binding to the 'shipping.calculateShipping' function in the controller.</li>
+            <li>There exist two conditionally rendered response divs that show how binding to various elements can drive the page content model.</li>
+          </ul>
+          <h5>controllers.js</h5>
+          <p>The embodyment of the application flow.</p>
+          <pre>
+'use strict';
+
+/* Controllers */
+
+angular.module('cascadeSelects.controllers', []).
+    controller('CascadeSelectsController', ['$scope', 'Cities', function($scope, Cities) {
+
+        $scope.error = undefined;
+
+        // TODO: something better needed here
+        function error(r) {
+            $scope.error = "Error: " + r.status + ". Message: " + r.data;
+        }
+
+        // Instantiate an object to store your scope data in (Best Practices)
+        // <a href="http://coder1.com/articles/consuming-rest-services-angularjs">http://coder1.com/articles/consuming-rest-services-angularjs</a>
+        $scope.cities = {
+            sources: null,
+            chosen: null
+        };
+        $scope.destinations = {
+            destinations: null,
+            chosen: null
+        };
+        $scope.shipping = {
+            calculateShipping: function() {
+                Cities.calculate.get({origin: $scope.cities.chosen, destination: $scope.destinations.chosen,
+                                      quantity: $scope.shipping.quantity}, function(response) {
+                    $scope.shipping.calculateShippingResponse = response.calculate.result;
+                }, function(httpResponse) {
+                    console.log(error(httpResponse));
+                })
+            },
+            calculateShippingResponse: undefined,
+            quantity: 1
+        };
+
+        Cities.cities.query(function(response) {
+            $scope.cities.sources = response.sources;
+            $scope.cities.chosen = $scope.cities.sources[0]
+        }, function(httpResponse) {
+            console.log(error(httpResponse));
+        });
+
+        $scope.$watch("[shipping.quantity, destinations.chosen, cities.chosen]", function(newValue, oldValue, scope) {
+            $scope.shipping.calculateShippingResponse = undefined;
+            $scope.error = undefined;
+        }, true);
+
+        $scope.$watch("cities.chosen", function(newValue, oldValue, scope) {
+            if (newValue === null)
+                return;
+            Cities.destinations.query({source: newValue}, function(response) {
+                    $scope.destinations.destinations = response.destinations;
+                    $scope.destinations.chosen = $scope.destinations.destinations[0]
+                }, function(httpResponse) {
+                    console.log(error(httpResponse));
+                }
+            )
+        }, true);
+    }]);
+</pre>
+          <p>Notable points:</p>
+          <ul>
+            <li>Nothing is bound directly to $scope; everything is handled using a "poor man's namespace" mechanism, instead. This is easier to read and also less likely to suffer conflict with other parts in a large application.</li>
+            <li>Note how $watch allows for cascading the selects.</li>
+            <li>Note that 'cities.chosen' is watched more than once. This allows a slightly more structured approach to having multiple tasks operate in response to a single stimulus.</li>
+            <li>Where the HTML defines data binding to various elements, the controller is the entity that populates $scope with these necessary elements.</li>
+            <li>There is a little, <em>very</em> simple, error handling in play here.</li>
+          </ul>
+          <p>As a structural nicety, the controller calls on a related service to do the REST heavy lifting.</p>
+          <h5>services.js</h5>
+          <p>The service uses AngularJS' $resource service to handle the low-level details of driving HTTP and interacting with a restful resource.</p>
+          <pre>
+'use strict';
+
+/* Services */
+
+angular.module('cascadeSelects.services', ['ngResource']).
+    factory("Cities", function($resource){
+
+        var context = '/web_war';
+        return {
+            cities: $resource(context + '/rest/cities', {}, {
+                query: {method: 'GET', params: {}, isArray: false}
+            }),
+            destinations: $resource(context + '/rest/cities/:source/destinations', {}, {
+                query: {method: 'GET', params: {source: '@source'}, isArray: false}
+            }),
+            calculate: $resource(context + '/rest/shipping/calculate', {}, {
+                get: {method: 'GET', params: {origin: '@origin', destination: '@destination', quantity: '@quantity'}, isArray: false}
+            })
+        };
+    })
+    .value('version', '1.0');
+</pre>
+          <p>Noteworthy here are:</p>
+          <ul>
+            <li>The application's '/web_war' context is hard coded. <em>Yuk!</em> Bad, bad Bob! It <em>is</em> possible to <a href="http://stackoverflow.com/questions/17022285/whats-the-better-way-to-identify-the-context-path-in-angular-js">get it
+            from incoming request</a> but I didn't bother for this application. Put it down to laziness, again.
+            </li>
+            <li>The use of $resource for REST interactions.</li>
+            <li>This service handles <a href="http://stackoverflow.com/questions/17160771/angularjs-a-service-that-serves-multiple-resource-urls-data-sources">multiple URLs</a>. This is a nice feature that's not really documented anywhere
+            'official', as far as I can see.
+            </li>
+            <li>The convention whereby the URL definition ':var' is fulfilled using the parameter '@var'. Something else not actually documented as far as I could see, so thank you <a href="http://stackoverflow.com/">stackoverflow</a>.
+            </li>
+          </ul>
+          <p>So there you are: a working application showing how to do REST-driven cascading selects using AngularJS. Hopefully in the future, the various search engines will be able to point any needy developer this way.</p>
+          <h3>Toy Time</h3>
+          <p>But wait! There's more!</p>
+          <p>Given that there is no schema equivalent for JSON/REST, the need for good documentation is paramount. Given, too, that devs (including yours truly) are dreadful at writing doco, there is a need for a good toy to help us document our
+          beautiful APIs.</p>
+          <p>"<a href="http://www.miredot.com/">MireDot</a> is a REST API documentation generator for Java that generates beautiful interactive documentation with minimal configuration effort."</p>
+          <p>How does MireDot go for this application? Like this:</p>
+          <p><img src="wp-content/uploads/2013/12/Miredot.png" alt="" title="Miredot" width="886" height="758"></p>
+          <p>Refer back to the Shipping resource. You can see how Miredot reads the Javadoc comments and incorporates them into the generated doco. Miredoc also supplies a few helpful Javadoc annotations (@servicetag/@statuscode) and also some
+          'real' annotations to guide the generation process. Miredot also has its own set of configuration options, and this can alter what is generated as well.</p>
+          <p>Not too shabby!</p>
+          <p>I'm not sure I like the abstract way that the JSON payload is shown in <em>this</em> case but it is tweakable and it's early days for the product.</p>
+          <p>I found Miredot easy to get and setup and when I corresponded with the developers (sending a bug report and a few opinions), they were courteous and responsive. What's not to like!</p>
+          <p>There's a free and a paid version. I played with the free version. Check it out!<br>
+          (NB: I'm not affiliated in any way.)</p>
+          <p>You can <a href='wp-content/uploads/2013/12/AngularCascadingSelectREST.zip'>download the IntelliJ project</a> (sans Miredot configuration, please note), should you so desire.</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Java, Javascript, Programming, REST, Tools</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Kill A Process With A Specific Command Line From The Command-Line In Windows</h1>
+        <div class="entry-content">
+          <p>You learn something new every day!</p>
+          <p>After a bit of wrestling with windows' tasklist and taskkill tools, I finally took to the fabulous interweb and came up with <a href=
+          "http://superuser.com/questions/52159/kill-a-process-with-a-specific-command-line-from-command-line">this</a>, viz:</p>
+          <pre>
+wmic Path win32_process Where "Caption Like '%java.exe%' AND CommandLine Like '%groovy.home%'" Call Terminate
+</pre>
+          <p>I knew about WMIC, but I didn't appreciate how versatile it actually was.</p>
+          <p>I do now!</p>
+          <p>PS: I also appreciate the PowerShell version so I guess that makes <em>two</em> things I have learned today.</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Tools</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Enterprise & Media Storage In The Cloud</h1>
+        <div class="entry-content">
+          <p>Amazon is really going all out to win the "cloud wars."</p>
+          <p>Witness:</p>
+          <p><img src="wp-content/uploads/2013/11/AmazonEMS-201x300.jpg" alt="" title="AmazonEMS" width="201" height="300"></p>
+          <p>Long may the wars continue…I get to attend free events like the above.</p>
+          <p>Thanks to Amazon for putting on another informative event.</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Cloud, Tools</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Playing</h1>
+        <div class="entry-content">
+          <p><em>Update:</em><br>
+          No sooner had I posted this than the excellent Tim Yates ( 
+          <script type="text/javascript">
+
+
+                        // obfuscate this stuff...
+                        var w = 'tim' + '.yates';
+                        var a = 'gmail';
+                        var b = 'com';
+                        var s = w + '@' + a + '.' + b;
+                        document.write(s)
+          </script> ) contacted me to show me how a <em>true master</em> does things, viz:</p>
+          <blockquote>
+            <p>Another Groovy option might be to mark the `Statement` class with `@groovy.transform.Canonical` and then do:</p>
+            <pre>
+text.split( /&lt;(\d+)&gt;/ )
+    .collect { it.split( ',' ) }
+    .findAll { it.size() == 9 }
+    .collect { new Statement( *it ) }
+    .each { println it.dump() }
+</pre>
+          </blockquote>
+          <p>Beautiful! I love this solution! Tim's work is always informative.</p>
+          <p>I admit that each time I wrote the 'if' statements I said to myself "there simply <em>has</em> to be a better way!" Trouble is, I couldn't see through to that better way. I doff my cap to Tim for teaching me.</p>
+          <p>Similarly munging the other examples here is Left As An Exercise For The Reader (I'm too lazy, in other words).</p>
+          <p>And now, back to the original post…</p>
+          <p><a href="http://grails.1312388.n4.nabble.com/Help-to-persist-in-grails-domain-td4650559.html">This post on the Grails user list</a> got me thinking. So I thought and then I played, and played…and played.</p>
+          <p>Below are Groovy, Ruby, Haskell and Scala versions of the same program.</p>
+          <p><em>Groovy Version</em></p>
+          <pre>
+class Statement {
+  String item1
+  String item2
+  String item3
+  String item4
+  String item5
+  String item6
+  String item7
+  String item8
+  String item9
+}
+
+def text ='&lt;1&gt;TCODE&lt;2&gt;14044,20110331,0,GBP,0,14044,20110331,52,TT&lt;3&gt;14044,20110331,0,GBP,0,14044,20110331,401,MM&lt;4&gt;14044,20110331,0,GBP,0,14044,20110331,403,MM&lt;5&gt;14044,20110331,0,GBP,0,14044,20110331,701,SW&lt;6&gt;14044,20110331,0,GBP,0,14044,20110331,701,SW&lt;7&gt;14044,20110331,0,GBP,0,14044,20110331,701,SW&lt;8&gt;14044,20110331,0,GBP,0,14044,20110331,701,SW'
+
+def matcher = text =~ /&lt;(\d+)&gt;([^&lt;]*)/
+matcher.each { it, csv = it[2] -&gt;
+  def split = csv.split(',', -1)
+
+  if (split.size() == 9) {
+    def itemMap = split.inject([:]) { map, o -&gt; map &lt;&lt; [("item${map.size() + 1}".toString()): o] }
+
+    def s = new Statement(itemMap)
+
+    // do 'something' with the new Statement
+    println s.dump()
+    }
+}
+</pre>
+          <p>And the result:</p>
+          <pre>
+&lt;Statement@1a260305 item1=14044 item2=20110331 item3=0 item4=GBP item5=0 item6=14044 item7=20110331 item8=52 item9=TT&gt;
+&lt;Statement@62e7f06c item1=14044 item2=20110331 item3=0 item4=GBP item5=0 item6=14044 item7=20110331 item8=401 item9=MM&gt;
+&lt;Statement@6959752e item1=14044 item2=20110331 item3=0 item4=GBP item5=0 item6=14044 item7=20110331 item8=403 item9=MM&gt;
+&lt;Statement@701c550a item1=14044 item2=20110331 item3=0 item4=GBP item5=0 item6=14044 item7=20110331 item8=701 item9=SW&gt;
+&lt;Statement@54133d06 item1=14044 item2=20110331 item3=0 item4=GBP item5=0 item6=14044 item7=20110331 item8=701 item9=SW&gt;
+&lt;Statement@3b0b8009 item1=14044 item2=20110331 item3=0 item4=GBP item5=0 item6=14044 item7=20110331 item8=701 item9=SW&gt;
+&lt;Statement@7002ed27 item1=14044 item2=20110331 item3=0 item4=GBP item5=0 item6=14044 item7=20110331 item8=701 item9=SW&gt;
+</pre>
+          <p><em>Ruby Version</em></p>
+          <pre>
+class Statement &lt; Struct.new(:item1, :item2, :item3, :item4, :item5, :item6, :item7, :item8, :item9)
+end
+
+text = '&lt;1&gt;TCODE&lt;2&gt;14044,20110331,0,GBP,0,14044,20110331,52,TT&lt;3&gt;14044,20110331,0,GBP,0,14044,20110331,401,MM&lt;4&gt;14044,20110331,0,GBP,0,14044,20110331,403,MM&lt;5&gt;14044,20110331,0,GBP,0,14044,20110331,701,SW&lt;6&gt;14044,20110331,0,GBP,0,14044,20110331,701,SW&lt;7&gt;14044,20110331,0,GBP,0,14044,20110331,701,SW&lt;8&gt;14044,20110331,0,GBP,0,14044,20110331,701,SW'
+
+matches = text.enum_for(:scan, /&lt;(\d+)&gt;([^&lt;]*)/).map do
+  Regexp.last_match
+end
+matches.each do |it, csv = (it[2])|
+  split = csv.split(',')
+
+  if split.size == 9
+    itemHash = split.inject({}) do |h, o|
+      k = "item#{h.size + 1}"
+      h[k] = o
+      h
+    end
+
+    s = Statement.new(itemHash)
+
+    # do 'something' with the new Statement
+    puts s.to_s
+  end
+end
+</pre>
+          <p><em>Scala Version</em></p>
+          <pre>
+import scala.util.matching.Regex.MatchIterator
+
+case class Statement(item1: String, item2: String, item3: String,
+                     item4: String, item5: String, item6: String,
+                     item7: String, item8: String, item9: String)
+
+object ScalaSplit {
+  private val TEXT = "&lt;1&gt;TCODE&lt;2&gt;14044,20110331,0,GBP,0,14044,20110331,52,TT&lt;3&gt;14044,20110331,0,GBP,0,14044,20110331,401,MM&lt;4&gt;14044,20110331,0,GBP,0,14044,20110331,403,MM&lt;5&gt;14044,20110331,0,GBP,0,14044,20110331,701,SW&lt;6&gt;14044,20110331,0,GBP,0,14044,20110331,701,SW&lt;7&gt;14044,20110331,0,GBP,0,14044,20110331,701,SW&lt;8&gt;14044,20110331,0,GBP,0,14044,20110331,701,SW"
+  private val PAT = """&lt;[^&lt;&gt;]+&gt;([^&lt;]*)""".r
+
+  private def stripTag(s: String): String = s.dropWhile(_ != '&gt;').drop(1)
+
+  def main(args: Array[String]) {
+
+    val matches: MatchIterator = PAT findAllIn TEXT
+    matches foreach { m =&gt;
+        val csv: Array[String] = stripTag(m).split(',')
+        if (csv.length == 9) {
+          val s: Statement = Statement(csv(0), csv(1), csv(2), csv(3), csv(4), csv(5), csv(6), csv(7), csv(8))
+
+          // do 'something' with the new Statement
+          println(s)
+        }
+    }
+  }
+}
+</pre>
+          <p>I couldn't find any way to spread parameters to arguments, so this is a bit long-winded.</p>
+          <p><em>Haskell Version</em></p>
+          <pre>
+import Text.Regex
+import Text.Regex.Posix
+import Data.Char
+import Data.List
+import Data.Maybe
+import Control.Monad
+
+data Something = Something { item1 :: String,
+                             item2 :: String,
+                             item3 :: String,
+                             item4 :: String,
+                             item5 :: String,
+                             item6 :: String,
+                             item7 :: String,
+                             item8 :: String,
+                             item9 :: String
+                             } deriving Show
+
+stripTag s = fromJust $ stripPrefix "&gt;" $ dropWhile (/= '&gt;') s
+
+eachMatch m = do
+    let csv = stripTag m
+    let matches = splitRegex (mkRegex ",") csv
+    when ((length matches) == 9) $ do
+        let st = Something { item1 = matches!!0, item2 = matches!!1, item3 = matches!!2,
+                             item4 = matches!!3, item5 = matches!!4, item6 = matches!!5,
+                             item7 = matches!!6, item8 = matches!!7, item9 = matches!!8
+                             }
+        putStrLn $ show st
+
+main = do
+    let text = "&lt;1&gt;TCODE&lt;2&gt;14044,20110331,0,GBP,0,14044,20110331,52,TT&lt;3&gt;14044,20110331,0,GBP,0,14044,20110331,401,MM&lt;4&gt;14044,20110331,0,GBP,0,14044,20110331,403,MM&lt;5&gt;14044,20110331,0,GBP,0,14044,20110331,701,SW&lt;6&gt;14044,20110331,0,GBP,0,14044,20110331,701,SW&lt;7&gt;14044,20110331,0,GBP,0,14044,20110331,701,SW&lt;8&gt;14044,20110331,0,GBP,0,14044,20110331,701,SW"
+    let pat = "&lt;[^&lt;&gt;]+&gt;([^&lt;]*)"
+    let matches = getAllTextMatches (text =~ pat :: AllTextMatches [] String)
+    mapM_ eachMatch matches
+</pre>
+          <p>It's interesting that all the versions look pretty much the same. There exist two possible reasons, as far as I can see. Either (1) since the problem is the same, the solution will pretty much be the same, or (2) if all you have is a
+          hammer, everything looks like a nail.</p>
+          <p>Still, a fun activity that kept me occupied!</p>
+          <p>Am I cool yet?</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Groovy, Haskell, Programming, Ruby, Scala</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="pagination">
+        <span class="next"><a href="DUMMY">Next »</a></span> <span class="previous"><a href="DUMMY">« Previous</a></span>
+      </div>
+    </div>
+  </div><!--#page-->
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script> 
+  <script src="js/site.js"></script>
+</body>
+</html>

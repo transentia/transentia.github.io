@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <title>Transentia - transentia pty. ltd.; development, consulting, training at the leading-edge of technology</title>
+  <link rel="stylesheet" type="text/css" media="screen, print, handheld" href="wp-content/themes/transentia/css/site.css">
+</head>
+<body>
+  <div id="page">
+    <div id="header">
+      <p><a href="../index.htm"><img src="wp-content/uploads/widgets/transentia-logo-red-glow.gif" border="0"></a></p>
+      <p class="old-content">transentia's old content; click on the logo to return to the new content</p>
+      <p id="blog-description">transentia pty. ltd.; development, consulting, training at the leading-edge of technology</p>
+    </div><!-- #header -->
+    <div id="content">
+      <div class="pagination">
+        <span class="next"><a href="DUMMY">Next »</a></span> <span class="previous"><a href="DUMMY">« Previous</a></span>
+      </div>
+      <div class="post hentry">
+        <h1 class="entry-title">Better Than A Bottle Of Wine</h1>
+        <div class="entry-content">
+          <p>Another look back.</p>
+          <p>Here is probably the best speaker's gift I have ever received:</p>
+          <p><img src="wp-content/uploads/2009/03/14032009005.jpg"> <img src="wp-content/uploads/2009/03/14032009006.jpg"></p>
+          <p>Usually, one gets bottles of wine, or pens or T-shirts. This gift is actually useful!</p>
+          <p>The conference was "InCite the Future, 2001" (I <em>think</em>…might have been the 2000 conference), organised by Software Engineering Australia (Queensland).</p>
+          <p>The organisation is now defunct (a victim of government myopia combined with petty jealousies and infighting personalities) and there's probably only a few of us die-hards around that remember it. Pretty sad, really.</p>
+          <p>I was helping out with the conference, as well as speaking, and one of the organisers asked what should be given to the speakers.</p>
+          <p>I said: "Anything but wine. I don't drink it and the overseas presenters won't want to take it back on the plane with them. You need something light that appeals to a nerd."</p>
+          <p>This is what she came up with. An excellent choice. I am a legendary nerd and it really hits the spot for me!</p>
+        </div><!--/entry-content-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Inventing A New Statement for Groovy In ~10 Minutes!</h1>
+        <div class="entry-content">
+          <p>So tonight <a href="http://markmail.org/message/jy3c4cgif6jihxvo">I opened my big mouth</a> on the Groovy user's mailing list.</p>
+          <p>Ruby has this (example from <a href="http://www.techotopia.com/index.php/The_Ruby_case_Statement">http://www.techotopi … _Ruby_case_Statement</a>):</p>
+          <pre>car = "Patriot"
+
+manufacturer = case car
+   when "Focus": "Ford"
+   when "Navigator": "Lincoln"
+   when "Camry": "Toyota"
+   when "Civic": "Honda"
+   when "Patriot": "Jeep"
+   when "Jetta": "VW"
+   when "Ceyene": "Porsche"
+   when "Outback": "Subaru"
+   when "520i": "BMW"
+   when "Tundra": "Nissan"
+   else "Unknown"
+end
+
+puts "The " + car  + " is made by "  + manufacturer</pre>
+          <p>I asked: "Why shouldn't Groovy have the same?"</p>
+          <p>In about 10 minutes, Guillaume Laforge (Groovy's Project Manager and Head of Development) had come up with this:</p>
+          <pre>def car = "Patriot"
+
+def manufacturer = match(car) {
+  when "Focus",     "Ford"
+  when "Navigator", "Lincoln"
+  when "Camry",     "Toyota"
+  when "Civic",     "Honda"
+  when "Patriot",   "Jeep"
+  when "Jetta",     "VW"
+  when "Ceyene",    "Porsche"
+  when "Outback",   "Subaru"
+  when "520i",      "BMW"
+  when "Tundra",    "Nissan"
+  otherwise         "Unknown"
+}
+
+println "The $car is made by $manufacturer"
+
+def match(obj, closure) {
+    closure.subject = obj
+    closure.when = { value, result -&gt;
+        if (value == subject)
+            throw new MatchResultException(result: result)
+    }
+    closure.otherwise = { return it }
+    closure.resolveStrategy = Closure.DELEGATE_FIRST
+    try {
+        closure()
+        closure.otherwise()
+    } catch (MatchResultException r) {
+        r.result
+    }
+}
+
+class MatchResultException extends RuntimeException {
+    def result
+}</pre>
+          <p>and the associated suggestion:</p>
+          <blockquote>
+            <p>you could have that utility method be a static method on some class that you'd import startically.<br>
+            For instance:</p>
+            <p>import static com.foo.Util.match</p>
+            <p>Then later on, you'd just have to do</p>
+            <p>def manufacturer = match(car) { … }</p>
+          </blockquote>
+          <p>I am both impressed and horified. Impressed that Groovy is so adaptable (Guillaume has basically created a new language construct out of thin air). Horrified because I couln't have come up with something like that in my <em>wildest
+          dream</em> and I doubt many others would be able to, either.</p>
+          <p>I tip my hat!</p>
+          <p><em>[edit]</em><br>
+          Another suggestion came from Dr. Paul King:</p>
+          <pre>car = "Camry"
+
+def getManufacturer() {
+  switch(car) {
+    case ["Focus", "Fiesta"]        : return "Ford"
+    case "Camry"                    : return "Toyota"
+    case { car.endsWith('back') }   : return "Subaru"
+    case "Ceyene"                   : return "Porsche"
+    case ~/5\d\di/                  : return "BMW"
+    case "Civic"                    : return "Honda"
+    default                         : return "Unknown"
+  }
+}
+
+println getManufacturer()</pre>
+          <p>Doable now, in a failry straightforward way, using the powerful capabilities of the <a href="http://docs.codehaus.org/display/GROOVY/Logical+Branching">enhanced switch</a>…</p>
+          <p>I still think that Groovy would be slightly more powerful (==simpler) with the added statement but that's just IMHO; it's not a showstopper…</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Groovy, Programming</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Not The Future We Planned…</h1>
+        <div class="entry-content">
+          <p><img src="wp-content/uploads/2009/03/future-joke.jpg"></p>
+          <p>I have been reading science-fiction since I was about 10 years old and the only author to come <em>close</em> to predicting the modern world was <a href="http://www.troynovant.com/Franson/Heinlein/Future-History.html">Robert
+          Heinlein</a>.</p>
+          <p>He 'predicted' (or rather he used the idea as an overarching background for several of his stories) what he called the "Crazy Years." If memory serves aright, we are pretty much slap-bang in the middle of them…</p>
+          <p>Even he didn't predict the world as revealed above, though.</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Rant</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Experiences From The Aunty</h1>
+        <div class="entry-content">
+          <p>From the BBC's Radio Labs: <a href="http://www.bbc.co.uk/blogs/radiolabs/2009/01/how_we_make_websites.shtm">Designing and building data driven dynamic web applications the one web, domain driven, RESTful, open, linked data way</a>.</p>
+          <p>Would be nicer if they made websites that were more than a few centimetres wide, but there is wisdom here, nonetheless.</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Tools</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">97 Things Every Software Architect Should Know</h1>
+        <div class="entry-content">
+          <p>An interesting conversation going on over at <a href="http://www.theserverside.com/news/thread.tss?thread_id=53819">TheServerSide.com</a> discussing the parables and war stories collected <a href=
+          "http://97-things.near-time.net/wiki">here</a>.</p>
+        </div><!--/entry-content-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Is Agile Development More About Culture Than Process?</h1>
+        <div class="entry-content">
+          <p>Very interesting blog post over at <a href="http://www.agileproductdesign.com/blog/agile_is_culture_not_process.html">AgileProductDesign.com</a>.</p>
+          <p>Hmmm?</p>
+          <p>Having watched (and participated in) a number of research teams (who of course always claim to be at the forefront of movements such as Agile) at work and play, I'd have to say "yes."</p>
+          <p>I'd also have to say "be careful with the culture that you allow to develop since an undesirable culture may lead to undesirable processes."</p>
+          <p>You may end up with a culture that places undue value on a team member having his own local cache of Dilbert comic strips and thus having a process in place that supports said team member effectively going on strike until same is not
+          supplied (true story!).</p>
+          <p>Aside from that, I'd certainly be happy with the idea that the persistence of the Waterfall software development process is a product of a culture. That culture might be dysfunctional, inadequate and dated, but there is often notably a
+          cultural aspect to the reason why so many organisations keep slogging along with Waterfall.</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Agile</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">More T-Shirts!</h1>
+        <div class="entry-content">
+          <p>Apologies if this site seems to be becoming more about clothing/baggage than about IT!</p>
+          <p>This T-shirt is a fairly recent acquisition, from the <a href="http://www.energex.com.au/">Energex</a>/<a href="http://www.sparq.com.au/">SPARQ</a> TCE Project that I have written about before:</p>
+          <p><img src="wp-content/uploads/2009/02/tce-frc-t-shirt.jpg" width="450"></p>
+          <p>This one is a lot older:</p>
+          <p><img src="wp-content/uploads/2009/02/enhydra-t-shirt.jpg" width="450"></p>
+          <p>It was given to me by one of the Enhydra guys in December 1999 at the Linux/Open Source Bazaar, Jacob K. Javits Centre, New York. I was presenting a 2-day tutorial session on Linux (RedHat 5.2).</p>
+          <p>My "body clock" was exactly 12 hours out of alignment but it was a lot of fun. For example: the organisers arranged for us to have free, unfettered access to the famous <a href="http://www.fao.com/home.jsp">FAO Schwartz Toy Store</a>
+          for a night…the perfect entertainment for a bunch of geeks! Another choice moment: watching the audience practically boo Corel CEO Michael Cowpland (I think; might have been RedHat CEO Bob Young….my jet-lagged memory is a little hazy here
+          but it keeps pushing a fedora at me…) offstage for daring to suggest that Linux would eventually have to be commercialised and become a money-making product before it could actually "rule the world." <a href=
+          "http://en.wikipedia.org/wiki/Richard_Stallman">Richard Stallman</a> and <a href="http://en.wikipedia.org/wiki/Eric_S._Raymond">Eric Raymond</a> were practically having fits, as were many of the faithful in the audience. How times have
+          changed…</p>
+          <p>This was pretty much the first 'real' Transentia engagement, so this T-shirt really does bring back a favourite memory.</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Retrospectives</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">SOA & The Tarpit of Irrelevancy</h1>
+        <div class="entry-content">
+          <p>InfoQ <a href="http://www.infoq.com/news/2009/02/TarpitofIrrelevancy">précis a nicely down-to-earth examination</a> of "the state of SOA/BPM software and its vendors."</p>
+          <p>Here's a taster:</p>
+          <blockquote>
+            <p>While rank and file developers go to conferences to soak in deep technical content, their peripherally technical managers (the ones who wrote some rockin' good Cobol code back in the day, but now they make decisions about modern
+            enterprise architecture) go to different conferences in Palm Springs. At those conferences, they have a 2-hour morning session, run by a big tool vendor, then play golf for the balance of the afternoon. And what the vendors show them is
+            poison.</p>
+          </blockquote>
+          <p>I just <em>love</em> the term "doodleware" the author introduces!</p>
+          <p>It's a curious thing: just yesterday I was pontificating on a similar theme to a colleague; it's nice to know that my cynical world-view is not <em>completely</em> in my own head, after all…</p>
+          <p>Perhaps the author wanted something along the lines of <a href="http://www.grailsflow.org/">grailsflow</a>?</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Grails, Programming, SOA</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">How's the Agility?</h1>
+        <div class="entry-content">
+          <p>Check this site out: <a href="http://www.abetterteam.org/">http://www.abetterteam.org/</a>.</p>
+          <p>An interesting idea.</p>
+          <p>The <a href="http://jamesshore.com/Agile-Book/">site associated with the 'parent' book</a> is also well worth a look-through.</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Agile</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Inspirational</h1>
+        <div class="entry-content">
+          <p>This is my cat, Furball.</p>
+          <p><img src="wp-content/uploads/2009/02/furball-big.jpg"></p>
+          <p>Clearly, Furball feels that she is in the right place, at the right time, doing the right thing.</p>
+          <p>A state of being to aspire to, I say…</p>
+        </div><!--/entry-content-->
+      </div><!-- .post -->
+      <div class="pagination">
+        <span class="next"><a href="DUMMY">Next »</a></span> <span class="previous"><a href="../28/28.htm">« Previous</a></span>
+      </div>
+    </div>
+  </div><!--#page-->
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script> 
+  <script src="js/site.js"></script>
+</body>
+</html>

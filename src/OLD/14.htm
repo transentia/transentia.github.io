@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <title>Transentia - transentia pty. ltd.; development, consulting, training at the leading-edge of technology</title>
+  <link rel="stylesheet" type="text/css" media="screen, print, handheld" href="wp-content/themes/transentia/css/site.css">
+</head>
+<body>
+  <div id="page">
+    <div id="header">
+      <p><a href="../index.htm"><img src="wp-content/uploads/widgets/transentia-logo-red-glow.gif" border="0"></a></p>
+      <p class="old-content">transentia's old content; click on the logo to return to the new content</p>
+      <p id="blog-description">transentia pty. ltd.; development, consulting, training at the leading-edge of technology</p>
+    </div><!-- #header -->
+    <div id="content">
+      <div class="pagination">
+        <span class="next"><a href="DUMMY">Next »</a></span> <span class="previous"><a href="DUMMY">« Previous</a></span>
+      </div>
+      <div class="post hentry">
+        <h1 class="entry-title">Hasta-la-vista Flatpress; Hola WordPress!</h1>
+        <div class="entry-content">
+          <p>We have changed our software stack from <a title="flatpress" href="http://www.flatpress.org">flatpress</a> to wordpress.</p>
+          <p>Sad to say, flatpress just wasn't quite managing.</p>
+          <p>The conversion between the two systems wasn't automatic and involved a <a title="judicious" href="http://en.wikipedia.org/wiki/Judge_Dredd">judicious</a> mix of PHP, Groovy, sed and bash scripting. Sadly it isn't 100% seamless…as/if you
+          browse the articles on the site you may find a number of "rough edges"…notably, images are shown at their 'natural' size, rather than being scaled for beauty. My apologies to anyone who is seriously inconvenienced by this but there comes a
+          point of diminishing returns…</p>
+          <p>Flatpress hosted 228 posts, so it did quite well. Here's to WordPress hosting many, many more.</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Tools</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Stop SQL Developer From Being So Annoying</h1>
+        <div class="entry-content">
+          <p>To prevent the otherwise excellent <a href="http://www.oracle.com/technology/products/database/sql_developer/index.html">SQL Developer</a> from incessantly nagging about file associations under Windows, add the following to
+          …\sqldeveloper\bin\sqldeveloper.conf:</p>
+          <pre>
+AddVMOption -Dno.shell.integration=true
+</pre>
+          <p>This works around the bug nicely.</p>
+          <p>The OTN thread is <a href="http://forums.oracle.com/forums/thread.jspa?threadID=649284&amp;start=15&amp;tstart=0">here</a>.</p>
+          <p>BTW: in case you didn't know, Oracle's codename for SQL Developer is 'raptor'…"Because Raptors eat <a href="http://www.toadsoft.com/">Toad</a>s."</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Tools</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Configuring Reference Data In Grails (Redux)</h1>
+        <div class="entry-content">
+          <p>A while back, in Configuring Reference Data In Grails, I talked about declaring elements in resources.groovy that could then be used to populate drop-down boxes in GSPs (to give one example).</p>
+          <p>Today, I found out an alternative way of declaring things:</p>
+          <pre>
+beans = {
+  xmlns util: "http://www.springframework.org/schema/util"
+
+  util.list(id: 'myList') {
+    value 'String 0'
+    (1..5).each { value "String $it" }
+    value 'String n'
+  }
+
+  util.map(id: 'myMap') {
+    entry key: 'k0', value: 'v0'
+    (1..5).each { entry key: "k$it", value: "v$it" }    
+    entry key: 'kn', value: 'vn'
+  }
+}
+</pre>
+          <p>I was long used to doing this in 'plain' Spring but wasn't sure that I could actually use the 'util' namespace stuff in Grails.</p>
+          <p>Thanks to SpringSource's Jeff Brown for <a href="http://markmail.org/message/3tpuvzr5ca5st6re">pointing out on grails-user</a> how to do it.</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Grails, Programming</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Working Through Associations With GORM</h1>
+        <div class="entry-content">
+          <p>I've recently been looking at an 'interesting' project.</p>
+          <p>The original developer (whom I'm guessing was a PHP-ite in a former life) took Grails for a spin and on the whole did a pretty fair job of getting his application up and running and keeping the customer happy and so deserves a fair
+          amount of Kudos, not to mention <a href="http://en.wikipedia.org/wiki/The_Gamesters_of_Triskelion">Quatloos</a>.</p>
+          <p>There was some 'grunge': a bit too much being done in GSP pages that should have been in controller code and not enough factoring into services, etc., but that's OK.</p>
+          <p>The application's domain handling was the one area that gave me pause to think, however.</p>
+          <p>There was a common pattern to it, which I'll try and explain…</p>
+          <p>The developer had used Grails' standard <a href="http://www.grails.org/GORM">GORM</a> domain classes to model the application's domain and (thus) initialize the database but throughout the various controllers I kept seeing code like
+          this:</p>
+          <pre>
+def id = ...
+def domainInstance = DomainClass.get(id)
+def query = """
+some 20-line query 
+walking the underlying relationships from DomainClassTable
+to DomainClassTable to get at whatever was wanted
+"""
+def sql = sql.query(query)
+  sql.eachRow { r -&gt;
+}
+</pre>
+          <p>The developer was using GORM quite trivially and for anything even slightly more 'demanding' he would "drop down" into plain SQL.</p>
+          <p>My first action was to groan out loud…<br>
+          My second action was to slap my <a href="http://www.simpsoncrazy.com/episodes/7F02">bright, shiny forehead</a>…<br>
+          My first thought was "Oh NO!" …<br>
+          My second thought was "What a <em>stupid</em> developer"…</p>
+          <p>Then I calmed down a bit and reconsidered. I came to the conclusion that I was being a rather harsh: <strong>for those new to Grails and the Java platform it is not obvious just what GORM/Hibernate brings to the party</strong>.</p>
+          <p>Consider:</p>
+          <pre>
+&lt;?php
+$username = "...";
+$password = "...";
+$hostname = "...";  
+$dbh = mysql_connect($hostname, $username, $password) 
+  or die("Can't to connect to MySQL");
+mysql_select_db("...",$dbh) 
+  or die("Could not select database ...");
+$result = mysql_query("SELECT * FROM table");
+while ($row = mysql_fetch_array($result,MYSQL_ASSOC)) {
+  print "ID:".$row{'id'}.". ... ."&lt;br&gt;";
+}
+mysql_close($dbh);
+?&gt;
+</pre>
+          <p>If this is what you have as your sole background and experience, and you are a busy guy with your nose to the grindstone (as we all tend to be), then a first read of the Grails documention (or the Hibernate or JPA documention for that
+          matter) wouldn't really show you about walking through associations and the joys of an SQL-free lifestyle.</p>
+          <p>This is sad, but it is also true.<br>
+          (It's also sad but true that there are plenty of Java guys out there who don't look past plain 1999-era JDBC…and end up with similarly grungy stuff as a result.)</p>
+          <p>If you trawl through the Grails documentation (<a href="http://grails.org/doc/1.2.x/guide/single.html">http://grails.org/do … .x/guide/single.html</a>) you'll see that there's a fair bit in there about <em>declaring</em> associations,
+          establishing cascading saves, updates and deletes, etc. but very little on actually <strong>using</strong> these associations.</p>
+          <p>The Grails documentation (<a href="http://grails.org/doc/1.2.x/guide/single.html#5.2.1.2%20One-to-many">Section 5.2.1.2 "One-to-many"</a>) does show a very small example, but blink and you'll miss it!</p>
+          <p>So here goes my attempt at leading you to a SQL-free nirvana…</p>
+          <p>As is my <a href="http://www.merriam-webster.com/dictionary/wont">wont</a>, I'll talk through a trivial example application. In this case, its a school, with classes, students, teachers, rooms and books.</p>
+          <p>It has a very simple Object Model:</p>
+          <p><img src="wp-content/uploads/2009/08/gorm_navigation.jpeg"></p>
+          <p>Note that I talk about an <em>Object Model</em>. As a developer, I am interested in the relationships between <em>Objects</em>. I am not interested in the underlying persistence mechanism's representation of that model (I'm guessing
+          that there are a few join tables in there, but that's just 'noise' that threatens to drown out what I want to think about). The Entity-Relationship diagram doesn't hold much interest for me.</p>
+          <p>Given my interest in all things Object, here are a couple of the more interesting domain classes:</p>
+          <pre>
+package school
+
+class Student {
+  String name
+  List books
+  static hasMany = [ books: school.Book ]
+}
+</pre>
+          <pre>
+package school
+
+class Book {
+  String title
+}
+</pre>
+          <pre>
+package school
+
+class School {
+
+  String name
+
+  List classes
+  static hasMany = [ classes: Class ]
+}
+</pre>
+          <p>Note that I have chosen to use Lists (rather than Sets, which is the default) to model the associations between my domain classes. This is often A Good Thing because it allows me to explicitly index into these associations, as will soon
+          become apparent.</p>
+          <p>Here's the first example of walking through various Object association:</p>
+          <pre>
+School.findByName("Grails High").classes[0].students[0].books[0].title
+</pre>
+          <p>I'll bet that you can easily determine what that line does.</p>
+          <p>Easily.</p>
+          <p>Quickly.</p>
+          <p>Think about that.</p>
+          <p>Especially if you are a SQL-head.</p>
+          <p>If you have persisted with plain SQL (pun intended), you'll know that there's a fair bit of walking through join tables, projecting and so on happening here.</p>
+          <p>I can <em>guarantee you</em> that a solution using the appropriate SQL wouldn't be so easily comprehensible (so "close to the problem definition") as what is shown above.</p>
+          <p>&lt;RANT&gt;<br>
+          I also feel confident in pointing out that the solution you are now sketching out in your head is probably non-portable between databases and most likely not portable between different schema representations of the same basic Object
+          Model.</p>
+          <p>Ah..what the hell, I'll say it…what you were thinking was just plain <em>wrong</em>!</p>
+          <p>It probably/possibly would have correctly done data retrieval under some conditions, but I'll bet that you weren't thinking about the same schema, vendor-specific SQL dialect, etc. as I was.</p>
+          <p>Hence my statement.</p>
+          <p>In contrast, there's not too much of this ambiguity in the GORM version…</p>
+          <p>This is probably a whole other argument for another time, however.<br>
+          &lt;/RANT&gt;</p>
+          <p>Here's a neat second example:</p>
+          <p><img src="wp-content/uploads/2009/08/gorm_school.png"></p>
+          <p>The GSP that hits the database and navigates the inter-Object associations is clear, concise and "all business." It's outcome-focused, not heavily weighted to the mechanism of data retrieval:</p>
+          <pre>
+&lt;%@ page import="school.*" %&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;title&gt;Welcome to Bob's GORMy School&lt;/title&gt;
+  &lt;style type="text/css" media="screen"&gt;
+    [...elided...]
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;h1&gt;Welcome to Bob's GORMy School&lt;/h1&gt;
+&lt;%
+  def school = School.get(1)
+  def mkp = new groovy.xml.MarkupBuilder(out)
+  mkp.div([class: "homePagePanel"]) {
+    p school.name
+    school.classes.each {c -&gt;
+      h2 ([style:'background:lightGray; font-weight: bold;'], "${c.code}: ${c.subject}")
+      p "Teacher: ${c.teacher.name}"
+      p "Room: ${c.room.designation}"
+      p "Students (${c.students.size()}):"
+      ul {
+        c.students.each {s -&gt;
+          li s.name
+          p "Books (${s.books.size()}):"
+          ul {
+            s.books.each { b -&gt;
+              li b.title
+            }
+          }
+        }
+      }
+    }
+  }
+%&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</pre>
+          <p>The code and the solution are pretty clearly matched, so I'm guessing that once again you'll be able to work out what is going on…even if you don't know GORM or <a href="http://www.grails.org/GSP+Reference">GSP</a>s.</p>
+          <p>Pay particular attention to the ease with which the code can walk through associations between objects and also deal with the various cardinalities of the association.</p>
+          <p>(While you're at it, give praise to MarkupBuilder!)</p>
+          <p>Still not convinced, eh?</p>
+          <p>Oh well…take a week off and work on the equivalent SQL. Then take a further week off to recreate the simple page I show above using the resultant data in all it's stream-y, batch-oriented weirdness. I'll wait…</p>
+          <p>Let's do some comparison shopping.</p>
+          <p>The following code snippets are equivalent ways of undertaking the business operation "for each student, find all the titles of all their books":</p>
+          <pre>
+println "GORM:"
+Student.findAll().each { s -&gt;
+  s.books.each { b -&gt;
+    println "${s.name}: ${b.title}"
+  }
+}
+</pre>
+          <pre>
+println "SQL:"
+def sql = new Sql(dataSource)
+def qry = """
+select s.name, b.title
+from Student s
+  inner join Student_Book sb on s.id = sb.student_books_id
+  inner join Book b on sb.book_id = b.id
+"""
+sql.eachRow(qry) {
+  println "${it.name}: ${it.title}"
+}
+</pre>
+          <p>Which more clearly matches the expected business operation?</p>
+          <p>Life is all about change, so try changing things ever so slightly:</p>
+          <pre>
+println "GORM:"
+Student.findAll().each { s -&gt;
+  println s.name
+  s.books.each { b -&gt;
+    println b.title
+  }
+}
+</pre>
+          <p>Trivial change, trivially easy with GORM.</p>
+          <p>I leave the equivalent change to the SQL morass as an exercise for the reader…</p>
+          <p>The drawback here is that your <a href="http://en.wikipedia.org/wiki/Pointy-Haired_Boss">PHB</a> may be tempted to change things around too often. There's probably <a href=
+          "http://www.amazon.com/Fire-Your-Boss-Stephen-Pollan/dp/0060583932">a cure for that</a>, however.</p>
+          <p>Go on…say it…be brave…it's a big issue.</p>
+          <p><a href="http://en.wikipedia.org/wiki/Optimization_(computer_science)#Quotes">Take a look here first</a>.</p>
+          <p>Then I'll <a href="http://blog.hibernate.org/Bloggers/IfYouAreHavingProblems?showCommentForm=true">quote</a> from Gavin King, the creator of Hibernate:</p>
+          <blockquote>
+            <p>Note that I have not yet met a serious performance problem in Hibernate 2.x that I could not solve quite quickly.</p>
+          </blockquote>
+          <p>(Note that we're a long way past the 2.x series now.)</p>
+          <p>You could argue that the developer of the application I am talking about was concerned with optimizing the application's performance. A laudable goal which we'll see about in a second…for now, just let me say that this application's
+          whole database is only about 250Mb. My <em>mobile phone</em> would give good performance serving this database, regardless of how I sub-optimally I were to structure the queries! I exaggerate (slightly) but its clear that there's a quick
+          "bang for buck" calculation to be made here, one that strongly argues against 'optimal' SQL.</p>
+          <p>Naive use of Hibernate (or any such tool) <em>can</em> lead to the <a href="http://www.javalobby.org/java/forums/t20533.html">n + 1 problem</a> where a collection requires multiple queries to retrieve.</p>
+          <p>GORM tries to assist with this where it can, and makes it possible to tune the behaviour of an application for various situations. One of the most powerful tools for this is the ability to configure <a href=
+          "http://grails.org/doc/1.2/guide/5.%20Object%20Relational%20Mapping%20(GORM).html#5.3.4">lazy/eager/batch fetching</a>.</p>
+          <p>For example, if I look at the <em>actual usage pattern</em> of the association between Class and Student, I may conclude that it is appropriate to always <em>eagerly</em> fetch Student instances at the same time as a Class instance is
+          fetched from the database. I might provide a mapping for Class as follows:</p>
+          <pre>
+package school
+
+class Class {
+  String code
+  String subject
+  Teacher teacher
+  Room room
+  List students
+  static hasMany = [ students: Student ]
+  static mapping = {
+    students fetch:"join"
+  }
+}
+</pre>
+          <p>I may conclude that in some usage situations, the relationship between Student and Book is an <em>eager</em> one: all accesses to a Student instance involves looking at the associated list of Book instances.</p>
+          <pre>
+println "GORM(eager):"
+Student.findAll([fetch:[books: "eager"]]).each { s -&gt;
+  println s.name
+  s.books.each { b -&gt;
+    println b.title
+  }
+}
+</pre>
+          <p>You can peek around (<a href="http://www.grails.org/plugin/p6spy">p6spy</a> is your friend) and see how the database is driven in this situation:</p>
+          <pre>
+select
+  this_.id as id7_1_,
+  this_.version as version7_1_,
+  this_.name as name7_1_,
+  books2_.student_books_id as student1_3_,
+  book3_.id as book2_3_,
+  books2_.books_idx as books3_3_,
+  book3_.id as id0_0_,
+  book3_.version as version0_0_,
+  book3_.title as title0_0_ 
+from
+  student this_ 
+    left outer join
+        student_book books2_ 
+            on this_.id=books2_.student_books_id 
+    left outer join
+        book book3_ 
+            on books2_.book_id=book3_.id
+</pre>
+          <p>No n + 1 problem here…</p>
+          <p>In other usage situations, a <em>lazy</em> approach may be appropriate:</p>
+          <pre>
+println "GORM(lazy):"
+Student.findAll([fetch:[books: "lazy"]]).each { s -&gt;
+  println s.name
+}
+</pre>
+          <p>This gives pretty simple and effective SQL:</p>
+          <pre>
+select
+  this_.id as id7_0_,
+  this_.version as version7_0_,
+  this_.name as name7_0_ 
+from
+  student this_
+</pre>
+          <p>Even in those situations where "only SQL will do", GORM allows the use of HQL to "get closer to the metal" while still avoiding a lot of drudgery:</p>
+          <pre>
+Book.executeQuery("select b from Book as b, Student as s where (s.id=:st) and (b in elements(s.books))",
+  [st: 2L]).each { println it.title }
+</pre>
+          <p>Of course, you could do it the hard way:</p>
+          <pre>
+select
+  book0_.id as id2_,
+  book0_.version as version2_,
+  book0_.title as title2_ 
+from
+  book book0_,
+  student student1_ 
+where
+  student1_.id=? 
+  and (
+    book0_.id in (
+      select
+        books2_.book_id 
+      from
+        student_book books2_ 
+       where
+        student1_.id=books2_.student_books_id
+    )
+  )
+</pre>
+          <p>How obscure is <em>that</em>! There's <em>nothing</em> in that mess that tells me what business needs I am trying to meet. It's the database equivalent of "assembly language" and-just like all assembly languages-is best left to tools
+          that know what they are doing.</p>
+          <p>It's <em>good</em> to have choice.</p>
+          <p>Really.</p>
+          <p>With GORM, I have a situation where I can start off simply and get progressively more sophisticated as the proven demands of my application require. I can build an Object Model for a domain without worrying about mechanics of what magic
+          incantations I will need to make it work. I have a "tuning point" in my application that I can work with. This is All Good Stuff.</p>
+          <p>Object graph navigation is extremely powerful, so go out and practice. You may have to play with it a bit before it gets under your skin but you'll be far more productive as a result.</p>
+          <p>I've seen a system convert from GORM-style to plain SQL data access (driven by a manager's "SQL experience") "in the name of performance" only to find the resulting true performance drop through the floor. GORM/Hibernate does a lot of
+          smart things that an average programmer just won't ever "get around to."</p>
+          <p>I'm really only touching the surface of things here (I haven't even talked about GORM's wonderful <a href="http://grails.org/doc/1.2/guide/5.%20Object%20Relational%20Mapping%20(GORM).html#5.5.2.2%20Caching%20Strategy">second-level
+          cache</a>, but I hope that all this helps.</p>
+          <p>Here's a nice starter resource for Hibernate, the technology underlying GORM: <a href="http://oreilly.com/catalog/9780596006969/">Hibernate: A Developer's Notebook</a>. Its a good read, even if its not GORM-specific.</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Grails, Programming</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Pimped-Out Grails BootStraps</h1>
+        <div class="entry-content">
+          <p>A while back, <a href="http://groovyblogs.org/">groovyblogs.org</a> pointed me to a site suggesting that I should <a href="http://blog.burningice.pl/?p=108">Pimp my Grails Bootstrap</a>.</p>
+          <p>"Nice," I thought, "but it should be possible to clean things up a bit…make it a bit more 'groovy.'"</p>
+          <p>So here is my attempt:</p>
+          <pre>import grails.util.Environment
+
+class BootStrap {
+
+  def init = {servletContext -&gt;
+    if (this.respondsTo(Environment.current.name))
+      this.invokeMethod(Environment.current.name, servletContext)
+  }
+
+  def destroy = {
+  }
+
+  def production(servletContext) {
+  }
+
+  def test(servletContext) {
+  }
+
+  def development(servletContext) {
+  }
+}</pre>
+          <p>A couple of things to note:</p>
+          <ul>
+            <li>Note the use of the Grails 1.1+ Environment class, rather than the older (now deprecated GrailsUtil stuff)</li>
+            <li>The methods <em>must</em> be true methods, not closure definitions (otherwise respondsTo() doesn't know about them, it seems)</li>
+            <li>It's all optional: if you only need development(say), you only have to define development()</li>
+            <li>the method names should correspond to what would be returned by Environment.current.name: (for the predefined environments, these are given by: Environment.DEVELOPMENT.name, Environment.TEST.name, etc.)</li>
+            <li>In <em>this</em> example, respondsTo()/invokeMethod() <strong>need</strong> to be invoked via this. Don't know why; shouldn't be needed as far as I can see, so YMMV</li>
+          </ul>
+          <p>There's also <a href="http://jira.codehaus.org/browse/GRAILS-289">http://jira.codehaus … rg/browse/GRAILS-289</a>, which hints at better things to come.</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Grails, Programming</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">A Small Improvement In Grails' GORM Subsystem</h1>
+        <div class="entry-content">
+          <p>What I learned today…</p>
+          <p>To quote Grails' Graeme Rocher:</p>
+          <blockquote>
+            <p>Grails 1.2 has save(failOnError:true)</p>
+          </blockquote>
+          <p>This should remove a small frustration…</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Grails, Programming</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Viewing Grails' In-Memory HSQLDB Database</h1>
+        <div class="entry-content">
+          <p>Another example of "what I learned today."</p>
+          <p>Thanks to <a href="http://act.ualise.com/blogs/continuous-innovation/2009/07/viewing-grails-in-memory-hsqldb/">act:ualise | technology</a> for this.</p>
+          <pre>
+import grails.util.Environment
+
+class BootStrap {
+
+  def init = {servletContext -&gt;
+
+    if (Environment.current == Environment.DEVELOPMENT) {
+      //
+      // don't forget to use the correct URL as set in DataSource.groovy
+      // typically:  jdbc:hsqldb:mem:devDB
+      // 
+      org.hsqldb.util.DatabaseManager.main()
+      ...
+</pre>
+          <p>A cheap and cheerful way of looking at Grails' in-built, transient in-memory database:</p>
+          <p><img src="wp-content/uploads/2009/08/hsqldb-grails.png"></p>
+          <p>It's no <a href="http://www.grails.org/p6spy+plugin">p6spy</a> or <a href="http://wiki.github.com/RobertFischer/autobase/">autobase</a>, but it's good enough for now.</p>
+          <p>By the way: note the 'new' (Grails 1.1) way of determining the current execution environment. Much prettier than the old way.</p>
+          <p><em>[edit]</em></p>
+          <p>This makes it even easier:</p>
+          <pre>
+org.hsqldb.util.DatabaseManager.main(['-url', 'jdbc:hsqldb:mem:devDB'] as String[])
+</pre>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Grails, Programming</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">What I Learned Today: Constraining Relation Cardinality In GORM</h1>
+        <div class="entry-content">
+          <p>I wanted to set a limit for how many classes a Grails Domain class could relate to and I couldn't see how to do it, so I put a call for help out on the Grails user list (user@grails.codehaus.org).</p>
+          <p>Burt Beckwith ( 
+          <script type="text/javascript">
+
+                        // obfuscate this stuff...
+                        var who = 'burt';
+                        var a = 'burtbeckwith';
+                        var b = 'com';
+                        var s = who + '@' + a + '.' + b;
+                        document.write(s)
+          </script> ) showed me how:</p>
+          <pre>class Author {
+  static hasMany = [ books : Book ]
+  String name
+  static constraints = {
+    books size: 0..3
+  }
+}
+
+class Book {
+  String title
+}</pre>
+          <p>Burt also pointed me to the doco: <a href="http://grails.org/doc/1.1.x/ref/Constraints/size.html">http://grails.org/do … onstraints/size.html</a>.</p>
+          <p>Thanks, Burt!</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Grails, Programming</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">What I Learned Today: Groovy Default Parameter Goodness</h1>
+        <div class="entry-content">
+          <p>Default parameters can reference other parameters.</p>
+          <p>This little snippet of Groovy:</p>
+          <pre>def f(x, y = x) {
+  println "x=$x, y=$y"
+}
+
+f('hello', 'world')
+f('hi')</pre>
+          <p>Gives:</p>
+          <pre>x=hello, y=world
+x=hi, y=hi</pre>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Groovy, Programming</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">JBoss Briefing Breakfast</h1>
+        <div class="entry-content">
+          <p>First things first: "Thank you, RedHat." Mum taught me to be polite. See, Mum, see :-)</p>
+          <p>This was a "Red Hat Briefing Session where you will learn about the newly launched JBoss Open Choice - Red Hat's strategy for simple, standard & flexible Java solutions."</p>
+          <p>The main message of the first session was: the industry wants simple; tomcat is enough. JBoss is responding to this demand.</p>
+          <p>Even the presenter ([the slightly tired-looking] Ms. Ivetta Kleinman, JBoss Solutions Architect) didn't seem at all impressed.</p>
+          <p>I agree with her advice: a cut-down server may seem like a good idea <em>now</em> but a bit of thinking about the future can be beneficial.</p>
+          <p>Lots of point solutions tend to end up inflicting death by a thousand puncture wounds.</p>
+          <p>I have been into plenty of sites that seemed to think that they can build a better JMS/Hibernate/SOA stack/SOAP framework/CORBA ORB/… than anyone else (and didn't need no stinkin' sub-optimal solution from someone "who knows nothing
+          about our <em>special</em> needs") and eventually a) find out that that wasn't really the case, b) find that their home-grown, beautifully 'architected' system is now an increasingly expensive liability, c) find their architects have got
+          bored and moved on to greener (and still innocent) fields, and d) can't find anyone willing to kill off their career by working with it.</p>
+          <p>Evidently, the industry still isn't mature.</p>
+          <p>The second part of the event was devoted to Ross Hall, Architect at Suncorp Personal Insurance. He gave a strong presentation saying how happy he was with JBoss Rules. I was glad to see someone actively pushing the idea that rules can
+          be extracted/abstracted away from messy tangles of inline code.</p>
+          <p>He introduced <a href="http://www.jboss.org/feeds/post/introducing_a_new_smart_forms_tool_drools_advisor">Drools Advisor</a>, a tool that they had developed to make creating form-based, rules-driven user interfaces easier.</p>
+          <p>This interested me: I had previously been involved in supporting an application whose sole raison-d'etre was to validate operator-input data against a schema [of sorts] to ensure consistency and correctness with respect to a myriad of
+          conditions, exceptional circumstances, resource constraints, and so on. Partly driven by a groaning, bug-ridden and awfully messy database structure, a rewrite had become painfully necessary. I proposed adopting a rules engine, only to be
+          told (by the lead maintainer) that "there are no rules in this system." No matter how hard I tried, I couldn't convince The Powers That Be that a mass of SQL stored procedures, Delphi-based "Business Objects" and UI validation
+          constituted/contained a set of 'rules'.</p>
+          <p>Wisdom is knowing that "you can take a horse to water, but you can't herd cats." Or something. I'm not wise enough yet, I guess.</p>
+          <p>Wish I'd have Drools Advisor when I was engaged in battling the "unenlightened dark forces"…having a pretty demo around would have helped <em>heaps</em>.</p>
+        </div><!--/entry-content-->
+      </div><!-- .post -->
+      <div class="pagination">
+        <span class="next"><a href="DUMMY">Next »</a></span> <span class="previous"><a href="../13/13.htm">« Previous</a></span>
+      </div>
+    </div>
+  </div><!--#page-->
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script> 
+  <script src="js/site.js"></script>
+</body>
+</html>

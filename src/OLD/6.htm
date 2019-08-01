@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <title>Transentia - transentia pty. ltd.; development, consulting, training at the leading-edge of technology</title>
+  <link rel="stylesheet" type="text/css" media="screen, print, handheld" href="wp-content/themes/transentia/css/site.css">
+</head>
+<body>
+  <div id="page">
+    <div id="header">
+      <p><a href="../index.htm"><img src="wp-content/uploads/widgets/transentia-logo-red-glow.gif" border="0"></a></p>
+      <p class="old-content">transentia's old content; click on the logo to return to the new content</p>
+      <p id="blog-description">transentia pty. ltd.; development, consulting, training at the leading-edge of technology</p>
+    </div><!-- #header -->
+    <div id="content">
+      <div class="pagination">
+        <span class="next"><a href="DUMMY">Next »</a></span> <span class="previous"><a href="DUMMY">« Previous</a></span>
+      </div>
+      <div class="post hentry">
+        <h1 class="entry-title">The Gr8 Technologies, Macau 2011</h1>
+        <div class="entry-content">
+          <p>Thanks to all at <a href="http://www.umac.mo/">The University of Macau</a> that came to listen to me rabbit on about Groovy and the Gr8 Technologies a few days ago.</p>
+          <p>I hope it was interesting (and understandable!).</p>
+          <p>The slide deck for "<a href='wp-content/uploads/2011/12/The-Gr8-Technologies.pdf'>The Gr8 Technologies</a>" (PDF) is now available.</p>
+          <p>Feel free to take a look around the rest of the G*-related content on this site. The tag cloud on the right of this page will help you navigate. I'd suggest you take a look at the <a href="http://groovymag.com/">GroovyMag</a> articles
+          on this site first: they are the most fully worked and carefully worded of all my materials.</p>
+          <p>May you never type another unnecessary semicolon!</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Groovy</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Groovy-WSlite</h1>
+        <div class="entry-content">
+          <p><a href="https://github.com/jwagenleitner/groovy-wslite">Library for Groovy that provides no-frills SOAP and REST webservice clients</a>.</p>
+          <p>No huge depencency list. Quite appealing.</p>
+          <p>From the front page:</p>
+          <pre>@Grab(group='com.github.groovy-wslite', module='groovy-wslite', version='0.1')
+import wslite.soap.*
+
+def soapClient = new SOAPClient("http://www.webservicex.net/WeatherForecast.asmx")
+def response = soapClient.send {
+    version SOAPVersion.V1_2
+    body {
+        GetWeatherByZipCode(xmlns:"http://www.webservicex.net") {
+            ZipCode("93657")
+        }
+    }
+}
+
+assert "SANGER" == response.GetWeatherByZipCodeResponse.GetWeatherByZipCodeResult.PlaceName.text()
+assert 200 == response.http.statusCode
+assert "OK" == response.http.statusMessage
+assert "ASP.NET" == response.http.headers["X-Powered-By"]
+</pre>
+          <p>Looks good. The Groovy/Grails webservices stack has been in need of a bit of love for a while, so it will be interesting to see how this develops.</p>
+          <p>Its probably worth keeping an eye on the <a href="http://groovy.329449.n5.nabble.com/GroovyWS-problems-again-td4686075.html#a4686568">topic</a> at Nabble.</p>
+          <p>When I think about everything I went through with OSB to do much the same actual work…</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Grails, Programming</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">A Pattern to Simplify Grails Controllers</h1>
+        <div class="entry-content">
+          <p>So I don't let this little nugget slip through the mesh:</p>
+          <p><a href="http://mrpaulwoods.wordpress.com/2011/01/23/a-pattern-to-simplify-grails-controllers/">A Pattern to Simplify Grails Controllers</a></p>
+          <p>As John Fletcher says on the Grails mailing list, this 'creates one of those "why didn't I think of that?" moments. Definitely should be abstracted into a plugin if not core.'</p>
+          <p>Nabble has <a href="http://grails.1312388.n4.nabble.com/controller-pattern-best-practice-td3717900.html#a3729339">the full discussion thread</a>.</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Grails, Programming</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Adopting Agile in an Environment of Fear</h1>
+        <div class="entry-content">
+          <p>A quick discussion on <a href="http://www.infoq.com/news/2011/07/fear-and-agile">Adopting Agile in an Environment of Fear</a> over at <a href="http://www.infoq.com/">infoq</a>.</p>
+          <p>It has often occurred to me that 'fear' (in many, many different guises) is actually an ever-present and sometimes overriding-yet still subtle and often unacknowledged-term in the decision-making equation.</p>
+          <p>Fear manifests as inertia and paralysis, as a defence mechanism, as an <a href="http://faculty.washington.edu/chudler/words.html">incongruous response to a stimulus</a>, as detachment and in many other ways.</p>
+          <p>It's good to see a few comments that address this.</p>
+          <p>How to transition the workplace from one based on "Darwin selection based on resistance to fears" to '"fear free" places.' <a href="http://blog.tsk.ro/the-fears-and-the-agile-adoption">There's the question</a>!</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Agile</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Enabling load balancing and failover in Apache CXF</h1>
+        <div class="entry-content">
+          <p>An excellent blog post at <a href="http://nurkiewicz.blogspot.com/2011/05/enabling-load-balancing-and-failover-in.html">NoBlogDefFound</a>.</p>
+          <p>Here's the premise:</p>
+          <blockquote>
+            <p>A while ago we've faced the requirement of load-balancing web services clients based on <a href="http://cxf.apache.org/">Apache CXF</a>. Also the clients should automatically fail-over when some of the servers are down. To make it
+            even worse, the list of servers target addresses was to be obtained from external service and updated at runtime. …If we only knew Apache CXF already supports all these features (almost) out of the box?</p>
+          </blockquote>
+          <p>Well worth remembering for future projects.</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Programming, Tools</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Wireless Is For The Birds</h1>
+        <div class="entry-content">
+          <p>I know this has been around the 'net for a fair while, but it still gives me a giggle:</p>
+          <p><img src="wp-content/uploads/2011/07/9cab5ab.jpg" alt="" title="9cab5ab" width="600"></p>
+          <p>Let this be a reminder to us all of the <a href="http://en.wikipedia.org/wiki/Unintended_consequences">law of unintended consequences</a>.</p>
+          <p>As far as I can tell, the original (in Danish) is at <a href="http://www.fruholm.dk/vare/503-bog-1-morten-ingemann-stribe-i-glas-og-ramme-traadloesning-wireless-technology">www.fruholm.dk</a>.</p>
+        </div><!--/entry-content-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">The Agile Coach Toolkit</h1>
+        <div class="entry-content">
+          <p>Games, sessions, presentations themed as "<a href="http://www.agilecoach.net/">Agile Every Day…Transforming Work into Play</a>" and released under the Creative Commons 2.0 license.</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Agile, Tools</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Groovy/Grails Live Snippets</h1>
+        <div class="entry-content">
+          <p>Thanks to Ivo Houbrechts & (<a href="http://www.ixor.be/">ixor</a>) for the <a href="http://livesnippets.cloudfoundry.com/docs/guide/index.html">livesnippets - Reference Documentation</a>.</p>
+          <p>To quote:</p>
+          <blockquote>
+            <p>The goal of Live Snippets is to bring code snippets and documentation together in a live demo.<br>
+            Live Snippets targets all Groovy and Grails related stuff.</p>
+            <p>The source code is available on <a href="https://github.com/houbie/livesnippets">github</a></p>
+            <p>The application is currently deployed on <a href="http://livesnippets.cloudfoundry.com/">Cloud Foundry</a></p>
+            <p>Enjoy!</p>
+          </blockquote>
+          <p>There's some really good stuff there covering Grails Webflow (including AJAX) and Grails Extended Validation.</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Grails, Groovy, Programming</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">A Great JBoss Resource</h1>
+        <div class="entry-content">
+          <p>I am sure that I will be visiting <a href="http://www.mastertheboss.com/">http://www.mastertheboss.com/</a> a fair bit.</p>
+          <p>So should you, if you are a <a href="http://www.jboss.org/jbossas">JBoss</a> developer.</p>
+          <p>If you aren't a JBoss developer: <a href="http://www.badbossology.com/">what's holding you back</a>?</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Tools</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">"The Space Merchants" Radio Play</h1>
+        <div class="entry-content">
+          <p>I am as happy as the first pig to discover mud!</p>
+          <p><a href="http://davidszondy.com/Radio.htm">Classic Science Fiction Radio Plays</a> has MP3s of the radio play of Frederik Pohl & C. M. Kornbluth's masterwork "The Space Merchants" as first broadcast on the CBS radio network on <a href=
+          "http://www.archive.org/download/CBSRadioWorkshop/CBSrw_57-02-17_ep55-Space_Merchants_Part_1.mp3">17</a> and <a href="http://www.archive.org/download/CBSRadioWorkshop/CBSrw_57-02-24_ep56-Space_Merchants_Part_2.mp3">24</a> February
+          1957.</p>
+          <p>I have written about The Space Merchants a few times before. It's relevance and observations remain timeless.</p>
+          <p>There are other goodies referenced there too, including:</p>
+          <ul>
+            <li>
+              <a href="http://www.archive.org/download/ExploringTomorrow-5Episodes/Exploring_Tomorrow.19xx.xx.xx_The_Liar_64kb.mp3">Liar!</a> by Isaac Asimov
+            </li>
+            <li>
+              <a href="http://www.archive.org/download/XMinus1_A/xminusone_560104_TheRoadsMustRoll.mp3">The Roads Must Roll</a> and <a href="http://www.archive.org/download/XMinus1_A/xminusone_550707_TheGreenHillsOfEarth.mp3">The Green Hills of
+              Earth</a> by Robert A. Heinlein
+            </li>
+            <li>
+              <a href="http://www.archive.org/download/XMinus1_A/xminusone_560222_Junkyard.mp3">Junkyard</a> by Clifford D. Simak
+            </li>
+          </ul>
+          <p>Look out, ears!</p>
+        </div><!--/entry-content-->
+      </div><!-- .post -->
+      <div class="pagination">
+        <span class="next"><a href="7/7.htm">Next »</a></span> <span class="previous"><a href="DUMMY">« Previous</a></span>
+      </div>
+    </div>
+  </div><!--#page-->
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script> 
+  <script src="js/site.js"></script>
+</body>
+</html>

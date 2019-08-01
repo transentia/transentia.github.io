@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <title>Transentia - transentia pty. ltd.; development, consulting, training at the leading-edge of technology</title>
+  <link rel="stylesheet" type="text/css" media="screen, print, handheld" href="wp-content/themes/transentia/css/site.css">
+</head>
+<body>
+  <div id="page">
+    <div id="header">
+      <p><a href="../index.htm"><img src="wp-content/uploads/widgets/transentia-logo-red-glow.gif" border="0"></a></p>
+      <p class="old-content">transentia's old content; click on the logo to return to the new content</p>
+      <p id="blog-description">transentia pty. ltd.; development, consulting, training at the leading-edge of technology</p>
+    </div><!-- #header -->
+    <div id="content">
+      <div class="pagination">
+        <span class="next"><a href="DUMMY">Next »</a></span> <span class="previous"><a href="DUMMY">« Previous</a></span>
+      </div>
+      <div class="post hentry">
+        <h1 class="entry-title">"Hi! I'm Tux The Linux Penguin"</h1>
+        <div class="entry-content">
+          <p>Picked this up in December 1999 at the Linux/Open Source Bazaar, Jacob K. Javits Centre, New York.</p>
+          <p><img src="wp-content/uploads/2009/04/linux-tux.jpg"></p>
+          <p>It has a tag on its 'behind' saying "Hi! I'm Tux The Linux Penguin" The badge has the heading "Penguin Power."</p>
+          <p>The badge also uses the quaint spelling 'LinuX', which proves how old it is: who would spell it that way nowadays!</p>
+          <p>I was presenting a 2-day tutorial session on Linux (RedHat 5.2). I have mentioned another trophy before.</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Retrospectives</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">…Must…Resist…JRuby…Scribble…</h1>
+        <div class="entry-content">
+          <p>I am weak-willed, I admit it! A JRuby version of Scribble!</p>
+          <pre>require 'java'
+
+include_class 'java.awt.event.MouseAdapter'
+include_class 'java.awt.event.MouseMotionAdapter'
+include_class 'javax.swing.JPanel'
+include_class 'javax.swing.JFrame'
+include_class 'java.awt.Graphics'
+include_class 'java.awt.Color'
+
+$model = Array.new
+
+$last_x = 0
+$last_y = 0
+
+class MouseAction &lt; MouseAdapter
+  def mousePressed(e)
+    $last_x = e.x
+    $last_y = e.y
+  end
+end
+
+class DrawLine
+  def initialize(x0, y0, x1, y1)
+    @x0 = x0
+    @y0 = y0
+    @x1 = x1
+    @y1 = y1
+  end
+
+  def paint(g)
+    g.drawLine(@x0, @y0, @x1, @y1)
+  end
+end
+
+class MouseMotionAction &lt; MouseMotionAdapter
+  def mouseDragged(e)
+    g = e.component.graphics
+    x = e.x
+    y = e.y
+    g.setColor(Color.black)
+    d = DrawLine.new($last_x, $last_y, x, y)
+    $model &lt;&lt; d
+    d.paint(g)
+    $last_x = x
+    $last_y = y
+  end
+end
+
+class Scribble &lt; JPanel
+  def paint(g)
+    $model.each {  | it | it.paint(g) }
+  end
+end
+
+class MainWindow &lt; JFrame
+  def initialize
+    super "JRuby Scribble"
+    setDefaultCloseOperation JFrame::EXIT_ON_CLOSE
+    setSize(600,400)
+    setResizable(false)
+    panel = Scribble.new
+    panel.addMouseListener MouseAction.new
+    panel.addMouseMotionListener MouseMotionAction.new
+    add panel
+  end
+end
+
+MainWindow.new.setVisible true</pre>
+          <p>Surprisingly, I couldn't find one of these out there on the 'web, so this is All My Own Work :-)</p>
+          <p>I wrote it using the JRuby implementation shipped with <a href="http://bits.netbeans.org/download/6.7/m3/">Netbeans 6.7m3</a>.</p>
+          <p>I have to say, I found the '@', '$' stuff pretty irritating, but I guess a Perl guy would feel at home (hmmm…is this a good thing….hmmmmm)</p>
+        </div><!--/entry-content-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Welcome, World!</h1>
+        <div class="entry-content">
+          <p>Nice to meet you :-)</p>
+          <p><img src="wp-content/uploads/2009/04/welcome-world-mar2009.png"></p>
+          <p>Hope you enjoy your stay.</p>
+        </div><!--/entry-content-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Significant Search Technology</h1>
+        <div class="entry-content">
+          <p>This strikes me as being significant technology for the future of search.</p>
+          <p><a href="http://facemining.pittpatt.com/">http://facemining.pittpatt.com/</a>.</p>
+          <p>Not to mention a trekkie's delight!</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Tools</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Java, Groovy, JavaFX</h1>
+        <div class="entry-content">
+          <p>From late 1997 to late 2004, I developed and ran a very nice Java course. Took it all round the world, in fact.</p>
+          <p>It's <strong>still available</strong>…and still <em>the best Java course</em> out there, IMHO (and I have given quite a few from several other [major] vendors in addition to my own).</p>
+          <p>One of the exercises that that participants seemed to enjoy was to take an applet not to dissimilar from the Scribble applet published in David Flanagan's <em>Java in a Nutshell</em> and modify it so that the drawing persevered through
+          screen redraws.</p>
+          <p>This helped the participants get their head around anonymous inner classes and the applet lifecycle callbacks and also gave them a chance to play with the List collection interface/classes.</p>
+          <p>Time moves on and we now have Groovy's <a href="http://docs.groovy-lang.org/latest/html/Swing+Builder">SwingBuilder</a> and the new <a href="http://javafx.com/">JavaFX</a> technology promoted by Sun.</p>
+          <p>Prompted by the negative press that JavaFX has received, postings such as <a href="http://lexecorp.com/2009/04/20/javafx-it-has-merit/">this</a> and the speed increases of the "consumer JRE", together with the fact that it is now
+          bundled into <a href="http://www.netbeans.org">Netbeans 6.5.1</a> (making it easy to get hold of and play with; not sure why it is currently missing in action for 6.7m3) I decided to see how the 'newcomers' stacked up.</p>
+          <p>The examples aren't completely identical (one is an applet, while the others are JFrames, for example) but this is still a nice 'feel' exercise.</p>
+          <p>I am reminded of the <a href="http://www.ariel.com.au/jokes/The_Evolution_of_a_Programmer.html">Evolution of a Programmer</a> joke…</p>
+          <p>Here goes…</p>
+          <p>=== Java (in homage to <a href="http://oreilly.com/catalog/9781565922624/">Java in a Nutshell, Second Edition</a>)</p>
+          <pre>import java.awt.*;
+import java.awt.event.*;
+import java.util.*;
+
+public class PerseveringScribbleCollections extends java.applet.Applet
+  {
+  int last_x = 0;
+  int last_y = 0;
+  List model = new ArrayList ();
+
+  public void init ()
+    {
+    addMouseListener
+      (
+      new MouseAdapter ()
+        {
+        public void mousePressed (MouseEvent e)
+          {
+          last_x = e.getX ();
+          last_y = e.getY ();
+          }
+        }
+      );
+
+    addMouseMotionListener
+      (
+      new MouseMotionAdapter ()
+        {
+        public void mouseDragged (MouseEvent e)
+          {
+          Graphics g = getGraphics ();
+          int x = e.getX ();
+          int y = e.getY ();
+          g.setColor (Color.black);
+          DrawLine d = new DrawLine (last_x, last_y, x, y);
+          model.add (d);
+          d.paint (g);
+          last_x = x; 
+          last_y = y;
+          }
+        }
+      );
+    }
+
+  public void paint (Graphics g)
+    {
+    ListIterator l = model.listIterator ();
+    while (l.hasNext ())
+      {
+      ((DrawLine) l.next ()).paint (g);
+      }
+    }
+  }
+
+class DrawLine
+  {
+  private int x0;
+  private int y0;
+  private int x1;
+  private int y1;
+
+  public DrawLine (int x0, int y0, int x1, int y1)
+    {
+    this.x0 = x0;
+    this.y0 = y0;
+    this.x1 = x1;
+    this.y1 = y1;
+    }
+
+  public void paint (Graphics g)
+    {
+    g.drawLine (x0, y0, x1, y1);
+    }
+  }</pre>
+          <p>=== Groovy (based on the Java version, above. All my own work ;=))</p>
+          <pre>import javax.swing.WindowConstants as WC
+
+import groovy.swing.SwingBuilder
+import java.awt.Color
+import java.awt.Graphics
+import javax.swing.JPanel
+
+def list = []
+def last_x = 0
+def last_y = 0
+
+SwingBuilder.build {
+  frame(title: 'Groovy Scribble',
+      size: [600, 400],
+      show: true,
+      pack: false,
+      resizable: false,
+      defaultCloseOperation: WC.EXIT_ON_CLOSE) {
+    widget(new Scribble(list: list),
+        mousePressed: {e -&gt;
+          (last_x, last_y) = [e.x, e.y]
+        },
+        mouseDragged: {e -&gt;
+          (x, y) = [e.x, e.y]
+          def d = new DrawLine(x0: last_x, y0: last_y, x1: x, y1: y)
+          d.paint(e.component.graphics)
+          list &lt;&lt; d
+          (last_x, last_y) = [x, y]
+        }
+    )
+  }
+}
+
+class Scribble extends JPanel {
+  def list = []
+
+  public void paint(Graphics g) {
+    list.each { it.paint(g) }
+  }
+}
+
+class DrawLine {
+  def x0
+  def y0
+  def x1
+  def y1
+
+  public void paint(Graphics g) {
+    g.setColor(Color.black);
+    g.drawLine(x0, y0, x1, y1);
+  }
+}</pre>
+          <p>=== JavaFX (adapted from <a href="http://jfx.wikia.com/wiki/Scribble">Planet JFX</a>)</p>
+          <pre>package au.com.transentia.scribble.javafx;
+
+import java.lang.System;
+import javafx.scene.*;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.*;
+import javafx.scene.shape.Polyline;
+import javafx.scene.shape.Rectangle;
+import javafx.stage.Stage;
+
+def w = 600;
+def h = 400;
+
+class Scribble extends CustomNode {
+    var polyline: Polyline;
+
+    public override function create(): Node {
+        var group: Group = Group{
+            onMousePressed: function (e: MouseEvent) {
+                polyline = Polyline{ points: [e.sceneX, e.sceneY] };
+                insert polyline into group.content ;
+            }
+            onMouseDragged: function (e: MouseEvent) {
+                insert [e.sceneX, e.sceneY] into polyline.points;
+            }
+            content: Rectangle {
+                width: w
+                height: h
+                fill: Color {opacity: 0}
+            }
+        }
+
+        return group;
+    }
+}
+
+Stage {
+    onClose: function(): Void {
+        System.exit(0);
+    }
+    title: "JavaFX Scribble"
+    width: w
+    height: h
+    visible: true
+    resizable: false
+    scene: Scene {
+        content: [Scribble{}]
+    }
+}</pre>
+          <p>I'm not going to draw any conclusion…not one. Nope, not one. "Left as an exercise for the reader", that sort of thing applies here…</p>
+          <p>I had fun and each example is interesting, in its own way.</p>
+          <p>Enjoy.</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Groovy, Java, Programming</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">The State Of The Groovy World</h1>
+        <div class="entry-content">
+          <p>An overview, at least. By <a href="http://thirstyhead.com">Scott Davis</a>: <a href="http://groovy.markmail.org/message/7lsabbh2eldga4dm">http://groovy.markma … age/7lsabbh2eldga4dm</a>…</p>
+          <p>I'll excerp the main bits:</p>
+          <blockquote>
+            <p>Manning has Groovy in Action (and soon Grails in Action as well). Apress has quite a impressive cadre of titles, from DGG to Beginning Groovy and Grails, GORM, Grails + Flex, and more. The Prags have Venkat and I (Programming Groovy
+            and Groovy Recipes, respectively), plus Dave Klein's upcoming Grails title. Morgan Kaufmann has the tragically underrated Groovy Programming.</p>
+            <p>In terms of online articles, I've been writing <a href="http://www.ibm.com/developerworks/views/java/libraryview.jsp?search_by=mastering+grails">Mastering Grails</a> for IBM developerWorks for a year and a half now.</p>
+            <p>I've rebooted Andy Glover's old <a href="http://www.ibm.com/developerworks/views/java/libraryview.jsp?search_by=practically+groovy">Practically Groovy series</a>. (BTW, I went back and rewrote every Groovy example dating back to 2004
+            so that they run under modern Groovy - not as hard a task as you might imagine…) That's effectively 50-ish new pages of new material each month. (And boy are my arms tired… wink) Those articles are regularly among the most popular at IBM
+            devWorks, FWIW. There's also the monthly GroovyMag, JavaWorld, <a href="http://groovy.dzone.com/">http://groovy.dzone.com/</a>, SCADS of personal blogs, the Groovy/Grails podcast from Glen and Sven, and more…</p>
+            <p>I speak 30+ weekends a year on the NFJS tour talking about Groovy and Grails. That's in addition to JavaOne, TSSJS, QCON, JavaZone, and a host of others. When I'm not speaking publicly, I'm offering private Groovy/Grails
+            training/mentoring/consulting through <a href="http://thirstyhead.com">http://thirstyhead.com</a> . There are many other folks, like Ken Kousen, smokejumper, SpringSource (natch), who do the same.</p>
+            <p>Andy Glover's BDD framework <a href="http://easyb.org">easyb</a> - written in Groovy - just won a Jolt award. Both Groovy and Grails have won JAX awards. There's Griffon, Gant, Gradle, GMock and many other libraries/ frameworks that
+            leverage the power of Groovy and Grails under the covers.</p>
+            <p>Companies from Wired to LinkedIn to IBM to SAP to SkyTV to Tropicana to Pepsi to Mutual of Omaha to the (US) National Cancer Institute to many many others without a public-facing website or case study have adopted Groovy and
+            Grails.</p>
+            <p>The Groovy/Grails community has an embarrassment of riches to choose from. (Apologies if I missed an obvious addition to any of the informal lists I rattled off of the top of my head.) This mailing list alone should be an indication
+            of how vibrant the community is.</p>
+          </blockquote>
+          <p>A nice <a href="http://groovy.markmail.org/message/2jay5rwuweukgdzb">follow-up quote</a> from Dierk König:</p>
+          <blockquote>
+            <p>Unlike other languages, Groovy positions itself as "Java's dynamic friend" rather than trying to be a replacement.</p>
+          </blockquote>
+          <p>And <a href="http://groovy.markmail.org/message/ieq5wd45whrmazkp">a bit more</a> from Russel Winder:</p>
+          <blockquote>
+            <p>"Groovy, the symbiotic partner to Java on the JVM". The words "partner" and "symbiotic" are crucial here!</p>
+            <p>…</p>
+            <p>Where you need static type checking and fastest execution performance use Java, as soon as you need any form of reflection or dynamism consider switching that bit of your system to Groovy. <em>This is multi-language programming in a
+            total system context</em>.</p>
+          </blockquote>
+          <p>(My italics)</p>
+          <p>Time for <em>you</em>, dear reader, to jump on the Groovy bandwagon. Don't be afraid, the horses won't bite!</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Griffon, Groovy, Programming</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">A Big Thank-You</h1>
+        <div class="entry-content">
+          <p>To Atlassian, for their special (limited time) offer of $5 each for <a href="http://www.atlassian.com/software/jira/">Jira</a> and <a href="http://www.atlassian.com/software/confluence/">Confluence</a>: <a href=
+          "http://www.atlassian.com/starter/">The Atlassian $timulus Package</a>.</p>
+          <blockquote>
+            <p>The world economy needs to get back on track and we want to help. Our products help teams communicate better, have more productive interactions and get stuff done. We want to help small entrepreneurial teams get the economy back into
+            high gear.</p>
+          </blockquote>
+          <p>It was all in a good cause, as well:</p>
+          <blockquote>
+            <p>We want to raise $25,000 for Room to Read, who help improve education in the developing world by establishing libraries, schools and more. Help us hit our goal, and create the young entrepreneurs of tomorrow.</p>
+          </blockquote>
+          <p><strong>I</strong> helped them hit their goal…the offer was just too good to refuse!</p>
+          <p>Great products, great (aussie) company and a great idea…<a href="http://www.time.com/time/magazine/article/0,9171,1604887,00.html">gotta love it</a>!</p>
+        </div><!--/entry-content-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">A Guru, Eh!</h1>
+        <div class="entry-content">
+          <p>This is too good to hide away on <a href="http://www.linkedin.com/pub/4/890/540">LinkedIn</a>:</p>
+          <blockquote>
+            <p>In the years that I worked with Bob, I watched him design, develop and deliver an impressive range of 'mission critical applications'. As testament to their quality and appropriate design, many presently service the ENERGEX community.
+            Bob is a font of knowledge backed up by hard earned practical know how. He creates scalable Java enterprise solutions that leave a group free to focus on new project work. As team lead, that was the benefit to me. I have no hesitation in
+            recommending Bob as a high caliber JAVA platform and technologies guru.</p>
+          </blockquote>
+          <p>Thanks <a href="http://lexecorp.com/">Alex</a>!</p>
+        </div><!--/entry-content-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Pretty Useful Pivot</h1>
+        <div class="entry-content">
+          <p>Wish <a href="http://incubator.apache.org/pivot/index.html">Pivot</a> had been around a couple of years ago:</p>
+          <blockquote>
+            <p>Pivot is a platform for building rich internet applications in Java. It combines the enhanced productivity and usability features of a modern RIA toolkit with the robustness of the industry-standard Java platform….Pivot applications
+            are written using a combination of Java and XML and can be run either as an applet or as a standalone (optionally offline) desktop application.</p>
+          </blockquote>
+          <p><a href="http://cwiki.apache.org/PIVOT/kitchen-sink-demo.html">Try the "Kitchen Sink" demo</a> yourself. It's really impressive with Java 6u10 or above…could applets <em>really</em> be <a href=
+          "http://www.javaworld.com/javaworld/jw-05-2008/jw-05-applets.html">making a comeback</a>? Hmm!</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Tools</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">A Pair Of Useful Utilities</h1>
+        <div class="entry-content">
+          <p>BareTail and BareGrep from <a href="http://www.baremetalsoft.com/">Bare Metal Software</a></p>
+          <p>Pro versions are avilable, as well.</p>
+        </div><!--/entry-content-->
+      </div><!-- .post -->
+      <div class="pagination">
+        <span class="next"><a href="DUMMY">Next »</a></span> <span class="previous"><a href="../22/22.htm">« Previous</a></span>
+      </div>
+    </div>
+  </div><!--#page-->
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script> 
+  <script src="js/site.js"></script>
+</body>
+</html>

@@ -1,0 +1,257 @@
+html {
+    margin: 0;
+    padding: 0
+}
+
+body {
+    font-family: sans-serif;
+
+
+    /*font-size: 12px;*/
+    margin: 0;
+    padding: 2px;
+    /*text-align: left*/
+}
+
+#page {
+    margin: 0 auto;
+    width: 100%;
+    background: #fff
+}
+
+#header strong, h1, h2, h3, h4 {
+    font-family: serif;
+
+    font-style: italic;
+    margin: 0;
+    margin-top: 10px;
+    padding: 4px
+}
+
+h2 {
+    color: #555;
+    font-size: 20px
+}
+
+h3 {
+    color: #555;
+    font-size: 18px
+}
+
+h4 {
+    color: #333;
+    font-size: 16px
+}
+
+li, p, td {
+    line-height: 1.5em;
+    margin-top: 1.2em
+}
+
+p, ul {
+    margin: 0 0 10px 0;
+    padding: 0
+}
+
+li {
+    margin: 0 0 5px 20px
+}
+
+a:link, a:visited {
+    color: #b22222;
+    font-weight: 700;
+    text-decoration: none
+}
+
+a:hover {
+    text-decoration: underline
+}
+
+.clear {
+    clear: both;
+    display: block;
+    float: none
+}
+
+.close {
+    margin-bottom: 40px
+}
+
+.close a, .close a:visited {
+    color: #333;
+    font-size: 11px
+}
+
+#content {
+    margin: 0 1% 1%
+}
+
+#header {
+    padding: 5px;
+    margin: 5px 5px 10px 5px;
+    background: #b22222 url(../img/shade.png) repeat-x
+}
+
+#footer {
+    padding: 20px 40px
+}
+
+#blog-title a, #blog-title a:visited {
+    color: #fff;
+    font-size: 30px;
+    text-decoration: none
+}
+
+#blog-description{
+    color: #fff;
+    font-size: 10px;
+    font-style: italic;
+}
+
+.old-content {
+    display: inline;
+    float: right;
+    color:white;
+    font-size: 10px;
+    font-weight: bold;
+    font-style: normal;
+    padding-right: 10px;
+}
+
+#content .entry-content h1, #content .entry-content h2, #content .entry-content h3, #content .entry-content h4 {
+    margin: 20px 0 10px;
+    padding: 0
+}
+
+#content div.hentry.post {
+    margin-bottom: 20px
+}
+
+#content .entry-title, #content .entry-title a, #content .entry-title a:visited {
+    background: #eee;
+    color: #b22222;
+    font-weight: 700;
+    margin-bottom: 10px;
+    text-decoration: none
+}
+
+#content .entry-title a:hover {
+    text-decoration: underline
+}
+
+#content div.entry-content {
+    margin-bottom: 10px
+}
+
+#content .entry-content blockquote {
+    border-left: 1px solid #ddd;
+    margin: 0 0 10px 20px;
+    padding: 7px 10px
+}
+
+#content div.entry-content ul {
+    margin: 0 0 10px 30px;
+    padding: 0
+}
+
+#content div.entry-content ul {
+    list-style: disc
+}
+
+#content div.entry-content li {
+    margin: 0 0 5px 0;
+    padding: 0
+}
+
+#content .comments-link {
+    margin-bottom: 15px
+}
+
+#content p.comments-link a, #content p.comments-link a:visited {
+    color: #333
+}
+
+#content .by-line, #content .filed {
+    font-size: 8px;
+    margin-bottom: 8px;
+    margin-top: -5px
+}
+
+#content .page .by-line {
+    margin-top: 30px
+}
+
+#content .by-line a, #content .by-line a:visited, #content .filed a, #content .filed a:visited {
+    color: #555
+}
+
+#content h2.comments {
+    margin-bottom: 10px
+}
+
+#content .some-html-is-ok {
+    color: #666;
+    font-size: 11px;
+    font-style: normal
+}
+
+#content .pagination {
+    margin-top: 20px;
+    margin-right: 10px;
+    margin-left: 10px;
+    margin-bottom: 20px;
+    height: 14px
+}
+
+#content .pagination a, #content .pagination a:visited {
+    color: black;
+}
+
+#content .pagination .next {
+    float: right
+}
+
+#carrington-about {
+    font-size: 11px;
+    line-height: 140%
+}
+
+#carrington-about h2 {
+    margin-top: 0
+}
+
+#footer, #footer a, #footer a:visited {
+    color: #999;
+    font-size: 12px
+}
+
+#footer p {
+    margin: 0;
+    padding: 0
+}
+
+#generator-link {
+    line-height: 30px
+}
+
+/*#developer-link a, #footer p#developer-link a:visited {*/
+/*    background: url(../img/by-crowd-favorite.png) no-repeat;*/
+/*    display: block;*/
+/*    float: right;*/
+/*    height: 30px;*/
+/*    overflow: hidden;*/
+/*    text-indent: -32697px;*/
+/*    width: 270px*/
+/*}*/
+
+code, pre {
+    font-family: monospace;
+    font-size: 90%;
+    border-top: 1px solid brown;
+    border-bottom: 1px solid brown;
+    background-color: #f5f5f5;
+    padding: 5px 10px;
+    font-weight: 700;
+    overflow: auto
+}
+

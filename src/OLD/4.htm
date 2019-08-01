@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <title>Transentia - transentia pty. ltd.; development, consulting, training at the leading-edge of technology</title>
+  <link rel="stylesheet" type="text/css" media="screen, print, handheld" href="wp-content/themes/transentia/css/site.css">
+</head>
+<body>
+  <div id="page">
+    <div id="header">
+      <p><a href="../index.htm"><img src="wp-content/uploads/widgets/transentia-logo-red-glow.gif" border="0"></a></p>
+      <p class="old-content">transentia's old content; click on the logo to return to the new content</p>
+      <p id="blog-description">transentia pty. ltd.; development, consulting, training at the leading-edge of technology</p>
+    </div><!-- #header -->
+    <div id="content">
+      <div class="pagination">
+        <span class="next"><a href="DUMMY">Next »</a></span> <span class="previous"><a href="DUMMY">« Previous</a></span>
+      </div>
+      <div class="post hentry">
+        <h1 class="entry-title">Gorgeous GBench</h1>
+        <div class="entry-content">
+          <p>I've been known to indulge my OCD and post a very few trivial <a href="?s=benchmark" title="micro-benchmarks">micro-benchmarks</a>.</p>
+          <p>Each time I just hacked a simple Groovy script together I thought "there <em>must</em> be a better way."</p>
+          <p>Turns out, there is: <a href="http://code.google.com/p/gbench/">GBench</a>: "a benchmarking module for <a href="http://docs.groovy-lang.org/latest/html/">Groovy</a>."</p>
+          <p>To see how GBench works, I took an <a href="2009/06/07/trivial-groovy-micro-benchmark/">earlier benchmark</a> and re-worked it for GBench, viz:</p>
+          <pre>
+@Grab('com.googlecode.gbench:gbench:0.4.1-groovy-2.1') // v0.4.1 for Groovy 2.1
+
+def r = benchmark(verbose: true) {
+    'Each' {
+        def i = 0
+        (1..100000000).each { i ++ }
+    }
+    'For' {
+        def i = 0
+        for (x in 1..100000000) { i ++ }
+    }
+}
+r.prettyPrint()
+</pre>
+          <p>And the result:</p>
+          <pre>
+Environment
+===========
+* Groovy: 2.1.2
+* JVM: Java HotSpot(TM) 64-Bit Server VM (23.7-b01, Oracle Corporation)
+    * JRE: 1.7.0_17
+    * Total Memory: 127.875 MB
+    * Maximum Memory: 127.875 MB
+* OS: Windows 8 (6.2, amd64) 
+
+Options
+=======
+* Warm Up: Auto (- 60 sec)
+* CPU Time Measurement: On
+
+Warming up "Each"...
+Measuring "Each"...
+Warming up "For"...
+Measuring "For"...
+            user  system         cpu        real
+
+Each  7859375000       0  7859375000  8111961507
+For   2250000000       0  2250000000  2304534377
+</pre>
+          <p>Simple, easy. What's not to like!</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Groovy, Programming</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Will Code For…Extraordinary Wealth</h1>
+        <div class="entry-content">
+          <p>And to further that aim…<a href='wp-content/html%20tidy2012/12/Bob-Brown-CV.docx'>Bob's CV in all it's Word 2010 .docx glory</a>.</p>
+          <p>Those with checkbooks, please line up on the left. If you have cash, form a nice queue on my right. Please find your place in the queue, ordered descending based on the amount of money you wish to throw at me. Favourable consideration
+          will be given to those wishing to sweeten the deal by offering me my own desert island/private jet, etc.</p>
+          <p>A man can dream, can't he?</p>
+        </div><!--/entry-content-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Triangle Groovy Koan</h1>
+        <div class="entry-content">
+          <p>Thought I'd post a "Groovy Koan."</p>
+          <p>The following is a Groovy version of a solution to the Triangle Ruby Koan, which (in part) challenges the student to code the following problem:</p>
+          <pre>
+# Triangle analyzes the lengths of the sides of a triangle
+# (represented by a, b and c) and returns the type of triangle.
+#
+# It returns:
+#   :equilateral  if all sides are equal
+#   :isosceles    if exactly 2 sides are equal
+#   :scalene      if no sides are equal
+#
+def triangle(a, b, c)
+  # WRITE THIS CODE
+end
+</pre>
+          <p>What you'll see here arguably represents a 'sexier' solution than <a href="http://stackoverflow.com/questions/4742692/a-more-elegant-solution-to-ruby-koans-triangle-rb">many others</a> out there.</p>
+          <p>It's not all my own work: its an amalgam of the various versions that were discussed during the workshop that I talked about earlier. So thanks to my fellow participants.</p>
+          <p>Here goes nothin'…</p>
+          <p>First, the solution:</p>
+          <pre>
+// file: triangle/Triangle.groovy
+package triangle
+
+class Triangle {
+    static triangle(_a, _b, _c) {
+        def coll = [_a, _b, _c]
+        def (a, b, c) = coll.sort()
+        if ((a + b) &lt;= c)
+            throw new TriangleException()
+        TriangleType.values()[coll.unique().size() - 1]
+    }
+}
+
+// NB: order is important here
+enum TriangleType {
+    EQUILATERAL, ISOSCELES, SCALENE
+}
+
+class TriangleException extends Exception {}
+</pre>
+          <p>Rather than follow the Ruby Koan testing path I have decided to find my own way and use the very neat <a href="http://code.google.com/p/spock/">Spock</a> testing framework. Viz:</p>
+          <pre>
+// file: TriangleSpec.groovy
+import spock.lang.*
+import triangle.*
+
+public class TriangleSpec extends spock.lang.Specification {
+
+    @Unroll("#iterationCount: &lt;#a, #b, #c&gt; represents an EQUILATERAL triangle.")
+    def "test equilateral triangles have equal sides"(a, b, c) {
+        expect:
+        TriangleType.EQUILATERAL == Triangle.triangle(a, b, c)
+        where:
+         a |  b |  c
+         2 |  2 |  2
+        10 | 10 | 10
+    }
+
+    @Unroll("#iterationCount: &lt;#a, #b, #c&gt; represents an ISOSCELES triangle.")
+    def "test isosceles triangles have exactly two sides equal"(a, b, c) {
+        expect:
+        TriangleType.ISOSCELES == Triangle.triangle(a, b, c)
+        where:
+         a |  b |  c
+         3 |  4 |  4
+         4 |  3 |  4
+         4 |  4 |  3
+        10 | 10 |  2
+    }
+
+    @Unroll("#iterationCount: &lt;#a, #b, #c&gt; represents a SCALENE triangle.")
+    def "test scalene triangles have no equal sides"(a, b, c) {
+        expect:
+        TriangleType.SCALENE == Triangle.triangle(a, b, c)
+        where:
+         a |  b |  c
+         3 |  4 |  5
+        10 | 11 | 12
+         5 |  4 |  2
+    }
+
+    @Unroll("#iterationCount: &lt;#a, #b, #c&gt; represents an illegal triangle.")
+    def "test illegal triangles throw exceptions"(a, b, c) {
+        when:
+        Triangle.triangle(a, b, c)
+        then:
+        thrown(TriangleException)
+        where:
+        a | b |  c
+        0 | 0 |  0
+        3 | 4 | -5
+        1 | 1 |  3
+        2 | 4 |  2
+    }
+}
+</pre>
+          <p>Does it work? Yes. Yes it does:</p>
+          <p><img src="wp-content/uploads/2012/12/TriangleKoan.png" alt="" title="TriangleKoan" width="390" height="498"></p>
+          <p>And in (a somewhat round-about) homage to Jim Wierich (author of Ruby's equivalent '<a href="http://rake.rubyforge.org/">rake</a>' tool), I have used Gradle for build automation and dependency management:</p>
+          <pre>
+// file: build.gradle
+apply plugin: "groovy"
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    groovy("org.codehaus.groovy:groovy-all:2.0.5")
+    testCompile "org.spockframework:spock-core:0.7-groovy-2.0"
+}
+
+// ALWAYS do tests regardless of up-to-date checking
+test.outputs.upToDateWhen { false }
+</pre>
+          <p>May the above help you along your journey on your path to enlightenment!</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Gradle, Groovy, Programming, Ruby</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">YOW! Workshops 2012 - Brisbane</h1>
+        <div class="entry-content">
+          <p>Had the opportunity to take a ramble on <a href="http://rubykoans.com/">The Path to Enlightenment</a> via Ruby Koans with <a href="http://onestepback.org/">Jim Weirich</a>.</p>
+          <p>Good fun!</p>
+          <p>It would be remiss of me if I did not mention that <a href="http://groovykoans.org/">Groovy Koans</a> do exist…so Groovy devs do not need to miss out on enlightenment.</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Groovy, Programming, Ruby</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Functional Programming with the Stars</h1>
+        <div class="entry-content">
+          <p>Thanks to all involved in making <a href="http://www.bfpg.org/events/90488112/?eventId=90488112&amp;action=detail">Functional Programming with the Stars</a> a success.</p>
+          <p>Maybe one day I'll properly grok Monads…</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Programming</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Using Betamax to Mock HTTP-based Interactions</h1>
+        <div class="entry-content">
+          <p>Another Groovymag contribution. This time from <a href="http://www.groovymag.com/main.issues.description/id=42/">GroovyMag March 2012</a>.</p>
+          <p><img src="wp-content/uploads/2012/11/gm41_400.jpg" alt="" title="gm41_400" width="400" height="518"></p>
+          <p><strong>I</strong> thought the title was 'clever', even if no-one else liked it!</p>
+          <p>As usual, the project files are <a href='wp-content/uploads/2012/11/MockingBird.zip'>available</a></p>
+          <hr>
+          <p>To Kill a Mocking Problem</p>
+          <p>Using Betamax to Mock HTTP-based Interactions</p>
+          <p>Bob Brown<br>
+          bob@transentia.com.au<br>
+          <a href="http://www.transentia.com.au">http://www.transentia.com.au</a></p>
+          <p><em>Extensively testing system components is a cornerstone idea of modern software development but, even with Groovy's powerful toolset, is sometimes easier said than done. This is especially true when testing a feature in an HTTP-based
+          application which relies on fixture data that is supplied via an interaction with another system. This article shows how Betamax can help.</em></p>
+          <h1>Introduction</h1>
+          <p>Some time ago, in a project not so far, far away from me I had a problem: I needed to run a test feature that required live fixture data from a "downstream" WebService. I couldn't use the standard TEST environment because a colleague
+          was reconfiguring it for his own nefarious purposes. I couldn't work with the SIT environment because another team was using it. I couldn't "borrow" the UAT environment since it was already booked out for testing an earlier change. Even
+          the TRAIN environment was unavailable due to an influx of new staff. Stymied! Nothing left to do but hack on the documentation, darn it…</p>
+          <p>Those of you who work in a large multi-project, multi-department environment will surely recognize (and I hope, sympathise with) my all-too-common situation: there are simply never enough environments to go around.</p>
+          <p>Had I known about Rob Fletcher's Betamax, I am sure that I could have saved myself a fair bit of aggravation and broken the dependency chain that linked my testing to the availability of another system.</p>
+          <p>To quote from the Betamax home page: <em>"Betamax is a record/playback proxy for testing JVM applications that access external HTTP resources such as web services and REST APIs. ….The first time a test annotated with @Betamax is run any
+          HTTP traffic is recorded to a tape and subsequent runs will play back the recorded HTTP response from the tape without actually connecting to the external server."<br></em></p>
+          <p>As I was thinking about Betamax, my mind mixed together two somewhat disparate ingredients: mocking and archiving old movies. Once I had swirled them together, added a pinch of Geb and a dash of Spock to the cocktail, out poured the
+          task at hand: to show how Spock and Geb can work together to automate scraping quotes from a web page dedicated to the old Gregory Peck classic movie "To Kill a Mockingbird", and then marshaling the results into a JSON structure suitable
+          for further processing. A second task is to illustrate how Betamax can accelerate things while decoupling the test from the actual web page's availability.</p>
+          <p>Martin Fowler (the self-proclaimed "loud-mouth on the design of enterprise software") would probably prefer that I called Betamax a stubbing system, rather than a mocking one but I couldn't for the life of me come up with a nice punny
+          stub-related 'hook' for the article, so for now I shall persist in calling it a mocking system. Follow the link given in the "Learn More" section for Martin's excellent article on the matter.</p>
+          <p>This is not a real testing situation, in that I am not interested in actually <em>testing</em> anything. Nevertheless, I chose to use Spock for this task because it provides an excellent testing framework that is worth highlighting and
+          because it integrates trivially easily with Betamax. I chose to use Geb to perform the actual web page scraping for the best of reasons: visibility, ease, compatibility and power.</p>
+          <h1>The scraping task</h1>
+          <p>The Spock/Geb code for this task is pretty simple. I have chosen to scrape the quotes from the "finestquotes.com" site. Figure 1 shows the contents and structure of the page I am scraping, as displayed by IE9's Developer Tools.</p>
+          <p><img src="wp-content/uploads/2012/11/figure_11.png" alt="" title="figure_1" width="30%"></p>
+          <p><em>Figure 1: Contents and structure of 'finestquotes.com' quotes page</em></p>
+          <p>The meta-task I am undertaking: writing an article covering how to bind different technologies together to scrape quotes from a web page, brings to mind the following-rather apposite-quote:</p>
+          <p><em>I have gathered a posie of other men's flowers and nothing but the thread which binds them is my own.<br>
+          -Michel Eyquem de Montaigne</em></p>
+          <p>Something to think about!</p>
+          <p>You should keep the structure of the page in mind as you read the Spock/Geb code given in Listing 1.</p>
+          <pre>
+import geb.*
+import geb.spock.*
+
+import static org.apache.commons.lang.StringUtils.strip
+import spock.lang.*
+import groovy.json.*
+
+class MockingBirdSpecification extends GebSpec {
+  def "scrape 'To Kill a MockingBird' quotes"() {
+    when:
+      to FinestQuotesPage
+    then:
+      at FinestQuotesPage
+    and:
+      produceJSON()
+  }
+
+  void produceJSON() {
+    new StringWriter().with { sw -&gt;
+      new StreamingJsonBuilder(sw).quotes() {
+        generated new Date()
+        title heading
+        size quotes.size()
+        quotes quotes.collect([]) { q -&gt;
+          [ quote: strip(q.quote, "   ~"), attribution: q.attribution]
+        }
+      }
+    println JsonOutput.prettyPrint(sw.toString())
+    }
+  }
+}
+
+class FinestQuotesPage extends Page {
+  static url =
+    "http://www.finestquotes.com/movie_quotes" +
+      "/movie/To%20Kill%20a%20Mockingbird/page/0.htm"
+  static at = { title.startsWith('Quotes') }
+  static content = {
+    quotes {
+      $("div#container1 &gt; div", id: "containerin").collect {
+        module Quote, it
+      }
+    }
+    heading { $("div#middletitles strong").text() }
+  }
+}
+
+class Quote extends Module {
+  static content = {
+    quote {
+      $("span.indquote_link").text()
+    }
+    attribution {
+      $("div", id: "authortab").text()
+    }
+  }
+}
+</pre>
+          <p><em>Listing 1: Screen-scraping a web page with Geb and Spock</em></p>
+          <p>Class MockingBirdSpecification shows Geb and Spock working together to access and scrape the quotes page. In this class, Spock supplies a JUnit-based testing framework while the feature "scrape 'To Kill a MockingBird' quotes" drives Geb
+          through its activities.</p>
+          <p>Geb defines a page using a content domain-specific language (DSL). The FinestQuotesPage class shows this in action. The class gives definitions for the page's URL, how to check if the page has been accessed correctly, how to access
+          (using Geb's JQuery-like selector language) the distinguished heading field and how to isolate from the HTML document each div element that acts as a container for the actual quote data. There are many such containers repeated throughout
+          the document, one for each quote.</p>
+          <p>Each container div itself encloses a defined structure that contains the actual data for each individual quote. Geb supplies a module DSL that makes it easy to cater for the sort of structural repetition seen here. In Listing 1, the
+          Quote class defines how to access the real quote and attribution data relative to its container. As the FinestQuotesPage class isolates each container div, it passes it to a Quote module and then gathers all the resultant Quote module
+          instances into a list that is then exposed via its quotes property. This technique represents a slightly unusual way of working with Geb and is described by Betamax's creator Rob Fletcher on his "Adhockery" blog (see the "Learn More"
+          section for a reference). Clearly, Rob is a multi-talented guy!</p>
+          <p>The end result of all this is that the page and associated list modules have extracted all the tasty "meat" from the document and exposed it so that it can be easily manipulated. From this point it is simple to produce a JSON
+          representation using Groovy's StreamingJsonBuilder and JsonOutput classes.</p>
+          <p>It is important to understand that Geb has done all the hard work of isolating the distinguished parts of the HTML document "up front" and does it one time only. Subsequent access to the various page and module properties is quite
+          efficient.</p>
+          <p>It is good to know that Geb can cope with invalid HTML. The HTML specification for the ID attribute says: "This attribute assigns a name to an element. This name must be unique in a document." The HTML document we are working with here
+          gives each container the same id attribute value ("containerin") and within each container there is a div with an id attribute having the value "authortab."</p>
+          <p>It is worth noting that when executed via Gradle, you will-by default-get nice "manager friendly" reports, as Figure 2 shows.</p>
+          <p><img src="wp-content/uploads/2012/11/figure_21-1024x824.png" alt="" title="figure_2" width="30%"></p>
+          <p><em>Figure 2: Spock report</em></p>
+          <p>Take a quick note of the time taken for this test to execute, we will refer to this later.</p>
+          <h1>Pressing the 'Betamax' button</h1>
+          <p>In the introduction I mentioned one of Betamax's virtues: the ability to decouple the system under test from its downstream fixture data. Betamax has at least one other virtue: speed.</p>
+          <p>Consider Figure 2: 6.19 seconds to execute. Not too bad but if you are an agilist with a large number of tests forever chasing James Shore's "ten minute build" ideal, you will want to do better. By avoiding all the messy network
+          interactions implicit in getting hold of external data, Betamax can speed up test execution, often quite substantially.</p>
+          <p>Enough discussion, let's see the code. Listing 2 shows the Betamax-augmented MockingBirdSpecification class. Clearly, it is trivial to bring Betamax to bear on a problem.</p>
+          <pre>
+import geb.*
+import geb.spock.*
+
+import static org.apache.commons.lang.StringUtils.strip
+import spock.lang.*
+import groovy.json.*
+import org.junit.Rule
+import betamax.Betamax
+import betamax.Recorder
+
+class BetamaxMockingBirdSpecification extends GebSpec {
+  @Rule Recorder recorder = new Recorder()
+
+  @Betamax(tape="ToKillAMockingBird.tape")
+  def "scrape 'To Kill a MockingBird' quotes"() {
+    setup:
+      browser.driver.setProxy("localhost", recorder.proxyPort)
+    when:
+      to FinestQuotesPage
+    then:
+      at FinestQuotesPage
+    and:
+      produceJSON()
+  }
+
+  void produceJSON() {
+    […elided, unchanged…]
+  }
+}
+</pre>
+          <p><em>Listing 2: The Betamax-augmented MockingBirdSpecification class</em></p>
+          <p>When you look at Listing 2, one thing should be immediately clear: it is <em>trivial</em> to include Betamax into a testing regime.</p>
+          <p>There are a number of points of interest in Listing 2.</p>
+          <p>Betamax uses a JUnit @Rule annotation attached to an instance of its Recorder class to allow the Recorder to hook into the lifecycle of the test and to start/shutdown Betamax's "tape recorder" proxy (which is actually an embedded
+          instance of Jetty). If you haven't seen it before, an @Rule is effectively a JUnit 4.7+ extension mechanism that provides access to the JUnit lifecycle (@Rules were initially called '@Interceptors'-a name which still seems clearer to
+          me).</p>
+          <p>The @Betamax annotation defines a 'tape' to use; Betamax will store the data arising from each request/response interaction into a tape (for the demo project the file src\test\resources\betamax\tapes\ToKillAMockingBird_tape.yaml).
+          Betamax provides a number of other options (unneeded for this article) that can be set via the @Betamax annotation or on the Recorder instance itself. These include the ability to store only requests that match (part of) a given URI or
+          header field values, setting a tape mode to READ_ONLY and setting a pass-through list of hosts that won't be proxied.</p>
+          <p>It is worth noting that Betamax can also configure itself from external files. As the documentation says: "If you have a file called BetamaxConfig.groovy or betamax.properties somewhere in your classpath it will be picked up by the
+          Recorder class."</p>
+          <p>As an aside, it is interesting to see that Rob Fletcher has chosen to use YAML (via the plain Java SnakeYAML library) for the tape format. YAML is a superset of JSON which provides "human-readable data serialization
+          format…data-oriented, rather than document markup." YAML is certainly a better choice for this purpose than XML would have been, due to its superior (at least, easier) support for binary data types. What makes YAML a particularly good
+          choice is that it makes it very easy to simply jump into a tape and edit it according to the needs of a test.</p>
+          <p>The last point of interest concerns configuring Geb to use Betamax's embedded proxy. I have added an appropriate setup block to the "scrape 'To Kill a MockingBird' quotes" feature.</p>
+          <p>It is easy to see the effect of Betamax on the test. The first time this Betamax-enhanced test is executed it is slightly slower due to the overhead of creating the tape. Subsequent test executions match and replay the recorded
+          interactions from the tape and so are much faster, as Figure 3 shows.</p>
+          <p><img src="wp-content/uploads/2012/11/figure_31-1024x658.png" alt="" title="figure_3" width="30%"></p>
+          <p><em>Figure 3: Betamax replay can be faster</em></p>
+          <p>Clearly, Betamax has had a big effect on the test's execution time. Things are much faster (pretty much twice as fast) without the network overhead.</p>
+          <p>It is worth reemphasizing that with Betamax in the loop, our test has not needed to go back to the source system. The test is now decoupled from issues arising from the system becoming unavailable, mutating under us, throwing up its own
+          set of bugs, etc., etc.</p>
+          <p>This is A Good Thing.</p>
+          <p>It gets better. If there were multiple tests within the same test suite, there would be a much bigger improvement: currently a large proportion of time is spent firing up Betamax's Jetty-based proxy server to service just the one
+          feature. This is very easy to see by making a copy of the Spock test and executing it alongside the original. Figure 4 shows the result.</p>
+          <p><img src="wp-content/uploads/2012/11/figure_41.png" alt="" title="figure_4" width="30%"></p>
+          <p><em>Figure 4: Avoiding repeated proxy startup</em></p>
+          <p>A nearly 8 times speedup. That ten minute build ideal seems back in reach now, doesn't it!</p>
+          <h1>Wrapping up</h1>
+          <p>You <em>need</em> to look at Betamax and see what it can do to for you.</p>
+          <p>Setting up fixture data for a unit test can be quite hard work and often drives people to create integration tests or simply leave things for manual acceptance testing. Betamax makes it as easy as possible to perform repeatable unit
+          testing with high-level or complex fixture data and at the same time can break the interdependencies between systems that often become impediments to a nice steady workflow.</p>
+          <p>The pairing of Geb and Spock is pretty neat as well.</p>
+          <p>Although it is early days (Betamax is currently at version 1.0, with version 1.1 showing on the horizon), Betamax shows great promise and is definitely technology I'll be keeping an eye on…I'd advise you to do the same.</p>
+          <h1>Learn more</h1>
+          <ul>
+            <li>Betamax's home, <a href="http://robfletcher.github.com/betamax/">http://robfletcher.github.com/betamax/</a>
+            </li>
+            <li>Spock, <a href="http://code.google.com/p/spock/">http://code.google.com/p/spock/</a>
+            </li>
+            <li>Geb, <a href="http://www.gebish.org/">http://www.gebish.org/</a>
+            </li>
+            <li>The Art of Agile Development: Ten-Minute Build, <a href="http://jamesshore.com/Agile-Book/ten_minute_build.html">http://jamesshore.com/Agile-Book/ten_minute_build.html</a>
+            </li>
+            <li>Modelling Repeated Structures with Geb, <a href="http://adhockery.blogspot.com/2010/11/modelling-repeating-structures-with-geb.html">http://adhockery.blogspot.com/2010/11/modelling-repeating-structures-with-geb.html</a>
+            </li>
+            <li>To Kill a Mockingbird, <a href="http://www.imdb.com/title/tt0056592/">http://www.imdb.com/title/tt0056592/</a>
+            </li>
+            <li>Quotes from the movie "To Kill a Mockingbird", <a href="http://www.finestquotes.com/movie_quotes/movie/To%20Kill%20a%20Mockingbird/page/0.htm">http://www.finestquotes.com/movie_quotes/movie/To%20Kill%20a%20Mockingbird/page/0.htm</a>
+            </li>
+            <li>SnakeYAML, <a href="http://code.google.com/p/snakeyaml/">http://code.google.com/p/snakeyaml/</a>
+            </li>
+            <li>HTML's ID Attribute, <a href="http://www.w3.org/TR/html4/struct/global.html#adef-id">http://www.w3.org/TR/html4/struct/global.html#adef-id</a>
+            </li>
+            <li>Mocks aren't Stubs, <a href="http://martinfowler.com/articles/mocksArentStubs.html#TheDifferenceBetweenMocksAndStubs">http://martinfowler.com/articles/mocksArentStubs.html#TheDifferenceBetweenMocksAndStubs</a>
+            </li>
+          </ul>
+          <p><em>Bob Brown is the director and owner of Transentia Pty. Ltd.. Based in beautiful Brisbane, Australia, Bob is a specialist in Enterprise Java and has found his niche identifying and applying leading-edge technologies and techniques to
+          customers' problems.</em></p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Geb, Gradle, Groovy, GroovyMag, Programming, Spock</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Strategy And Tactics And Architecture</h1>
+        <div class="entry-content">
+          <p>A chance meeting with a friend this evening got me thinking…</p>
+          <p>He was undertaking (enthusiastically, it seems) <a href="http://www.opengroup.org/togaf/">TOGAF</a> training. It was the end of the day and he seemed a little worn down. Not surprising really, he faces a herculean task.</p>
+          <p>The TOGAF version 9 book proudly announces announces it is 780 pages long:</p>
+          <p><img src="wp-content/uploads/2011/09/togaf-book.png" alt="" title="togaf-book" width="463" height="173"></p>
+          <p>And that's just the <em>framework</em>!</p>
+          <p>I gather that the idea is he will become a "TOGAF Thought Leader" and can champion the roll out of TOGAF throughout the organisation.</p>
+          <p>It is assumed that things will improve when everyone can speak the same language about their architectural plans.</p>
+          <p>This got me musing:</p>
+          <p><img src="wp-content/uploads/2011/09/chin-arch.png" alt="" title="chin-arch" width="659" height="65"> [*1]</p>
+          <p>What? You didn't catch that?</p>
+          <p>Oh well. Maybe you should take some Chinese Training. Then you can become a "Chinese Thought Leader" and can champion the roll out of Chinese throughout your organisation. Things are bound to improve once everyone can speak Chinese.
+          [*2]</p>
+          <p>No?</p>
+          <p>Surprised?</p>
+          <p>The TOGAF approach is rooted in the time when we <em>hoped</em> that open standards would prevail. In this nirvana we were all running <a href="http://en.wikipedia.org/wiki/Tru64_UNIX#OSF.2F1">OSF/1</a> (distributed via <a href=
+          "http://en.wikipedia.org/wiki/Architecture_Neutral_Distribution_Format">ANDF</a>, naturally) and programming in Ada.</p>
+          <p>Today's world isn't like that. We have brought down upon ourselves an increasing number of OSs, a plethora of different languages, some good interoperability technologies, and vendors that work both assiduously and insidiously to
+          subvert any semblance of neutrality to ensure that their clients are locked in to their product set.</p>
+          <p>Here's the hard truth from our industry's history: you can strategise all you want but you won't succeed unless you retain tactical flexibility.</p>
+          <p>IMHO, these days one should focus <strong>hard</strong> on tactics, not strategy. You can achieve something tactically, but the war is never ending (and thus can't be won).</p>
+          <p>To put it another way (paraphrasing <a href="http://en.wikiquote.org/wiki/Helmuth_von_Moltke_the_Elder">Helmuth von Moltke the Elder</a>): No battle plan ever survives contact with the enemy.</p>
+          <p>More is <em>not</em> better. If your <em>framework</em> on its own amounts to 780 dense pages, you have simply <em>no chance.</em><br>
+          Your clients won't understand it. Your team won't follow it. Your vendors won't tolerate it.</p>
+          <p>There is but one single Critical Success Factor here: simplicity.</p>
+          <p><a href="http://en.wikipedia.org/wiki/KISS_principle">KISS.</a> It's your <em>only</em> chance.</p>
+          <p>You <em>can't have</em> a single all-encompassing architecture. You can't expect everyone to get on board. The world will not stand still-you won't even have time to formulate the Grand Plan.</p>
+          <p>Darn but this 'architecture' idea is soooo seductive though isn't it: maybe it'll all work <em>this time</em>…</p>
+          <p>Not going to happen, though.</p>
+          <p>To get back to military terms…the strategy has been decided: you are already in the war; you now must focus on constantly adapting your tactics.</p>
+          <p>Gotta say I feel a bit sorry for my friend! The organisation under whose flag he labours was established precisely on the promise that it will control his clients' worlds and guide them to a well-designed, static and completely
+          regulated nirvana.</p>
+          <p>For them, there is no politically accepable alternative.</p>
+          <p>For them, <a href="http://www.agilemodeling.com/essays/agileArchitecture.htm">Agile</a> <a href="http://www.agilearchitect.org/agile/index.asp">Architecture</a> just isn't possible.</p>
+          <p>And yet history shows us it probably is the only thing that might be useful, not to say appropriate.</p>
+          <p>A losing battle, if ever there was one.</p>
+          <p>[*1]: Maybe any problems you are having with your architechure aren't actually related to the langauge being used to describe said architecture.</p>
+          <p>[*2]: I'm actually all in favour of learning Chinese…</p>
+        </div><!--/entry-content-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Testing and Evaluating a Simple Set of Classes</h1>
+        <div class="entry-content">
+          <p>I completely forgot to publish my <a href="http://www.groovymag.com/main.issues.description/id=44/">January 2012 GroovyMag article</a>! The topic "Testing and Evaluating a Simple Set of Classes" covers testing using Spock, CodeNarc and
+          Cobertura.</p>
+          <p><img src="wp-content/uploads/2012/05/gm-ed44_400.jpg" alt="" title="gm-ed44_400" width="386" height="500"></p>
+          <p>Here goes nothing…</p>
+          <p>Almost forgot: the source files, etc. are <a href='wp-content/uploads/2012/11/Grader.zip'>here</a>.</p>
+          <hr>
+          <p><strong>Testing and Evaluating a Simple Set of Classes</strong></p>
+          <p>Bob Brown<br>
+          bob@transentia.com.au<br>
+          <a href="http://www.transentia.com.au/">http://www.transentia.com.au</a></p>
+          <p><em>It is an oft-repeated statement that code written using a dynamic language such as Groovy requires more testing than a static language such as Java. It is fortunate, then, that such a wealth of excellent testing tools is available
+          to the Groovy developer.</em></p>
+          <h1>Introduction</h1>
+          <p>I am writing this on a Jetfoil (a Boeing-built jet-propelled hydrofoil) flying/sailing across the mouth of the Pearl River Delta to Macau ("the Las Vegas of the East"). I am visiting friends and colleagues at the University of Macau and
+          will also be giving a presentation on "The Gr8 Technologies" to the University's Computer Science and Engineering faculty.</p>
+          <p>My mind is ticking over with an academic viewpoint, and has latched onto a nicely scholastic problem: testing and evaluating a simple pair of classes designed to grade a student's multiple-choice exam paper.</p>
+          <p>For this article I will take a look at testing using Spock, CodeNarc and Cobertura.</p>
+          <h1>The classes under test</h1>
+          <p>There are two classes that it is necessary to test.</p>
+          <p>Listing 1 shows the Grader class. This is where the bulk of the grading-related work is undertaken.</p>
+          <pre>
+package macau.gr8
+
+class Grader {
+  def expectedAnswers
+  def graderFileReader
+
+  def grade(String s) {
+    def candidateAnswers = graderFileReader.readGradesListFromFile(s)
+    grade(candidateAnswers)
+  }
+
+  def grade(List candidateAnswers) {
+    if (expectedAnswers?.size() != candidateAnswers?.size())
+      -1.0
+    else {
+      def count = 0
+      expectedAnswers.eachWithIndex {o, index -&gt;
+        if (o == candidateAnswers[index]) count ++
+      }
+
+      count / expectedAnswers.size()
+      }
+  }
+}
+</pre>
+          <p><em>Listing 1: The Grader class under test</em></p>
+          <p>As can be seen, the Grader class possesses two major pieces of functionality, represented as a pair of overloaded methods.</p>
+          <p>When presented with a list of answers, it compares that list to the expected list (which should have been set at class construction time) and returns a percentage grade in the range 0.0..1.0.</p>
+          <p>For interest's sake, there is a more idiomatic way of doing the list comparison:</p>
+          <pre>
+def grade(List candidateAnswers) {
+    expectedAnswers?.size() != candidateAnswers?.size() ?
+        -1 : [expectedAnswers, candidateAnswers].transpose().
+            findAll { it[0] == it[1] }.size() / expectedAnswers?.size()
+}
+</pre>
+          <p>I find my way clearer (even if less functionally 'trendy'), so I am sticking with it.</p>
+          <p>When presented with a file containing a single line representing a simple CSV-formatted list of answers, the Grader class reads the file, the contents of which are bound to a list and the answer contained within it is graded as
+          previously described.</p>
+          <p>Listing 2 illustrates what is probably the simplest use of Grader in a script.</p>
+          <pre>
+import macau.gr8.*
+
+def grader = new Grader(expectedAnswers: ['a','b','c'],
+  graderFileReader: new GraderFileReader())
+assert grader.grade(['a','b','c']) == 1.0D
+assert grader.grade('rsrc/100pct.txt') == 1.0D
+</pre>
+          <p><em>Listing 2: Simple Grader usage</em></p>
+          <p>Listing 3 shows the GraderFileReader class. This is a small utility class used by Grader to handle File I/O and also perform the binding of CSV data to Groovy list form.</p>
+          <pre>
+package macau.gr8;
+
+class GraderFileReader {
+  def readGradesListFromFile(name) {
+      def f = new File(name)
+      if (!f.exists())
+        throw new Exception("File $name does not exist.")
+      def txt = f.text
+      txt?.split(',') as List
+  }
+}
+</pre>
+          <p><em>Listing 3: GraderFileReader utility class</em></p>
+          <p>Although having this frankly utilitarian class separated out from the Grader class may seem unnecessary, factoring this functionality into a separate class that is 'injected' as a dependency into the Grader class proper nicely
+          simplifies testing, as will be seen.</p>
+          <h1>Simple testing with Spock</h1>
+          <p>To quote the Spock website: "Spock is a testing and specification framework for Java and Groovy applications. What makes it stand out from the crowd is its beautiful and highly expressive specification language."</p>
+          <p>Spock is based on JUnit 4 and can be used in any situation where you may currently be applying JUnit. Spock's novel use of Global AST Transforms to create its "beautiful and highly expressive specification language" makes for a testing
+          tool that provides much greater ease-of-use for the dynamic Groovy developer.</p>
+          <p>Although perhaps not taking us as far in the direction of Behaviour Driven Development as easyb, Spock still makes it easy to have development driven by story-like specifications. A specification for one feature of the Grader's
+          functionality might be:</p><em><br>
+          The perfect paper:<br></em>
+          <p><em>Given:<br>
+              an instance of a paper grader<br>
+          When:<br>
+              a perfect answer is presented<br>
+          Then:<br>
+              the calculated grade should be 100%<br></em></p>
+          <p>In Listing 4 it is easy to see how this feature (and similar) is translated into a Spock test.</p>
+          <pre>
+package macau.gr8;
+
+import spock.lang.Specification
+import static spock.util.matcher.HamcrestMatchers.closeTo
+
+public class GraderSpecification0 extends Specification {
+  def grader
+
+  def "The perfect paper"() {
+    given:
+      def grader = new Grader(expectedAnswers: ['a','b','c'])
+    when: "A perfect answer is presented"
+      def result = grader.grade(['a','b','c'])
+    then: "The grade should be 100%"
+      result == 1.0
+  }
+
+  def "The worst paper"() {
+    given:
+      def grader = new Grader(expectedAnswers: ['a','b','c'])
+    when: "No answers are given"
+      def result = grader.grade([])
+    then: "An error should be indicated"
+      result == -1.0
+  }
+
+  def "A poor paper"() {
+    given:
+      def grader = new Grader(expectedAnswers: ['a','b','c'])
+    when: "The fairly poor paper is presented"
+      def result = grader.grade(['a','c','b'])
+    then: "The grade should be 33%"
+      result closeTo(0.33D, 0.01D)
+  }
+}
+</pre>
+          <p><em>Listing 4: Simple Spock Specification</em></p>
+          <p>One big advantage of Spock should now be apparent: the readability of the testing code. It is pretty clear what is going on and it is not too hard to imagine sitting down and discussing this with an end-user.</p>
+          <p>Since Spock has JUnit "under the covers" it can be used easily with tools such as ant, maven or Gradle. Support in IntelliJ is also good (I haven't tried eclipse/STS, apologies to all those who have worked hard on those products).</p>
+          <p>Another powerful and useful feature of Spock is the "deep integration of Hamcrest matchers."</p>
+          <p>Hamcrest is "…a library of matcher objects (also known as constraints or predicates) allowing 'match' rules to be defined declaratively." Hamcrest use is optional but can occasionally prove quite effective in helping us create clear
+          tests.</p>
+          <p>Consider the third feature in Listing 4. Here we have a result of 1 correct answer out of 3. A naïve check for 'result == 0.33D' would of course fail, but the use of Hamcrest's closeTo method makes for a much more readable and concise
+          test than would otherwise be possible.</p>
+          <p>As Figure 1 shows, Spock can produce a nice, HTML-format report that allows one to drill-down into each individual class' results.</p>
+          <p><img src="wp-content/uploads/2012/11/figure_1.png" title="figure_1" width="781" height="334"></p>
+          <p><em>Figure 1: Spock's reports</em></p>
+          <p>At the moment, the text labels associated with the various blocks in a feature don't make it into the generated reports. The API reportedly allows for this but the developers are looking for someone to incorporate this ability into the
+          reports in an appropriate fashion.</p>
+          <h1>Parameterised testing with Spock</h1>
+          <p>Take a look back at Listing 4. The testing code is quite OK, but is none too DRY (DRY = Don't Repeat Yourself; a directive that all of us should follow as rigorously as is practical). Writing a multitude of essentially similar tests
+          quickly gets old! Spock's parameterised features help to preserve both our sanity and the quality of the actual testing code.</p>
+          <p>Listing 5 shows how Spock very neatly deals with the essentially repetitive testing needed to ensure the Grader class's correctness.</p>
+          <pre>
+public class GraderSpecificationListing5 extends Specification {
+  @AutoCleanup(quiet = true)
+  def grader = new Grader(expectedAnswers: ['a', 'b', 'c'])
+
+  @Unroll("#iterationCount: grade for #paper is #res")
+  def "Grader with papers given inline"() {
+    expect: "Grade an individual paper"
+      that grader.grade(paper), closeTo(res, 0.01D)
+
+    where: "With the following papers"
+      paper                | res
+      ['a', 'b', 'c']      | 1.0D
+      ['a', 'b', 'd']      | 0.66D
+      ['a', 'c', 'b']      | 0.33D
+      ['x', 'y', 'z']      | 0.0D
+      ['c', 'a', 'b']      | 0.0D
+      ['a', 'b']           | -1.0D
+      ['a', 'b', 'c', 'd'] | -1.0D
+      []                   | -1.0D
+      null                 | -1.0D
+    }
+}
+</pre>
+          <p><em>Listing 5: Parameterised Spock test</em></p>
+          <p>Implicitly specified through the expect:…where: pair of blocks is a loop through the provided data, with each iteration assigning to the variables 'paper' and 'res' as appropriate prior to them being used and tested inside the expect:
+          block.</p>
+          <p>Spock normally reports the success or failure of an entire feature. With the @Unroll attribute, one has a chance to customise this behaviour so that a result is given for each iteration of the parameterised test. The IntelliJ runner's
+          display is shown in Figure 2. Knowing the outcome of each parameterised test gives one a nice 'fuzzy' feeling and can be very helpful for long-running features.</p>
+          <p><img src="wp-content/uploads/2012/11/figure_2.png" alt="" title="figure_2" width="15%"></p>
+          <p><em>Figure 2: Unrolled parameterised test output</em></p>
+          <p>Note the orange 'headlines' in Figure 2. This is a slight imperfection in IntelliJ's presentation that is being tracked in the Jetbrains issue tracker via issue <a href="http://youtrack.jetbrains.com/issue/IDEA-75860">IDEA-75860</a>,
+          among others.</p>
+          <p>Also of note in Listing 5 is the use of the @AutoCleanup annotation. This is another useful element of Spock that helps keep the testing script clean and DRY. The example in Listing 5 uses the 'quiet' parameter, which 'squelches' any
+          exception that might occur during teardown of a Grader instance. Since Spock automatically attempts to call a 'close' method on any associated resource (and since Grader has no such method), such an exception is guaranteed to happen and
+          would simply represent unwanted 'noise' that might make the testing outcomes unclear.</p>
+          <h1>Spock and Excel</h1>
+          <p>It is sometimes best to have test parameters held externally to a feature; this may be especially true if one is getting testing fixture data directly from a user.</p>
+          <p>Spock is capable of driving a parameterised feature from any iterable instance, so with a little bit of help from the Apache Poi project it is possible to use an Excel spreadsheet to provide the data to a data-driven parameterised
+          feature.</p>
+          <p>Listing 6 shows the Spock test containing a parameterised feature driven by the data contained in the spreadsheet shown in Figure 3.</p>
+          <p><img src="wp-content/uploads/2012/11/figure_3.png" alt="" title="figure_3" width="15%"></p>
+          <p><em>Figure 3: Excel spreadsheet specifying fixture data</em></p>
+          <pre>
+package macau.gr8;
+
+import spock.lang.Specification
+import static spock.util.matcher.HamcrestMatchers.closeTo
+import static spock.util.matcher.HamcrestSupport.that
+import spock.lang.Unroll
+import spock.lang.AutoCleanup
+import org.apache.poi.ss.usermodel.WorkbookFactory
+
+public class GraderExcelSpecification extends Specification {
+  @AutoCleanup(quiet = true)
+  def grader = new Grader(expectedAnswers: ['a', 'b', 'c'])
+
+  @Unroll("#iterationCount: grade for #paper is #res")
+  def "Grader with papers from Excel"() {
+    expect: "Grade an individual paper"
+      that grader.grade(paper), closeTo(res, 0.01D)
+
+    where: "With the following papers"
+      [paper, res] &lt;&lt;
+        new ExcelHelper(excelFilename: /rsrc\test.xlsx/).rows()
+  }
+}
+
+class ExcelHelper {
+  def excelFilename
+
+  def rows() {
+    def workBook =
+      WorkbookFactory.create(new FileInputStream(excelFilename))
+    def sheet = workBook.getSheetAt(0)
+    sheet.rowIterator().collect([]) { row -&gt;
+      def firstCell = row.getCell(row.firstCellNum)
+      def paper
+      def res
+      if ("null" == firstCell?.stringCellValue)
+        (paper, res) = [null, -1.0D]
+      else {
+        paper = []
+        (row.firstCellNum + 1..&lt;row.lastCellNum - 1).each {
+          def cell = row.getCell(it)
+          if (cell)
+            paper &lt;&lt; cell.stringCellValue
+        }
+        res = row.getCell(row.lastCellNum - 1).
+          numericCellValue
+      }
+    [paper, res]
+    }
+  }
+}
+</pre>
+          <p><em>Listing 6: Spock test parameterised with spreadsheet data</em></p>
+          <p>It is worth remembering that because it is a pure Java library, POI does not require a windows installation to do its Good Stuff and so does not represent a problem for those who might be running development or continuous integration
+          systems and not paying the "Microsoft Tax."</p>
+          <h1>Spock mocks and intentions</h1>
+          <p>We may wish to test the Grader's file-related behaviour but not have a test data file available. Perhaps the system that should produce the file has not yet been created, or is still not reliable or represents some other impediment to
+          the development task at hand? Coupling between projects is often vexatious and can steal a surprising amount of time from a schedule. To compensate, Spock provides a simple yet powerful facility for defining mock objects.</p>
+          <p>Spock allows us to do more than just define simple mocked objects; it also allows us to define intentions for the mocked object. Whereas a mock allows us to ascribe known (often simpler than usual) behaviour for an instance, an
+          intention makes it possible to evaluate the <em>protocol</em> by which a class is utilised by other classes.</p>
+          <p>Listing 7 shows how Spock makes it easy to create a mock and define intentions for that mock instance.</p>
+          <pre>
+package macau.gr8;
+
+import spock.lang.AutoCleanup
+import spock.lang.Specification
+
+class GraderMockedSpecification extends Specification {
+  @AutoCleanup(quiet = true)
+  def grader = new Grader(expectedAnswers: ['a','b','c'])
+
+  def "Given a mock file"() {
+    setup: "Establish the grader with a mocked GFR"
+      def graderFileReader = Mock(GraderFileReader)
+      grader.graderFileReader = graderFileReader
+      1 * graderFileReader.readGradesListFromFile(_) &gt;&gt; ['a','b','c']
+      0 * _._
+
+    when: "Read a paper's answers from a given file"
+      def res  = grader.grade('100pct.txt')
+
+    then: "Ensure expected behaviour"
+      res == 1.0D
+  }
+}
+</pre>
+          <p><em>Listing 7: Mocks and intentions</em></p>
+          <p>The key to the magic resides in the following lines:</p>
+          <pre>
+def graderFileReader = Mock(GraderFileReader)
+...
+1 * graderFileReader.readGradesListFromFile(_) &gt;&gt; ['a','b','c']
+0 * _._
+</pre>
+          <p>These do three things:</p>
+          <p>1) create a mock instance for the GraderFileReader class. This mock instance will implement the same interface as the real class,</p>
+          <p>2) establish that the mocked readGradesListFromFile method should always return the defined three-element list,</p>
+          <p>3) state the intention that the readGradesListFromFile method should only ever be called once and that no other method on the mocked instance should ever be called.</p>
+          <p>That's a fair bit of sophistication wrapped into a quite succinct syntax!</p>
+          <h1>Guiding test creation with Cobertura</h1>
+          <p>While Spock provides a nice specification-oriented testing capability, it does not supply every piece of the testing puzzle. A perennial question for those writing tests is: "how do I know when I have written enough tests?"</p>
+          <p>Cobertura helps answer this question by generated instrumented versions of the code under test, running the Spock tests using this code and then reporting on which lines have been executed.</p>
+          <p>Figure 4 shows what Cobertura makes of the testing undertaken on the Grader class.</p>
+          <p><img src="wp-content/uploads/2012/11/figure_4-1024x428.png" alt="" title="figure_4" width="50%"></p>
+          <p><em>Figure 4: Cobertura report showing drilldown</em></p>
+          <p>Clearly, not every execution pathway has been tested for the GraderFileReader class. Note that Cobertura has also highlighted the fact that only one branch of the 'f.exists()' if statement has been exercised.</p>
+          <p>Cobertura requires very little configuration, simply point it at the source files and let it run.</p>
+          <p>The good thing about Cobertura is that it allows us to associate some sort of metric to our testing efforts. While 100% code coverage is the ideal it is rarely achieved, usually due to time/budget or other constraints. Nevertheless, as
+          the late, great science-fiction writer Robert Heinlein once wrote: "If it can't be expressed in figures, it is not science; it is opinion. It has long been known that one horse can run faster than another - but which one? Differences are
+          crucial." This is probably one of those issues (like performance) where a pragmatic "good enough" approach is likely acceptable.</p>
+          <h1>Testing code quality with CodeNarc</h1>
+          <p>So we can now assume that we have a Grader class that tests correctly with 100% coverage. Is it good enough yet? Well…probably not! There are sure to be imperfections, inconsistencies, violations of best practices, anti-patterns,
+          inadvertent oversights and miscellaneous style issues remaining in the code; issues that may or may not affect the correctness of the code but which certainly accumulate and reduce overall quality.</p>
+          <p>CodeNarc is a rule-driven analysis tool that (according to its website): "…analyzes Groovy code for defects, bad practices, inconsistencies, style issues and more."</p>
+          <p>There are currently "…over 175 rules with more added each week." Rules range from the trivial "UnnecessarySemicolon; <em>Semi-colons as line endings can be removed safely</em>", through the useful "GStringAsMapKey; <em>A GString should
+          not be used as a map key since its hashcode is not guaranteed to be stable</em>", to encompassing subtle concurrency-related rules like "SynchronizedOnBoxedPrimitive; <em>The code synchronizes on a boxed primitive constant, such as an
+          Integer. Since Integer objects can be cached and shared, this code could be synchronizing on the same object as other, unrelated code, leading to unresponsiveness and possible deadlock.</em>"</p>
+          <p>CodeNarc uses a ruleset configuration DSL (much like that understood by ConfigSlurper) to determine what rules should be enabled/disabled and what parameters should be applied to the rules.</p>
+          <p>Listing 8 gives the ruleset used for the Grader project.</p>
+          <pre>
+ruleset {
+
+  description 'Grader CodeNarc RuleSet'
+
+  ruleset("config/codenarc/StarterRuleSet-AllRulesByCategory.groovy.txt") {
+        DuplicateNumberLiteral   ( enabled : false )
+        DuplicateStringLiteral   ( enabled : false )
+        BracesForClass           ( enabled : false )
+        BracesForMethod          ( enabled : false )
+        IfStatementBraces        ( enabled : false )
+        BracesForIfElse          ( enabled : false )
+        BracesForForLoop         ( enabled : false )
+        BracesForTryCatchFinally ( enabled : false )
+        JavaIoPackageAccess      ( enabled : false )
+        ThrowRuntimeException    ( enabled : false )
+    }
+}
+</pre>
+          <p><em>Listing 8: CodeNarc ruleset for Grader</em></p>
+          <p>CodeNarc is another tool that produces a nice HTML-formatted report, shown in Figure 5.</p>
+          <p><img src="wp-content/uploads/2012/11/figure_5-860x1024.png" alt="" title="figure_5" width="50%"></p>
+          <p><em>Figure 5: CodeNarc report</em></p>
+          <p>Tools like CodeNarc are common for static languages like Java. CodeNarc does the Groovy developer a great service by bringing similar capability to the world. It is worth repeating the statement to be found on CodeNarc's home page:
+          "We're inspired by the wonderful PMD and Checkstyle Java static analysis tools, as well as the extensive Groovy inspections performed by IntelliJ IDEA." CodeNarc's strengths relate to the facts that it is open source, is a command-line
+          tool that-unlike the IntelliJ Groovy inspections mentioned in the above quote-is easy to incorporate into a continuous integration scheme, and (unlike either PMD or Checkstyle) is tailor-made for the dynamic nature of Groovy, rather than
+          for Java.</p>
+          <h1>Conclusion</h1>
+          <p>For all the testing done here, there are still (at least) two more 'imperfections' in this code! Consider what would happen if the grader instance were to be provided with the expectedAnswers parameter given as an empty list, or null
+          (or if no parameter at all is given)…fixing the remaining issues is "left an exercise for the reader", as my old Maths books always put it.</p>
+          <p>What does this prove? Well…to paraphrase an old, slightly sexist adage: "a tester's life is never done." At least with Spock, life is a bit more productive and maybe even a bit more fun.</p>
+          <h1>Learn more</h1>
+          <ul>
+            <li>Spock, <a href="http://code.google.com/p/spock/">http://code.google.com/p/spock/</a>
+            </li>
+            <li>CodeNarc, <a href="http://codenarc.sourceforge.net/">http://codenarc.sourceforge.net/</a>
+            </li>
+            <li>Cobertura, <a href="http://cobertura.sourceforge.net/">http://cobertura.sourceforge.net/</a>
+            </li>
+            <li>Gradle, <a href="http://gradle.org/">http://gradle.org/</a>
+            </li>
+            <li>Hamcrest matchers, <a href="http://code.google.com/p/hamcrest/">http://code.google.com/p/hamcrest/</a>
+            </li>
+            <li>Easyb, <a href="http://code.google.com/p/easyb/">http://code.google.com/p/easyb/</a>
+            </li>
+            <li>AST Transformations, <a href="http://docs.groovy-lang.org/latest/html/Compile-time+Metaprogramming+-+AST+Transformations">http://groovy.codehaus.org/Compile-time+Metaprogramming+-+AST+Transformations</a>
+            </li>
+          </ul>
+          <p><em>Bob Brown is the director and owner of Transentia Pty. Ltd.. Based in beautiful Brisbane, Australia, Bob is a specialist in Enterprise Java and has found his niche identifying and applying leading-edge technologies and techniques to
+          customers' problems.</em></p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Groovy, GroovyMag, Programming</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Derived Properties In Grails</h1>
+        <div class="entry-content">
+          <p>As described in the grails <a href="http://grails.org/doc/latest/guide/GORM.html#derivedProperties" title="doco">doco</a>, derived properties seem to be restricted to simple formulae like 'PRICE * TAX_RATE'.</p>
+          <p>Not true, silly me!</p>
+          <p>After kneeling at the alter of The Great Google I ended up <a href="http://blog.eyallupu.com/2009/07/hibernate-derived-properties.html">here</a>, which put me straight. All praise The Great Google.</p>
+          <p>The following works very nicely to determine the cardinality of a given relationship:</p>
+          <pre>
+class Practice {
+    Long numDoctors
+
+    static mapping = {
+        numDoctors formula: '(select count(*) from doctor dr where (dr.practice_id = id))'
+    }
+
+    static hasMany = [
+        doctors: Doctor
+    ]
+}
+</pre>
+          <p>Just something to remember.</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Grails, Groovy, Programming</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Moving Grails' Configuration Around On Windows</h1>
+        <div class="entry-content">
+          <p>A common question on the Grails user list (and sites like StackOverflow <a href="http://stackoverflow.com/questions/7492378/grails-how-can-i-customize-the-location-of-the-slcache-directory-cant-do-it">for example</a>) is "How can I move
+          the '.grails' folder around."</p>
+          <p>it is possible to establish unique settings in the application's BuildConfig.groovy to do this, but there IS a Windows-level ability.</p>
+          <p>Yes, Virginia: Windows/NTFS <em>can</em> do file and folder links. Hard and soft links, too.</p>
+          <p>Take a look:</p>
+          <p><img src="wp-content/uploads/2012/09/WinLinks.jpg" alt="" title="WinLinks" width="744" height="540"></p>
+          <p>Top left in the image shows you the command and usage, top right shows my profile directory after the move/linking. Bottom shows the destination folder containing the moved directories.</p>
+          <p>Moving things around with filesystem links seems much better to me: the logical project layout can stay the same and evolve, even if the various development environments aren't identical. Also: the fewer configuration items that one has
+          to tweak, the better, IMHO.</p>
+          <p>The other good thing about this is that it can apply to pretty much anything you need to do (note that I am moving my '.IntelliJidea12′ configuration directory as well, among others). It's a standard Windows facility that Windows itself
+          uses.</p>
+          <p>Want to <a href="http://en.wikipedia.org/wiki/NTFS_symbolic_link">know</a> <a href="http://technet.microsoft.com/en-us/library/cc753194%28v=ws.10%29.aspx">more</a>?</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Grails, Groovy, Programming, Tools, windows</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="pagination">
+        <span class="next"><a href="DUMMY">Next »</a></span> <span class="previous"><a href="DUMMY">« Previous</a></span>
+      </div>
+    </div>
+  </div><!--#page-->
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script> 
+  <script src="js/site.js"></script>
+</body>
+</html>

@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <title>Transentia - transentia pty. ltd.; development, consulting, training at the leading-edge of technology</title>
+  <link rel="stylesheet" type="text/css" media="screen, print, handheld" href="wp-content/themes/transentia/css/site.css">
+</head>
+<body>
+  <div id="page">
+    <div id="header">
+      <p><a href="../index.htm"><img src="wp-content/uploads/widgets/transentia-logo-red-glow.gif" border="0"></a></p>
+      <p class="old-content">transentia's old content; click on the logo to return to the new content</p>
+      <p id="blog-description">transentia pty. ltd.; development, consulting, training at the leading-edge of technology</p>
+    </div><!-- #header -->
+    <div id="content">
+      <div class="pagination">
+        <span class="next"><a href="DUMMY">Next »</a></span> <span class="previous"><a href="DUMMY">« Previous</a></span>
+      </div>
+      <div class="post hentry">
+        <h1 class="entry-title">M is the new WWW</h1>
+        <div class="entry-content">
+          <p>A nice little article (if a little old, now) from Scott Davies of <a href="http://aboutgroovy.com/">aboutGroovy.com</a> (via <a href="http://www.ibm.com/developerworks/">IBM Developerworks</a>):</p>
+          <p><a href="http://www.ibm.com/developerworks/java/library/j-grails06178/">Grails and the mobile Web</a>.</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Grails, Programming</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">The "Coolest" DHTML Calendar</h1>
+        <div class="entry-content">
+          <p>I was introduced to this a few years back by a colleague (thanks, Steve!). It has been a favourite ever since:</p>
+          <p><a href="http://www.dynarch.com/projects/calendar/">http://www.dynarch.c … m/projects/calendar/</a></p>
+          <p>There is now a <a href="http://www.grails.org/Calendar+Plugin">Grails plugin</a>, so there seems to be life in the old girl yet.</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Grails, Programming, Tools</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Don't Let Your Packets Leave Home Without It</h1>
+        <div class="entry-content">
+          <p>You <em>need</em> to be <a href="http://www.mvps.org/winhelp2002/hosts.htm">Blocking Unwanted Parasites with a Hosts File</a>.</p>
+          <p>Trust me on this…</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Tools</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">A Universe of Apps…and Pain</h1>
+        <div class="entry-content">
+          <p>This is the last project I worked on at Energex/SPARQ; the "Universal Logging System."</p>
+          <p>The task was to produce a suite of applications capable of browsing the fairly substantial amount of live and historical/archived substation data.</p>
+          <p>Man, I gave myself trouble!</p>
+          <p>Like a fool, I insisted on the "buy not build" mantra right up to the point when it became clear that-wish as I might-it was really <em>not possible</em> to buy anything that could handle the type and <em>quantity</em> of data involved.
+          To be more precise, the available budget was a few <a href="http://en.wikipedia.org/wiki/Order_of_magnitude">orders of magnitude</a> smaller than the available commercial toolsets but the effect was the same.</p>
+          <p><img src="wp-content/uploads/2009/02/uls-web-montage.jpg"></p>
+          <p>So: having expended (wasted is a little too strong a term…there were some learning outcomes, after all) a fair amount of time attempting to bend the likes of <a href="http://www.eclipse.org/birt/phoenix/">Eclipse BIRT</a>, <a href=
+          "http://www.pentaho.com/">Pentaho</a> and <a href="http://www.sap.com/solutions/sapbusinessobjects/sme/reporting/crystalreports/index.epx">Crystal Reports</a> to my will, I was faced with having to build a large-ish integration framework
+          and associated suite of applications from scratch in a compressed timeframe.</p>
+          <p>It goes against the grain but OK…time to start building from scratch.</p>
+          <p>I chose to use a graphing tool called <a href="http://www.steema.com/">TeeChart</a>. TeeChart was recommended to me by a colleague who had used it before and trusted it. A few bugs aside, it works well and can handle lots of data quite
+          nicely. As for the rest: Spring and Spring modules (Caching, Valang); a four instance JBoss cluster on RHEL4; JRockit as the JVM…</p>
+          <p>All went well, initially. I hummed along putting together a nice swing-based framework allowing for the integration of disparate datasources and it finally seemed like I was back on track.</p>
+          <p>Until this point, I had been building with Spring MVC/Webflow but I had wanted to "move on up the food chain" and get the company using JSF. I duly adopted RichFaces and set about building a nice, tabbed interface.</p>
+          <p>This hummed along for a while until a 'gotcha' appeared (you knew one would, didn't you…).</p>
+          <p>In my design, each tab in the UI would represent a parameter-entry form, designating the required datasource and associated query parameters. This could be templated out easily enough into small included files, would be quick and easy
+          to understand and so would be correspondingly easy to build.</p>
+          <p>(You will see the sort of interface I was trying to get build when I get to the Swing app. that was part of the application suite, a bit later in this tale of woe.)</p>
+          <p>There is a little entry in the <a href="https://facelets.dev.java.net/">facelets</a> FAQ entitled "<a href="http://wiki.java.net/bin/view/Projects/FaceletsFAQ#I_m_getting_Duplicate_ID_Errors">I'm getting Duplicate ID Errors (and
+          Bindings)</a>":</p>
+          <blockquote>
+            <p>This can be caused by a couple things. The first is when you use JSTL or logical predicates in your templates which add or remove components based on some volatile logic in your model. It's not so much the case that your component
+            tree can't change between requests, but you do open opportunities for errors to occur. <strong>Sometimes</strong> explicitly providing id's to your components corrects this problem such that JSF has no way of
+            <strong>accidentally</strong> assigning a duplicate.</p>
+            <p>The second way this can happen is when you using 'binding' attributes on your components. If you are binding components to anything other than request-scope, you can run into problems where components, and their assigned identifiers,
+            get injected into another page, conflicting with their identifiers. Again, you can <strong>attempt</strong> to provide explicit id's to your components to avoid conflict and guarantee uniqueness, but it doesn't fix the greater issue with
+            application/session scoped bindings:</p>
+            <p>1) UIComponents are not Serializable- and therefore cannot be clustered</p>
+            <p>2) UIComponents are not thread safe can cannot be used by multiple requests at once</p>
+            <p>Binding UIComponents to backing beans is actually something worth doing to ease particular use cases. Instead of using a session/application scoped bean, use a request-scoped composite mediator that receives your session beans and the
+            UIComponent instance to coordinate behavior. The injection of your session-scoped beans can be managed with the faces-config managed-property or with any of the 3rd party extensions such as Spring 2.0 or Seam.</p>
+          </blockquote>
+          <p>Those key-words that I have highlighted shot the whole UI down in flames. I was 80% of the way through and could <strong>not</strong> continue to use JSF. To this day, I have no solution, and I note that the FAQ entry remains.</p>
+          <p>I had to restart the UI using basic Spring MVC and foregoing all the AJAX-y goodness that Richfaces would have given me (yes, I could have picked another AJAX framework, but at this point I was well and truly shell-shocked and only
+          wanted to hide under my desk. I definitely didn't want yet another setback).</p>
+          <p>I have to give it to my manager: he coped with all these setbacks <strong>admirably</strong>. Thank you, Gary!</p>
+          <p>Thus the application suite as shown above was developed.</p>
+          <p>And shown to the 'users.' They hated it!</p>
+          <p>There had been a long discussion over web-app vs. desktop app that had finally come down on the web-app side. Oh Well!</p>
+          <p>I had continually been showing the app to various "interested parties", tweaking and fiddling based on suggestions/feedback. The time to demo to the "world at large" rolled around. During the demo, one of my main contacts decided to go
+          feral and panned everything about the project: the existing system was perfect; the new features weren't useful (to him); the colors (chosen to be <em>precisely</em> the same) were bad, etc., etc. In fact, it was <em>all a complete
+          disaster that proved how incompetent I and my colleagues were</em>!</p>
+          <p>Once the dust had settled on this, two facts became obvious:<br>
+          1. he was one of the developers of the old system and perhaps felt a little 'threatened'<br>
+          2. his problem was not with the suite at all, but turned out to be with the settings established for IE6 by the corporate SOE policy.</p>
+          <p>In the end, much of the fuss came down to one little checkbox:</p>
+          <p><img src="wp-content/uploads/2009/02/uls-ie-opts.jpg"></p>
+          <p>Once we had set up his IE6 to create new windows as needed, rather than reuse existing windows (and potentially lose what was happening in that window), all settled down.</p>
+          <p>One never know, does one!</p>
+          <p>Still, it was decided to 'deemphasise' the web-version (it was pretty much functionally complete, anyway) and start on a pure desktop UI that would talk to the middle tiers of the system but provide an IE6-free 'experience.'</p>
+          <p>This piccy shows the Swing-based desktop application:</p>
+          <p><img src="wp-content/uploads/2009/02/uls-app.jpg"></p>
+          <p>This app used TeeChart (for its already-mentioned ability to handle large datasets, but also because it handles interactivity quite well) with a few SwingX components thrown in.</p>
+          <p>It is a shame that time/money eventually caught up with me and I didn't get to complete it.</p>
+          <p>On the other hand, I was exhausted and happy to see a halt. The project had been a sequence of disasters, technically and 'politically.'</p>
+          <p>I'll never trust JSF again, that's for sure.</p>
+          <p>I'm also more convinced than ever that "thou shalt <strong>never</strong> contemplate one-person projects."</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Retrospectives</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">A Very Good Presentation</h1>
+        <div class="entry-content">
+          <p>From Bob Martin, Object Mentor Inc.: <a href="http://www.infoq.com/presentations/craftmanship-ethics">Craftsmanship and Ethics</a>.</p>
+          <p>I would recommend that <em>all</em> managers and PMs (yes, <em>and</em> coders!) watch this.</p>
+          <p>And then follow up by <a href="http://www.computer.org/portal/cms_docs_software/software/homepage/2007/s3024.pdf">reading this</a>.</p>
+          <p>And then follow up by <a href="http://blog.objectmentor.com/articles/2008/03/06/tdd-on-three-index-cards">reading this</a>.</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Agile</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Java Can't "Do Realtime"</h1>
+        <div class="entry-content">
+          <p>Something I hear a lot, <a href="http://en.wikipedia.org/wiki/Real_time_Java">RTSJ</a> (<a href="http://jcp.org/en/jsr/detail?id=1">JSR-1</a>/<a href="http://jcp.org/en/jsr/detail?id=282">JSR-282</a>) notwithstanding.</p>
+          <p><a href="http://www.youtube.com/watch?v=lXct7Bzdhzw">So what's this, then?</a></p>
+        </div><!--/entry-content-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">A Page to Remember</h1>
+        <div class="entry-content">
+          <p>Lexecorp's <a href="http://lexecorp.com/2008/10/29/software-project-process-and-tools/">Software project process and tools?</a> page.</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Tools</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Better than Butter, I am!</h1>
+        <div class="entry-content">
+          <p>Just received this recommendation from <a href="http://www.linkedin.com/pub/0/797/191">Tony Obermeit</a> via <a href="http://www.linkedin.com/pub/4/890/540">LinkedIn</a>:</p>
+          <blockquote>
+            <p>"Bob introduced me to Java at a training course back in 1997, I've also attended conferences overseas where he has presented and he has always been highly knowledgeable and well received. He knows his stuff!"<br>
+            Service Category: IT Consultant<br>
+            Year first hired: 1997<br>
+            Top Qualities: Great Results, Expert, High Integrity</p>
+          </blockquote>
+          <p>In a follow-up email, Tony went on to say:</p>
+          <blockquote>
+            <p>"Thinking about what I said I realize I should have commented on what a solid foundation that initial java training has given me, it certainly has been a significant boost to my career."</p>
+          </blockquote>
+          <p>Thanks Tony!</p>
+        </div><!--/entry-content-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Another Bit of Personal/Professional History</h1>
+        <div class="entry-content">
+          <p>This time, the 'CoalCraft' System, circa 1999~2001.</p>
+          <p>I built this while working for the now-disbanded DSTC, alongside my colleage and good friend <a href="http://logicaltech.com.au/index.php?option=com_content&amp;task=view&amp;id=206&amp;Itemid=0">Dennis Remmer</a>. We both continued our
+          involvement after leaving DSTC (I set up Transentia and Dennis established <a href="http://www.etwo.com.au/">eTwo; "expertise for an advanced internet"</a>)</p>
+          <blockquote>
+            <p>CoalCraft is a modern distributed system that brings together providers of information of various resources (such as Coal Producers, Power Stations, Transport Schedulers, etc.) through a "brokering" service, to an arbitrary number of
+            users. Information providers are able to maintain their own repository in its native format and provide a window into it by registering with a provider "map." Information users are able to access real-time information for analysis
+            without requiring significant local system resources for data storage.</p>
+          </blockquote>
+          <p>The following should give you an idea regarding how it was constructed and promoted:</p>
+          <blockquote>
+            <p>CoalCraft has been constructed to be platform independent and is implemented in pure Java:<br>
+            * CoalCraft's Object-Oriented construction makes it easily extensible and flexible.<br>
+            * CoalCraft uses Java's Remote Method Invocation (RMI) system as the underlying distribution mechanism allowing Object-Oriented communication. This provides ease of development and makes it easy to 'plug' Providers into the system.<br>
+            * The CoalCraft client application is constructed using Java's second-generation 'Swing' Graphical User Interface components and this allows for a sophisticated user interface.<br>
+            * The CoalCraft client application exports data in XML, the upcoming standard format for data interchange. This keeps the system open and allows further processing of data obtained via the CoalCraft system to be carried out with
+            ease.</p>
+          </blockquote>
+          <p>Here's the obligatory piccy:</p>
+          <p><img src="wp-content/uploads/2009/02/coalcraft.gif"></p>
+          <p>During the early 2000s, we schlepped the system around to various potential users (assisting the client) and even ran a small 'live' trial with some interested parties but in the end it didn't get anywhere (I think we needed a better
+          spruiker and a bit more $$$ for P.R. than was available).</p>
+          <p>Still, it was "leading-edge" at the time and the client asked me to assist in preparing a patent application, which was a new thing for me so I guess it deserves a small footnote in history…such as the one just here.</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Retrospectives</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">The Really Big Index</h1>
+        <div class="entry-content">
+          <p>A list of all content pages in Sun's <em>The Java Tutorial</em>.</p>
+          <p><a href="http://java.sun.com/docs/books/tutorial/reallybigindex.html">http://java.sun.com/ … /reallybigindex.html</a>.</p>
+          <p>Even though I have been programmng in Java for lo these many years (SDK 0.98 on a Mac Duo 280c; circa 1995/6), I've never seen this before.</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Java, Tools</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="pagination">
+        <span class="next"><a href="DUMMY">Next »</a></span> <span class="previous"><a href="../29/29.htm">« Previous</a></span>
+      </div>
+    </div>
+  </div><!--#page-->
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script> 
+  <script src="js/site.js"></script>
+</body>
+</html>

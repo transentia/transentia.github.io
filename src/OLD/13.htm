@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <title>Transentia - transentia pty. ltd.; development, consulting, training at the leading-edge of technology</title>
+  <link rel="stylesheet" type="text/css" media="screen, print, handheld" href="wp-content/themes/transentia/css/site.css">
+</head>
+<body>
+  <div id="page">
+    <div id="header">
+      <p><a href="../index.htm"><img src="wp-content/uploads/widgets/transentia-logo-red-glow.gif" border="0"></a></p>
+      <p class="old-content">transentia's old content; click on the logo to return to the new content</p>
+      <p id="blog-description">transentia pty. ltd.; development, consulting, training at the leading-edge of technology</p>
+    </div><!-- #header -->
+    <div id="content">
+      <div class="pagination">
+        <span class="next"><a href="DUMMY">Next »</a></span> <span class="previous"><a href="DUMMY">« Previous</a></span>
+      </div>
+      <div class="post hentry">
+        <h1 class="entry-title">Cascading Lists with Groovy's SwingBuilder</h1>
+        <div class="entry-content">
+          <p>At lunch yesterday, one of my ex-colleagues was telling me that he couldn't <em>quite</em> get cascading lists to work when using Groovy's SwingBuilder.</p>
+          <p>So I knocked up an example for him:</p>
+          <p><img title="cascade-list-swingbuilder" src="wp-content/uploads/2009/09/cascade-list-swingbuilder.PNG" alt="cascade-list-swingbuilder" width="311" height="105"></p>
+          <p>Mum told me that it is good to share my toys, so:</p>
+          <pre>import groovy.swing.*
+import javax.swing.*
+
+def swing = new SwingBuilder()
+
+def masterData = [en: ['Hello, World!', 'How are you?'], es: ['Hola Mundo!', "Como Esta?"], can: ['Foon Ying!', 'Lei Ho Ma?']]
+
+def detailModel = new DefaultListModel()
+
+swing.actions() {
+  action(id: 'masterAction',
+          name: 'masterAction',
+          closure: {e-&gt;
+            def l = e.source
+            if (!e.valueIsAdjusting) {
+              def i = l.selectedValue
+              detailModel.clear()
+              masterData[i].each {
+                detailModel.addElement(it)
+              }
+            }
+          })
+}
+swing.frame(title: 'My Frame', pack: true, visible: true,
+                 defaultCloseOperation: javax.swing.WindowConstants.EXIT_ON_CLOSE) {
+  panel() {
+    tableLayout() {
+      tr {
+        td {
+          scrollPane() {
+            list(valueChanged: masterAction.closure, visibleRowCount: 3, listData: masterData.collect {k, v -&gt; k })
+          }
+        }
+        td {
+          scrollPane() {
+            list(visibleRowCount: 3, model: detailModel)
+          }
+        }
+      }
+    }
+  }
+}</pre>
+          <p>It may not be optimal, but it works.</p>
+          <p>There's one or two little 'gotchas' here.</p>
+          <p>First: having to pass 'masterAction.closure' directly to the first list seems wrong…elsewhere when using SwingBuilder one would just have to use 'masterAction' so this feels a little 'off' to me.</p>
+          <p>Second: the code shown works fine when run under Groovy 1.6.4 via IntelliJ Maia EAP 10666. When run directly in 1.6.4′s GroovyConsole, it gives an error:</p>
+          <pre>
+Exception thrown: Cannot cast object '[en, es, can]' with class 'java.util.ArrayList' to class 'java.util.Vector'
+org.codehaus.groovy.runtime.typehandling.GroovyCastException: Cannot cast object '[en, es, can]' with class 'java.util.ArrayList' to class 'java.util.Vector'
+</pre>
+          <p>The workaround is to use:</p>
+          <pre>list(..., listData: masterData.collect {k, v -&gt; k } as Object[])</pre>
+          <p>This is probably more 'correct' according to the API, anyway.</p>
+          <p>Still, something feels 'off' here…why the different behaviors?</p>
+          <p>These are minor niggles, however.</p>
+          <p>It's still a clean and clear solution.</p>
+          <p>Gotta love that <a href="http://docs.groovy-lang.org/latest/html/api/groovy/swing/impl/TableLayout.html">TableLayout</a>, as well.</p>
+          <p><em>[edit]</em><br>
+          There <em>was</em> something a bit off, but it <a href="https://issues.apache.org/jira/browse/GROOVY-3734">should be sorted by now</a>.</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Griffon, Groovy, Programming</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Another Groovy Micro-Benchmark</h1>
+        <div class="entry-content">
+          <p>I have been maintaining grungy code, with lots of Java-esque stuff like this:</p>
+          <pre>{
+def value = 99
+def s = 'string' + value</pre>
+          <p>I have been 'Groovifying' the code into a (slightly) more readable version:</p>
+          <pre>{
+def value = 99
+def s = "string$value"</pre>
+          <p>(This micro-change makes more sense/value if you see the real code but that's under wraps, so you'll have to trust me on this…)</p>
+          <p>Anyway, I started wondering if I was really doing the right thing, performance-wise, so I knocked up the following sequence of tests:</p>
+          <pre>def ts = System.currentTimeMillis()
+for (i in 1..1000000) {
+}
+println ("Took: ${System.currentTimeMillis() - ts}ms.")
+// Took: 70ms.</pre>
+          <p><a href="https://visualvm.dev.java.net/">VisualVM</a> lets me see how many strings are created. Not too many, as one would expect:</p>
+          <p><img title="groovy-perf-1" src="wp-content/uploads/2009/09/groovy-perf-1.PNG" alt="groovy-perf-1" width="699" height="236"></p>
+          <p>Here's the 'before' case:</p>
+          <pre>def ts = System.currentTimeMillis()
+for (i in 1..1000000) {
+  def x = 'test' + i
+}
+println ("Took: ${System.currentTimeMillis() - ts}ms.")
+// Took: 292ms.</pre>
+          <p><img title="groovy-perf-before" src="wp-content/uploads/2009/09/groovy-perf-before.PNG" alt="groovy-perf-before" width="798" height="370"></p>
+          <p>And the 'after' case:</p>
+          <pre>def ts = System.currentTimeMillis()
+for (i in 1..1000000) {
+  def x = "test$i"
+}
+println ("Took: ${System.currentTimeMillis() - ts}ms.")
+// Took: 368ms.</pre>
+          <p><img title="groovy-perf-after" src="wp-content/uploads/2009/09/groovy-perf-after.PNG" alt="groovy-perf-after" width="806" height="351"></p>
+          <p>There's clearly a lot more going on here, so it's good that the run time is still "roughly in the same ballpark" as before.</p>
+          <p>Was I doing the right thing? Well, the system I am working on is really pretty small and this sort of micro-level concern constitutes about 0.000000000001% of the performance of the system. In terms of readability, I think I am winning,
+          so I'm still happy.</p>
+          <p>For completeness, there's a few other cases I hacked around on. None was particularly surprising:</p>
+          <pre>def ts = System.currentTimeMillis()
+for (i in 1..1000000) {
+  def x = "test$i".toString()
+}
+println ("Took: ${System.currentTimeMillis() - ts}ms.")
+// Took: 478ms.</pre>
+          <p>This one is interesting because its pretty much a standard Java idiom:</p>
+          <pre>def ts = System.currentTimeMillis()
+for (i in 1..1000000) {
+  def x = String.format('test%d', i)
+}
+println ("Took: ${System.currentTimeMillis() - ts}ms.")
+// Took: 2583ms.</pre>
+          <p>It's also the slowest (and VisualVM showed a lot of pattern matching going on "behind the scenes"). Its probably worth remembering this when anyone talks about how dynamic languages are not performant in "The Real World."</p>
+          <pre>def ts = System.currentTimeMillis()
+for (i in 1..1000000) {
+  def sb = new StringBuilder('test')
+  sb.append(i)
+  def x = sb.toString()
+}
+println ("Took: ${System.currentTimeMillis() - ts}ms.")
+// Took: 260ms.</pre>
+          <pre>def ts = System.currentTimeMillis()
+for (i in 1..1000000) {
+  def sb = new StringBuilder('test')
+  sb &lt; &lt; i
+  def x = sb.toString()
+}
+println ("Took: ${System.currentTimeMillis() - ts}ms.")
+// Took: 300ms.</pre>
+          <p>As is my wont, I'm not going to draw any conclusions (there's "lies, damn lies and performance statistics", remember…or maybe "the beauty of performance statistics lies in the eye of the beholder").</p>
+          <p>Hope you found all this interesting, however.</p>
+          <p>Curiosity may have killed the cat…it'll probably give me RSI.</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Groovy, Programming</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Excellent Presentation From Agile2009: "Mapping The Change Battlefield"</h1>
+        <div class="entry-content">
+          <p>By Giora Morein: <a href="http://www.bigvisible.com/gmorein/agile2009-battlemapping/">http://www.bigvisible.com/gmorein/agile2009-battlemapping/</a>.</p>
+          <p>With exercises, too!</p>
+          <p>Wish I'd been there…</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Agile</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Groovy Map Surprises</h1>
+        <div class="entry-content">
+          <p>I lost a fair bit of time today wrestling with the subtleties of Groovy Maps.</p>
+          <p>Take a look:</p>
+          <pre>def val = 99
+def map = [:]
+
+map = ["fred$val":val]
+println map["fred$val"]
+// =&gt; null
+
+map = [("fred$val"):val]
+println map["fred$val"]
+// =&gt; null
+
+map = [("fred$val".intern()):val]
+println map["fred$val"]
+// =&gt; 99
+
+// compilation error...ok, expected
+//map = ['fred' + val:val]
+//println map["fred$val"]
+
+map = [('fred' + val):val]
+println map["fred$val"]
+// =&gt; 99
+
+map = [("fred$val".toString()):val]
+println map["fred$val"]
+// =&gt; 99
+
+def s = "fred$val"
+map = [(s):val]
+println map["fred$val"]
+// =&gt; null
+
+s = "fred$val"
+map = [(s):val]
+println map[s]
+// =&gt; null
+
+map = [:]
+map.put("fred$val", 99)
+println map.get("fred$val")
+// =&gt; 99
+</pre>
+          <p>The amount of strangeness shown here is all too much for my liking…</p>
+          <p>On leafing through the Groovy 'bible', <a href="http://www.manning.com/koenig/">GINA</a>, I found the possibility of a hint of a reason:</p>
+          <blockquote>
+            <p>There is also a corner case with GStrings if their values write themselves lazily.</p>
+          </blockquote>
+          <p>Which led me to the Groovy site on <a href="http://docs.groovy-lang.org/latest/html/Strings+and+GString">Strings and GStrings</a>, which gives the salient advice:</p>
+          <p><img title="GStringsAreNotStrings" src="wp-content/uploads/2009/09/GStringsAreNotStrings.png" alt="GStringsAreNotStrings" width="746" height="118"></p>
+          <p>So, now I know.</p>
+          <p>It's partly (mostly?) my misconception…or foolishness: expecting a String to be a GString.</p>
+          <p>Well:</p>
+          <blockquote>
+            <p>How can I possibly put a new idea into your heads, if I do not first remove your delusions?<br>
+            "Doctor Pinero" in <a href="http://en.wikipedia.org/wiki/Life-Line">Life-Line (1939)</a></p>
+          </blockquote>
+          <p>I now carrying one less delusion around with me. This is good.</p>
+          <p>Not sure I am any happier, <a href="http://en.wikipedia.org/wiki/Profanity_in_science_fiction">TANJ it</a>!</p>
+          <p>Here's a debugging nightmare:</p>
+          <pre>
+final val = 99
+
+println """
+GString:"""
+def map = [:]
+// NB: without toString()
+map.put("fred$val", '?')
+println map.get("fred$val")
+println map.get("fred99")
+println map.get("fred99".toString())
+println map.get('fred99')
+println map["fred99"]
+println map['fred99']
+println map[("fred99")]
+println map[('fred99')]
+println map['fred' + 99]
+println map["fred" + 99]
+println map[("fred" + 99)]
+println map[("fred" + 99).toString()]
+map.each {k,v -&gt;
+  println "$k=&gt;$v"
+  }
+
+println """
+String:"""
+map = [:]
+// NB: with toString()
+map.put("fred$val".toString(), '!')
+println map.get("fred$val")
+println map.get("fred99")
+println map.get("fred99".toString())
+println map.get('fred99')
+println map["fred99"]
+println map['fred99']
+println map[("fred99")]
+println map[('fred99')]
+println map['fred' + 99]
+println map["fred" + 99]
+println map[("fred" + 99)]
+println map[("fred" + 99).toString()]
+map.each {k,v -&gt;
+  println "$k=&gt;$v"
+  }
+
+println """
+Buyer beware:"""
+map = [:]
+map.put("fred$val", val)
+map.put("fred$val".toString(), val)
+map.each {k,v -&gt;
+  println "$k=&gt;$v"
+  }
+</pre>
+          <p>Here's what you get:</p>
+          <pre>
+GString:
+?
+null
+null
+null
+null
+null
+null
+null
+null
+null
+null
+null
+fred99=&gt;?
+
+String:
+null
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+fred99=&gt;!
+
+Buyer beware:
+fred99=&gt;99
+fred99=&gt;99
+Result: [fred99:99, "fred99":99]
+</pre>
+          <p><a href="http://en.wikipedia.org/wiki/TANSTAAFL">TANSTAAFL</a>, I guess…you win some, you lose some and this is but a small entry on Groovy's otherwise clean "rap sheet."</p>
+          <p><em>[edit]</em></p>
+          <p>Jim Shingler (who writes at: <a href="http://jshingler.blogspot.com/">Shingler's Thoughts</a>) sent me the following alternative:</p>
+          <pre>
+def val = 99
+def map = [:]
+
+map."fred$val" = val
+println map
+println map["fred$val"]
+println map."fred$val"
+</pre>
+          <p>Seems to be a little more robust, thanks.</p>
+          <p>The takeaway message seems (to me) to be: "Don't use GStrings as keys in a map. Especially don't use GStrings with embedded placeholders because their lazy evaluation may make life awkward."</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Groovy, Programming</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Apologies To Groovyblogs.org Readers</h1>
+        <div class="entry-content">
+          <p>As you may see, I have moved to WordPress and a new subdomain.</p>
+          <p>Because of this, I have had to re-publish my feed and those of you coming from <a title="GroovyBlogs.org" href="http://GroovyBlogs.org">GroovyBlogs.org</a> may see a few duplicated submissions. I apologise for this…it's not a deliberate
+          attention-grabbing ploy.</p>
+          <p>Normal service should be quickly resumed ;-)</p>
+        </div><!--/entry-content-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">GrIMMiS Article In September's GroovyMag</h1>
+        <div class="entry-content">
+          <p>Another <a href="http://www.groovymag.com/main.issues.description/id=13/">GroovyMag edition containing musings by yours truly</a> has hit the streets.</p>
+          <p>The article is entitled "GrIMMiS-the Groovy Internet Mood Meter in SVG" and is a whimiscal look at using <a href="http://www.w3.org/Graphics/SVG/">Scalable Vector Graphics</a> with Grails and AJAX.</p>
+          <p><a href="http://grimmis.alpheratz.staxapps.net/"><img title="GrIMMiS" src="wp-content/uploads/2009/09/GrIMMiS-300x282.png" alt="GrIMMiS" width="300" height="282"></a></p>
+          <p>But wait! There's more!</p>
+          <p>I have deployed GrIMMiS as a <a href="http://www.stax.net/">Stax Cloud Application</a> (on the <a href="http://aws.amazon.com/ec2/">Amazon Elastic Compute Cloud</a>), so you can play with it (it's not particularly impressive, though…it
+          only does one thing…). Here you go:</p>
+          <p><a href="http://grimmis.alpheratz.staxapps.net/">How is the Internet feeling today? How are <em>you</em> feeling today?</a></p>
+          <p>You'll need a browser that has good SVG support. I use Opera 10 and Firefox 3.5.<br>
+          (I believe that the version of prototype currently shipped with Grails doesn't like Safari and Chrome…so aficionados of those browsers are currently out of luck.)</p>
+          <p>I'm not particularly a Microsoft basher, but when it comes to SVG, Microsoft should be <em>thoroughly ashamed</em> of Internet Explorer.</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Grails, GroovyMag, Programming</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Another Factoid For The Memory Box: Embedded Images In HTML</h1>
+        <div class="entry-content">
+          <p>This is (yet) another thing I always forget how to do…</p>
+          <p><code>&lt;img alt="Red Square" src="data:image/png,%89PNG%0D%0A <em>[...elided...]</em> %60%82" /&gt;</code></p>
+          <p>With a <a href="http://www.quirksmode.org/">compatible brower</a>, this gives:</p>
+          <p><img src="data:image/png,%89PNG%0D%0A%1A%0A%00%00%00%0DIHDR%00%00%00%10%00%00%00%10%08%02%00%00%00%90%91h6%00%00%00%19IDAT(%91c%BCd%AB%C2%40%0A%60%22I%F5%A8%86Q%0DCJ%03%00%DE%B5%01S%07%88%8FG%00%00%00%00IEND%AEB%60%82" alt=
+          "Red Square"></p>
+          <p>Doesn't necessarily work with all browsers (so <a href="http://www.webstandards.org/action/previous-campaigns/buc/upgrade//">you know what to do</a> if you can't see a reddish-brown square), but it can come in handy at times.</p>
+          <p>As always, <a href="http://en.wikipedia.org/wiki/Data_URI_scheme">Wikipedia has the lowdown on the whole "Data URI" thing</a>…</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Tools</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">More "No Clean Feed" Stuff</h1>
+        <div class="entry-content">
+          <p>With the help of <a href="http://www.getup.org.au/campaign/SaveTheNet&amp;id=726">GetUp</a>, I have faxed this email to my local MP: The Hon. Archibald Bevis MP Member for Brisbane [ALP].</p>
+          <blockquote>
+            <p>Dear sir,</p>
+            <p>As an Australian with 25 year's worth of experience in the ICT industry I wish to register my opposition to the current proposals for a 'clean' internet.</p>
+            <p>I believe that this proposal:</p>
+            <ul>
+              <li>is fundamentally undemocratic and may give governments present and future the ability to block information without scrutiny or accountability.</li>
+              <li>has the potential to significantly harm Australia's ICT industry. At the very least, it has already caused harm to Australia's international reputation (refer to conversations like <a href=
+              "http://tech.slashdot.org/article.pl?sid=09/02/12/048203">http://tech.slashdot.org/article.pl?sid=09/02/12/048203</a> to see this).
+              </li>
+              <li>is technically EXTREMELY weak. ALL other places that have tried this sort of thing have failed. Circumvention WILL be trivial and commonplace.</li>
+              <li>is NOT the only possible solution. There are plenty of alternatives - like distributing software to parents to use at home, or making the filter opt-in rather than mandatory. I favour the option of providing a 100% tax rebate for
+              anyone who purchases their choice of commercially available internet filter from the existing market place. I have written about this in 'unacceptable.'</li>
+            </ul>
+            <p>I STRONGLY urge you to prevent this ill-considered and insidious idea from becoming law.</p>
+          </blockquote>
+          <p>I urge any Australian reader to please join with me in working to prevent this abomination of an idea from becoming law.</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Rant</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">HTML Color Names</h1>
+        <div class="entry-content">
+          <p>I always forget these, so I'll store the <a href="http://www.w3schools.com/HTML/html_colornames.asp">link</a> here for safe keeping.</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Tools</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">IBM Images A Single Molecule</h1>
+        <div class="entry-content">
+          <p>My First Degree was in Applied Chemistry (from the <a title="University of Hertfordshire" href="http://www.herts.ac.uk/home-page.cfm">University of Hertfordshire</a> [nee Hatfield Polytechnic]) and <a title="this simply blows me away"
+          href="http://www.newscientist.com/article/dn17699-microscopes-zoom-in-on-molecules-at-last.html">this simply blows me away</a>:</p>
+          <p><img title="dn17699-1_300" src="wp-content/uploads/2009/08/dn17699-1_300.jpg" alt="dn17699-1_300" width="300" height="296"></p>
+          <p>It is an image of a <em>single</em> Pentacene molecule.</p>
+          <p>The possibilities are endless!</p>
+        </div><!--/entry-content-->
+      </div><!-- .post -->
+      <div class="pagination">
+        <span class="next"><a href="DUMMY">Next »</a></span> <span class="previous"><a href="../12/12.htm">« Previous</a></span>
+      </div>
+    </div>
+  </div><!--#page-->
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script> 
+  <script src="js/site.js"></script>
+</body>
+</html>

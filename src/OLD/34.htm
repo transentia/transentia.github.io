@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <title>Transentia - transentia pty. ltd.; development, consulting, training at the leading-edge of technology</title>
+  <link rel="stylesheet" type="text/css" media="screen, print, handheld" href="wp-content/themes/transentia/css/site.css">
+</head>
+<body>
+  <div id="page">
+    <div id="header">
+      <p><a href="../index.htm"><img src="wp-content/uploads/widgets/transentia-logo-red-glow.gif" border="0"></a></p>
+      <p class="old-content">transentia's old content; click on the logo to return to the new content</p>
+      <p id="blog-description">transentia pty. ltd.; development, consulting, training at the leading-edge of technology</p>
+    </div><!-- #header -->
+    <div id="content">
+      <div class="pagination">
+        <span class="next"><a href="DUMMY">Next »</a></span> <span class="previous"><a href="DUMMY">« Previous</a></span>
+      </div>
+      <div class="post hentry">
+        <h1 class="entry-title">Instrumenting Java and Groovy Code with JMX (Wonderful WebFlow Part IV)</h1>
+        <div class="entry-content">
+          <p><em>This is the fourth post in a series. it may be A Good Idea to take a look at the earlier posts as well…You Have Been Warned!</em></p>
+          <p>All substantial applications require management and monitoring; in the Java world, <a href="http://java.sun.com/javase/technologies/core/mntr-mgmt/javamanagement/">JMX</a> is the <a href=
+          "http://en.wikipedia.org/wiki/Java_Management_Extensions">standard technology</a>.</p>
+          <p>I have instrumented the Calc WebFlow to maintain two JMX-capable counters (<a href="http://en.wikipedia.org/wiki/Mbean">MBeans</a>): total number of flows created since application startup and instantaneous count of flows actually
+          active. Both of these counters (actually, two instances of the same class) are injected into the controller, as this excerpt shows:</p>
+          <pre>
+class CalcController {
+
+  def totalFlowsCreatedSequenceMBean
+  def instantaneousFlowCountMBean
+
+  def calcFlow = {
+    startup {
+      action() {
+        flow.flowCreatedSequence = totalFlowsCreatedSequenceMBean.increment()
+        log.debug "calcFlow startup; this is flow #${flow.flowCreatedSequence}; instantaneous flow count: ${instantaneousFlowCountMBean.increment()}"
+      }
+      on('success').to 'init'
+    }
+
+    shutdown {
+      action() {
+        log.debug "calcFlow shutdown; this is flow #${flow.flowCreatedSequence}; instantaneous flow count: ${instantaneousFlowCountMBean.decrement()}"
+      }
+      on('success').to 'results'
+    }
+  }
+</pre>
+          <p>Although there is a <a href="http://grails.org/JMX+Plugin">Grails plugin for JMX</a> and a <a href="http://code.google.com/p/groovy-jmx-builder/">Groovy JMX DSL</a> and a <a href=
+          "http://docs.groovy-lang.org/latest/html/api/groovy/util/GroovyMBean.html">GroovyMBean class</a>, configuring JMX is a fairly trivial task, so I'm going to do it "by hand."</p>
+          <p>In Grails, standard spring-oriented configuration is done using the Spring Beans DSL in the file conf/resources.groovy:</p>
+          <pre>
+import org.springframework.jmx.support.MBeanServerFactoryBean
+import org.springframework.jmx.export.MBeanExporter
+import org.springframework.jmx.export.annotation.AnnotationJmxAttributeSource
+import org.springframework.jmx.export.assembler.MetadataMBeanInfoAssembler
+
+// Place your Spring DSL code here
+beans = {
+  // application-level counters
+  totalFlowsCreatedSequenceMBean(calc.CounterMBean)
+  instantaneousFlowCountMBean(calc.CounterMBean)
+
+   // JMX infrastructure configuration
+   mbeanServer(MBeanServerFactoryBean) {
+       locateExistingServerIfPossible = true
+   }
+   attributeSrc(AnnotationJmxAttributeSource)
+   assemblr(MetadataMBeanInfoAssembler) {
+       attributeSource = attributeSrc
+   }
+   exporter(MBeanExporter) {
+       server = mbeanServer
+       assembler = assemblr
+       autodetect = true
+       beans = ["calc.jmx:counter=totalFlowsCreatedSequenceMBean": totalFlowsCreatedSequenceMBean,
+                "calc.jmx:counter=instantaneousFlowCountMBean": instantaneousFlowCountMBean]
+   }
+}
+</pre>
+          <p>You should be able to see how the 'totalFlowsCreatedSequenceMBean' and 'instantaneousFlowCountMBean' bean instances are created by the underlying Spring infrastructure and then injected into the Calc controller (this very powerful
+          behaviour is "autowiring by name", in Spring parlance).</p>
+          <p>On to the actual JMX MBean. This is written in Groovy (in the directory src/groovy/calc) but I have remained fairly true to the spirit of Java (methods, not closures, for example) to be sure that JMX doesn't get too 'confused':</p>
+          <pre>
+package calc
+
+import org.apache.log4j.Logger
+import org.springframework.jmx.export.annotation.ManagedAttribute
+import org.springframework.jmx.export.annotation.ManagedOperation
+import org.springframework.jmx.export.annotation.ManagedResource
+
+@ManagedResource (description = "A simple Counter MBean")
+class CounterMBean {
+    private static final Logger log = Logger.getLogger(CounterMBean)
+    private int value
+
+    CounterMBean() {
+      value = 0;
+      log.debug 'CounterMBean constructed; initial value: $value'
+    }
+
+    @ManagedAttribute (description = "Retrieve the current value of the Counter")
+    public synchronized int getValue() {
+        return value
+    }
+
+    @ManagedOperation (description = "Bump up the Counter by 1; return new value for Counter")
+    public synchronized int increment() {
+        return ++value
+    }
+
+    @ManagedOperation (description = "Reduce the Counter by 1; return new value for Counter")
+    public synchronized int decrement() {
+        return --value
+    }
+
+  @ManagedOperation (description = "Reset the Counter to 0")
+  public synchronized int reset() {
+      value = 0
+      return value
+  }
+}
+</pre>
+          <p>This MBean specifies a single attribute: 'value' and a number of operations: 'increment', 'decrement' and 'reset.' These are available to both the actual using application and to the management infrastructure.</p>
+          <p>One key point here (often overlooked, however) is that all the methods must be synchronized to prevent strange and wonderful <a href="http://en.wikipedia.org/wiki/Race_condition">race conditions</a>.</p>
+          <p>Notice how operations and attributes are configured and exported via Java <a href="http://www.onjava.com/pub/a/onjava/2004/06/30/insidebox1.html">attributes</a>. If you look back to the Spring configuration shown earlier, you will see
+          the use of 'AnnotationJmxAttributeSource' to pick up and export appropriately annotated classes.</p>
+          <p>It is easy to see how this all comes together by starting up <a href="http://java.sun.com/developer/technicalArticles/J2SE/jconsole.html">jconsole</a> and looking for the calc.jmx ObjectName:</p>
+          <p><img src="wp-content/uploads/2008/12/calc-jconsole.jpg"></p>
+          <p>Adding JMX into the mix is so simple for any Spring-based application (and Grails is Spring-based, of course) that there is almost no excuse for <em>not</em> adding this level of monitor-ability and manage-ability to an application.</p>
+          <p>What are you waiting for? Go to it!</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Grails, Programming</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Load Testing (Wonderful WebFlow Part III)</h1>
+        <div class="entry-content">
+          <p><em>This posting follows on from Testing WebFlow (Wonderful Webflow, Part II). It's probably best to take a look at those first…</em></p>
+          <p>Ahhh Load Testing! The very name strikes fear into the heart.</p>
+          <p>I have seen projects crash and burn and been frantically resurrected as a result of poor performance that only came to light at the last minute. I have seen projects scrabble to find the appropriate incantations (read: JVM options) that
+          will encourage the performance faeries to sprinkle their magic dust on the system so that the project can "go live." I have seen angst, blood, sweat and tears as year-long projects fail to cross that "one final hurdle" on the path to
+          deployment.</p>
+          <p>I have often wondered: why is Load Testing always left so late? I have talked to people that profess to practise XP development who still leave it to the latter stages of the project, even though creating a <a href=
+          "http://www.agilealliance.org/system/article/file/970/file.pdf">Potentially Shippable Product</a> is supposed to be a primary goal for an iteration.</p>
+          <p>There seem to be two underlying reasons for this state of affairs. The first reason is cost. Tools like <a href=
+          "https://h10078.www1.hp.com/cda/hpms/display/main/hpms_content.jsp?zn=bto&amp;cp=1-11-126-17%5E8_4000_100&amp;jumpid=reg_R1002_USEN">HP LoadRunner</a> are not cheap, plus it costs a lot to engage a load testing specialist to do the work
+          (presumably faery food is rare and expensive…) so it has to be done only when things are "finally ready." The second reason goes like this: "since the system isn't finished yet, the figures won't mean anything, so there's no point in doing
+          it." Here is one such statement: <a href="http://www.devx.com/webdev/Article/17950/1954">"Running performance tests in a development environment that differs from your production environment can often be a misleading and misdirected
+          effort."</a>.</p>
+          <p>Both reasons are fallacious. Load Testing need not be an expensive activity, especially when <a href="http://en.wikipedia.org/wiki/Free_and_open_source_software">FOSS</a> such as <a href="http://jakarta.apache.org/jmeter/">JMeter</a>
+          are available. The idea that performance figures are the only product of load testing is also wrong: load testing can show weaknesses in the overall application architecture, or how the application is to be managed, it can highlight a
+          wrong choice of JVM settings or even of actual JVM (until recently my mantra was: "thou shalt use JRockit for server-side applications." With their recent takeover of BEA, Oracle has unfortunately put the <a href=
+          "http://www.urbandictionary.com/define.php?term=Kaibosh">kaibosh</a> on that [BOO!] so I'm not even going to link to JRockit's home page). Load testing can show weaknesses in choice of tool, algorithm, technique or team. The actual
+          <em>figures</em> that emerge although often considered hightly important, may actually be the least important outcome.</p>
+          <p>IMHO one should aim for Load Testing to be done for each iteration of Potentially Shippable Product so that no nasty surprises pop up at the last moment. Given a sophisticated enough scripted CI (JMeter Plugin for Hudson exists); CI is
+          supposed to drive software quality, after all.</p>
+          <p>For <em>really</em> quick and dirty performance tests, there's <a href="http://httpd.apache.org/docs/2.0/programs/ab.html">Apache ab</a> or <a href="http://curl.haxx.se/">curl</a> or even <a href=
+          "http://www.gnu.org/software/wget/">wget</a>, so there is really no excuse for not knowing <em>something</em> about performance. <a href="http://www.humanresourcesmagazine.com.au/articles/2b/0c01e32b.asp">She'll be right mate</a> just
+          won't cut it!</p>
+          <p>Enough pontification! Let's take a look at how to use Apche JMeter with our Calc WebFlow application.</p>
+          <p>Why JMeter? It's FOSS, powerful and you gotta love a tool whose manual has a chapter entitled <a href="http://jakarta.apache.org/jmeter/usermanual/boss.html">17. Help! My boss wants me to load test our web app!</a> :-)<br>
+          Why not JMeter? <a href="http://www.theserverside.com/news/thread.tss?thread_id=40931#211377">"…not every company is willing to stop putting out huge sums of money for Mercury."</a> Support for some edge cases involving JavaScript is the
+          main lack and this can be overcome by using <a href="http://badboy.com.au/">badboy</a> (good Ozzie software!) in conjunction with JMeter.</p>
+          <p>JMeter works in two modes: as a recording proxy for your browser and then as a playback device for the recording made previously.</p>
+          <p><a href="http://discuss.joelonsoftware.com/default.asp?joel.3.409986.33">Laziness is a virtue</a>, so I am not going to show each step of the process! There <a href="http://www.devx.com/webdev/Article/17950/1954">are</a>.<a href=
+          "http://jakarta.apache.org/jmeter/usermanual/index.html">Plenty</a>.<a href="http://safari.informit.com/9780596527938/jmeter-proxy">of</a>.<a href=
+          "http://www.exforsys.com/tutorials/jmeter/using-http-proxy-server-to-record-page-requests.html">Resources</a>,.<a href="http://robert.penz.name/106/mini-howto-for-jmeter-a-open-source-web-load-testing-tool/">already</a>.</p>
+          <p>I will add a few generally-useful and WebFlow-specific tidbits, however.</p>
+          <p>If you have Vista and use IE you will find it dificult/impossible to proxy for anything on localhost/127.0.0.1. Solutions include: binding your server to a <a href="http://technet.microsoft.com/en-us/library/cc708322.aspx">loopback
+          adapter</a>, using <a href="http://www.opera.com/">another</a> <a href="http://en-us.www.mozilla.com/en-US/firefox/">browser</a> or using a separate server machine. This is a general issue, not something specific to JMeter.</p>
+          <p>Before playback, for clarity rename each request in the recorded interactions, otherwise the various reports and graphs become very confusing:</p>
+          <p><img src="wp-content/uploads/2008/12/jmeter-raw-recording.jpg"></p>
+          <p>For the actual Load Test playback to work correctly, JMeter needs to invoke a couple of helper functions: the Cookie Manager and a Regular Expression Extractor. While the need for the former tool is probably quite clear, the requirement
+          for/use of the latter needs explanation. JMeter cannot simply replay the sequence as recorded. Recall that WebFlow allocates a unique one-time per-flow value for each flow that is stored in the '_flowExecutionKey' hidden field/request
+          parameter. Although JMeter stores this, it cannot simply reuse the recorded value on replay, and instead must extract and use the value allocated afresh for each flow execution. This is the task of the Regular Expression Extractor: look
+          through the recorded sequence for a specified pattern that can then be saved into a variable.</p>
+          <p>Once recorded, each script must be 'massaged' to make use of the variable that the Regular Expression Extractor will maintain, rather than use the recorded value directly (it is in this area that a tool like LoadRunner might make life
+          easier: it has an 'auto-correlate' ability that simplifies this task). Care is needed here and many references on the 'net are wrong or <a href="http://blog.springsource.com/2007/06/22/putting-spring-web-flow-to-a-load-test/">a bit out of
+          date</a>:</p>
+          <p><img src="wp-content/uploads/2008/12/jmeter-regex.jpg"></p>
+          <p>To be clear, here are the appropriate values:</p>
+          <blockquote>
+            <p>Reference Name: flowExecutionKey<br>
+            Regular Expression: name="_flowExecutionKey" value="(.*?)"<br>
+            Template: $1$<br>
+            Match No.: 0</p>
+          </blockquote>
+          <p>And here is a 'massaged' request entry, showing how the 'flowExecutionKey' variable is used:</p>
+          <p><img src="wp-content/uploads/2008/12/jmeter-regex-2.jpg"></p>
+          <p>As is desirable, JMeter produces nice graphs and reports, as this pair of screenshots shows:</p>
+          <p><img src="wp-content/uploads/2008/12/jmeter-90pc-graph.jpg"> <img src="wp-content/uploads/2008/12/jmeter-graph.jpg"></p>
+          <p>JMeter has a wide range of elements that can be added to a test plan: the "View Results Tree" Listener is useful for helping out with development/debugging of a test plan. <a href=
+          "http://jakarta.apache.org/jmeter/usermanual/component_reference.html#View_Results_Tree">As the manual says</a>: "The View Results Tree shows a tree of all sample responses, allowing you to view the response for any sample. In addition to
+          showing the response, you can see the time it took to get this response, and some response codes." Very useful:</p>
+          <p><img src="wp-content/uploads/2008/12/jmeter-results-tree.jpg"></p>
+          <p>(As an aside, note how this results tree shows how WebFlow automatically implements the <a href="http://www.theserverside.com/tt/articles/article.tss?l=RedirectAfterPost">"Redirect after POST"</a> technique…nice!)</p>
+          <p>The "Gaussian Random Timer" is another useful test plan element. Rather than issuing requests as quickly as possible, with no "think time" in between, the Gaussian Random Timer makes JMeter simulate the timing between hits more
+          realistically. This gives a better indication of how a system might be expected to perform in the "normal situation" but is probably not so hot at predicting performance at extreme load.</p>
+          <p>There are many other test plan elements, you should <a href="http://jakarta.apache.org/jmeter/usermanual/">take a look at the user manual</a> to see just what other elements JMeter makes available.</p>
+          <p>Of course, JMeter is controllable from gant, as this small example shows:</p>
+          <pre>
+DEVTOOLS = 'c:/DEVTOOLS'
+dirJMeterHome = "${DEVTOOLS}/jakarta-jmeter-2.3.2"
+jmeterTests="jmeter"
+jmeterResultsDir="${jmeterTests}/results"
+jmeterResultsJtl="${jmeterResultsDir}/jmeter-results.jtl"
+jmeterResultsHtml="${jmeterResultsDir}/jmeter-results.html"
+jmeterResultsXsl="${dirJMeterHome}/extras/jmeter-results-report_21.xsl"
+jmeterTestJmx="${jmeterTests}/calc.jmx"
+
+dirGantHome = ant.project.properties."environment.GANT_HOME"
+
+includeTargets &lt;&lt; gant.targets.Clean
+cleanDirectory &lt;&lt; [jmeterResultsDir]
+
+ant.path(id: 'pathJMeter') {
+  fileset(dir: dirJMeterHome + '/lib', includes: '*.jar')
+}
+
+ant.path(id: 'pathJMeterAntTask') {
+  fileset(dir: dirJMeterHome + '/extras', includes: 'ant-jmeter-*.jar')
+}
+
+ant.taskdef(name: 'jmeter', classname: 'org.programmerplanet.ant.taskdefs.jmeter.JMeterTask',
+            classpathref: 'pathJMeterAntTask')
+
+ant.path(id: 'pathGroovy') {
+  fileset(dir: dirGantHome + '/lib', includes: '*.jar')
+}
+
+target(init: 'Initialise the build, given a clean start') {
+  ant.mkdir(dir: jmeterResultsDir)
+}
+
+target (reformatReport: 'Do XSLT Magic') {
+    ant.xslt(in: "${jmeterResultsJtl}", out:"${jmeterResultsHtml}", style: "${jmeterResultsXsl}")
+}
+
+target(runJMeterTests: 'Get JMeter up & running') {
+  jmeter(jmeterhome: "${dirJMeterHome}", resultlog: "${jmeterResultsJtl}", testplan: "${jmeterTestJmx}")
+      {
+      property(name:"jmeter.save.saveservice.output_format", value: "xml")
+      property(name: "jmeter.save.saveservice.response_data.on_error", value: "true")
+  }
+}
+
+target(defaultTarget: 'Do Everything') {
+  depends(clean, init)
+
+  println 'Starting...'
+
+  runJMeterTests()
+
+  reformatReport()
+}
+
+setDefaultTarget(defaultTarget)
+</pre>
+          <p>Equally of course, once one has a gant script, one can easily integrate with Hudson (which knows how to do the XSLT step itself, so the gant script could be even shorter than that shown above):</p>
+          <p><img src="wp-content/uploads/2008/12/jmeter-hudson.jpg"><br>
+          (the observant among you may notice that the charts are not that exciting; we'll see how <a href="https://hudson.dev.java.net/issues/show_bug.cgi?id=2752">bug 2752</a> works out…)</p>
+          <p>Just so you know, JMeter is not just for testing HTTP-based systems. It is equally possible to build comprehensive test plans to load test JDBC-accessible databases, SOAP-base WebServices, FTP servers, etc.</p>
+          <p>Think about this: the combination of JMeter and Hudson can recast Load Testing from a rarely-performed, expensive "magic shield" to just another test aimed at improving the quality of your code. This is surely A Good Thing.</p>
+          <p>For the curious, the actual JMeter Test Plan associated with this post is available <a href="wp-content/uploads/2008/12/calc.jmx">here</a>.</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Grails, Programming</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Testing WebFlow (Wonderful Webflow, Part II)</h1>
+        <div class="entry-content">
+          <p><em>This posting follows on from Wonderful WebFlow. Probably best to take a look at that one first…</em></p>
+          <p>The post cited above developed a simple app. based around WebFlow, so now comes the time to test that app.</p>
+          <p>To loosely paraphrase <a href="http://www.hhgttgonline.com/html/quotes_ford1.html">Ford Prefect</a>: Testing is important. Testing Dynamic Languages doubly so.</p>
+          <p>Grails understands the importance of testing and provides integrated facilities for unit and integration testing. Since WebFlow is integrated into Grails' controllers there exists a specialised integration testing facility for WebFlow.
+          This is a little bit 'grungy' (IMHO) but is straightforward and easy to use. The Grails integration test (which, according to the Grails convention, must be stored in the grails-app hierarchy in the directory test/integration) is:</p>
+          <pre>public class CalcFlowTests extends grails.test.WebFlowTestCase {
+   def getFlow() { new CalcController().calcFlow }
+
+   void testShoppingCartFlow(){
+      def viewSelection = startFlow()
+
+      assertEquals "operand1", viewSelection.viewName
+
+     flow.params.value = '10'
+     viewSelection = signalEvent('next')
+     assertEquals "operand2", viewSelection.viewName
+
+     flow.params.value = '100'
+     viewSelection = signalEvent('next')
+     assertEquals "operator", viewSelection.viewName
+
+     flow.params.operator = '+'
+     viewSelection = signalEvent('next')
+     assertEquals "results", viewSelection.viewName
+
+     assertEquals 110, viewSelection.model.res
+   }
+}</pre>
+          <p>This test is simple: it drives the flow through its various states, supplying the requisite parameters (it is this mechanism that seems 'grungy' to me) and performing a number of tests to confirm that the flow is operating as
+          specified.</p>
+          <p>To execute the test, simply:</p>
+          <pre>grails test-app</pre>
+          <p>The test produces a number of XML reports that (via the <a href="http://www.c2.com/cgi/wiki?XsltLanguage">magic</a> that is <a href="http://en.wikipedia.org/wiki/XSLT">XSLT</a>) are transformed into HTML and plain text for the benefit
+          of us poor humans.</p>
+          <p><img src="wp-content/uploads/2008/12/calc-webtest.jpg" alt=""></p>
+          <p>Simple testing for a quite complex application. True Grails-y goodness, JUnit-style!</p>
+          <p>But wait! There's more!</p>
+          <p>Not content with this simple, essentially low-level isolated testing, Grails also has a <a href="http://webtest.canoo.com/">Canoo WebTest</a> plugin that brings a lot more to the table. Let's take a look.</p>
+          <p>WebTest is essentially a UI-less script-driven browser that is capable of evaluating its operation and the content it retrieves from the application against a series of assertions and requirements. Unlike the flow testing we have just
+          seen this is higher-level and operates under the same conditions as a normal browser: it is subject to the vagaries of grottily-generated HTML, wierd JavaScript tricks, CSS 'goodness', the lot.</p>
+          <p>Even so, WebTest is powerful, easy to use and makes good reports. What more can one want?</p>
+          <p>As always with Grails, installing and configuring the plugin is simple:</p>
+          <pre>grails install-plugin webtest
+grails create-webtest Calc</pre>
+          <p>This creates the files webtest/tests{TestSuite,CalcTest}.groovy (with a few others that are not immediately relevant to the task at hand).</p>
+          <p>CalcTest.groovy is generated according to the normal conventions for a Grails controller and normally would need very little hacking. Here however we have a WebFlow-based controller so a more radical makeover</p>
+          <p>is called for, leaving CalcTest.groovy looking like this:</p>
+          <pre>class CalcTest extends grails.util.WebTest {
+
+  // Unlike unit tests, functional tests are often sequence dependent.
+  // Specify that sequence here.
+  void suite() {
+    testCalcFlow()
+    // add tests for more operations here
+  }
+
+  def testCalcFlow() {
+    webtest('Basic Calc flow; 1 + 1 = 2') {
+
+      invoke '/calc', description: 'Move to Operand 1 Page'
+
+      group(description: 'Operand 1 Page') {
+        verifyTitle 'Get Operand 1'
+
+        setInputField name: 'value', value: '1'
+      }
+      clickButton 'Next', description: 'Move to Operand 2 Page'
+
+      group(description: 'Operand 2 Page') {
+        verifyTitle 'Get Operand 2'
+        setInputField name: 'value', value: '1'
+      }
+      clickButton 'Next', description: 'Move to Operator Page'
+
+      group(description: 'Operator Page') {
+        verifyTitle text: 'Get.*Operator', regex: true
+
+        setSelectField name: 'operator', optionIndex: 0
+      }
+      clickButton 'Next'
+
+      group(description: 'Results Page') {
+        verifyTitle 'Results'
+        verifyText '1 + 1 = 2'
+      }
+    }
+  }
+}</pre>
+          <p>There's really <a href="http://www.southparkstudios.com/">Nothing To See Here</a> that we haven't already seen (barring the 'group' concept, but that will become clear in the <a href=
+          "http://www.positiveatheism.org/hist/quotes/dawkins.htm">fullness of time</a>), so let's move right along.</p>
+          <p>The WebTest plugin makes testing easy:</p>
+          <pre>grails run-webtest</pre>
+          <p>This starts up the application "in the background" and then throws up a simple "please wait" dialog as the tests progress:</p>
+          <p><img src="wp-content/uploads/2008/12/calc-webtest-monitor.jpg" alt=""></p>
+          <p>Once the tests are complete, WebTest creates some very comprehensive HTML reports in the directory webtest/reports:</p>
+          <p><img src="wp-content/uploads/2008/12/calc-webtest-montage.jpg" alt=""></p>
+          <p>It is nice to see the Green Bar reappear on these reports :-) It's also nice to see the human-readable descriptive text extracted from the various steps into the report.</p>
+          <p>You may be thinking that making a lot of tests using even the simpler Groovy syntax would get tedious after a while. You'd be correct, but this is where WebTest's <a href="http://webtestrecorder.canoo.com/">WebTest Recorder</a> comes
+          in. This is a Mozilla Firefox plugin that does just what it's name suggests it should do:</p>
+          <p><img src="wp-content/uploads/2008/12/webtest-recorder-recording.jpg" alt=""></p>
+          <p>It doesn't make a beautifully formatted, grouped script for you, but it does give a nice starting point (and may cut down on errors that could be introduced if the test were to be made 'from scratch').</p>
+          <p>I feel obliged to echo the warning that hits you as soon as you attempt to download the plugin:</p>
+          <p><img src="wp-content/uploads/2008/12/webtest-recorder-warning.jpg" alt=""></p>
+          <p>WebTest is a good tool to demo: one can usually get a "wow!" or two from <a href="http://en.wikipedia.org/wiki/Clarke's_three_laws">interested observers</a>.</p>
+          <p>These reports are of sufficient quality that, in times of <a href="http://www.nytimes.com/2007/08/11/business/11envy.html">dire need</a>, they can be placed under the nose of an interested <a href=
+          "http://en.wikipedia.org/wiki/Pointy-Haired_Boss">PHB</a>.</p>
+          <p>The use of 'group' in the test should now be clear. In the words of the WebTest manual: "…allows grouping and giving a description to a sequence of nested steps." Groups make the reports easier to understand and give structure to the
+          test itself.</p>
+          <p>One can drill-through the various reports and even view the actual pages retrieved by WebTest during a test run; this cache of pages proves very useful when the world didn't go as expected!</p>
+          <p>So: this post has looked at two of the facilities Grails provides for testing a WebFlow for correct behaviour. It's important to note that these facilities are available to any app., not just those making use of the WebFlow
+          facility.</p>
+          <p>Up next: the thorny issue of Load testing.</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Grails, Programming</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Wonderful WebFlow</h1>
+        <div class="entry-content">
+          <p>A few projects ago, I had the pleasure of using the early versions of <a href="http://www.springsource.org/webflow">Spring WebFlow</a>.<br>
+          For the great unwashed out there, WebFlow <a href="http://static.springframework.org/spring-webflow/docs/1.0.5/reference/introduction.html#introduction-overview">is</a>:</p>
+          <blockquote>
+            <p>…a component of the Spring Framework's web stack focused on the definition and execution of UI flow within a web application.</p>
+            <p>The system allows you to capture a logical flow of your web application as a self-contained module that can be reused in different situations. Such a flow guides a single user through the implementation of a business task, and
+            represents a single user <em>conversation</em>. Flows often execute across HTTP requests, have state, exhibit transactional characteristics, and may be dynamic and/or long-running in nature.</p>
+          </blockquote>
+          <p>In other words, WebFlow makes it easy to create and control long-running, multi-page 'Wizards' that hold a stepwise dialog with the user.</p>
+          <p>Using WebFlow was straightforward and resulted in a system that was clean, well-structured and efficient…I wrote about this on the <a href="http://forum.springframework.org/showpost.php?p=140152&amp;postcount=4">WebFlow forum</a>,
+          noting:</p>
+          <blockquote>
+            <p>Here is my experience: "it all just works!" And well :-)</p>
+            <p>Webflow gave me no heartache at all.</p>
+          </blockquote>
+          <p>WebFlow is normally configured via an XML file that tends to get pretty large pretty quickly. Tools like <a href="http://springide.org/blog/">Spring IDE</a> and the Spring Web Flow Visual Editor built into IntelliJ do help control the
+          complexity but it seems as though the tide is turning against XML (something that I expect we'll all live to regret one day, but this industry seems to have no true "organisational memory": we just don't learn lessons…); maybe its the
+          <a href="http://en.wikipedia.org/wiki/Generation_Y">GenY</a>-ers amongst us looking for <a href="http://www.zdnetasia.com/news/business/0,39044229,62046818,00.htm">instant gratification</a>?</p>
+          <p>In this spirit then, this posting is all about how <a href="http://www.grails.org">Grails</a> makes living with WebFlow easier.</p>
+          <p>The project is a simple calculator: enter an operand on one page (with one form), enter a second operand on a second page/form, enter an operator on a third page/form and display the result on a final page.</p>
+          <p><img src="wp-content/uploads/2008/12/calc-montage.jpg"></p>
+          <p>It's not beautiful, I know! I'm only interested in the 'core' aspects of the application here…</p>
+          <p>The application flow allows for going back to revist pages as well as simply moving forward. Properly allowing for backward motion along is a non-trivial task, typically requiring<br>
+          server-side and/or client-side state maintenance and <a href="http://www.jroller.com/kdonald/entry/spring_web_flow_pr2_is">continuation</a> support.</p>
+          <p>In Grails, <a href="http://grails.org/WebFlow">WebFlow support</a> is a standard feature available to any controller and is configured conventionally by defining a closure with a name ending in 'Flow'…take a look:</p>
+          <pre>
+class CalcController {
+
+  def totalFlowsCreatedSequenceMBean
+  def instantaneousFlowCountMBean
+
+  def index = {
+    redirect(action: 'calc')
+  }
+
+  def calcFlow = {
+    startup {
+      action() {
+        flow.flowCreatedSequence = totalFlowsCreatedSequenceMBean.increment()
+        log.debug "calcFlow startup; this is flow #${flow.flowCreatedSequence}; instantaneous flow count: ${instantaneousFlowCountMBean.increment()}"
+      }
+      on('success').to 'init'
+    }
+
+    init {
+      action() {
+        flow.op1 = new OperandCommand()
+        flow.op2 = new OperandCommand()
+        flow.oper = new OperatorCommand()
+        flow.res = null
+      }
+      on('success').to 'operand1'
+    }
+
+    operand1 {
+      on('next') { OperandCommand cmd -&gt;
+        flow.op1 = cmd
+        !flow.op1.validate() ? error() : success()
+        log.debug "OP1: $flow.op1.value"
+      }.to 'operand2'
+    }
+
+    operand2 {
+      on('back').to 'operand1'
+      on('next') { OperandCommand cmd -&gt;
+        flow.op2 = cmd
+        !flow.op2.validate() ? error() : success()
+        log.debug "OP2: $flow.op2.value"
+      }.to 'operator'
+    }
+
+    operator {
+      on('back').to 'operand2'
+      on('next') { OperatorCommand cmd -&gt;
+        flow.oper = cmd
+        !flow.oper.validate() ? error() : success()
+        log.debug "Operator: $flow.oper.operator"
+      }.to 'calculate'
+    }
+
+    calculate {
+      action {
+        def left = flow.op1.value
+        def right = flow.op2.value
+        def operator = flow.oper.operator
+        switch (operator) {
+          case '+': flow.res = left + right; break;
+          case '-': flow.res = left - right; break;
+        }
+        log.debug "${left} ${operator} ${right} = ${flow.res}"
+      }
+      on('success').to 'shutdown'
+    }
+
+    shutdown {
+      action() {
+        log.debug "calcFlow shutdown; this is flow #${flow.flowCreatedSequence}; instantaneous flow count: ${instantaneousFlowCountMBean.decrement()}"
+      }
+      on('success').to 'results'
+    }
+
+    results()
+  }
+}
+
+class OperatorCommand implements java.io.Serializable {
+  static constraints = {
+    operator inList: ['+', '-']
+  }
+
+  Character operator
+}
+
+class OperandCommand implements java.io.Serializable {
+  static constraints = {
+    value nullable: false
+  }
+
+  Integer value
+}
+</pre>
+          <p>This Controller intiates a flow in response to being invoked via the url <em>http://…/Calc/calc/calc</em>.<br>
+          (Application context = 'Calc', controller name = 'calc', flow name = 'calc'…it <em>does</em> make sense, really!)</p>
+          <p>It is much easier to read this WebFlow DSL than to read the equivalent XML configuration. Trust me! Since Grails is based on Groovy and can use closures, the WebFlow DSL also thankfully frees one from the need to create <em>many,
+          many</em> small action classes (in an earlier project I had to create about 100 classes, most of which had one line of 'real' code in them. Traditional WebFlow is unfortunately a bit <a href=
+          "http://www.c2.com/cgi/wiki?CodeSmell">smelly</a> in this regard; creating a class hierarchy helped rein in some of the nastiness and creating a parent-child relationship in the XML config file also helped, but the Grails DSL is just
+          <em>so much</em> better!).</p>
+          <p>Rather than walk laboriously through each line, consider only the 'operand2′ closure in the flow. It is easy to see how the application behaves at this point (and indeed, this is the point of most DSL: easy comprehension): when the
+          'back' event ocurs, move to the 'operand1′ state and show the corresponding view, which-by Grails' WebFlow convention-is found in the file 'operand1.gsp'. When the 'next' event occurs, execute the corresponding closure before transitioning
+          to the 'operator' state.</p>
+          <p>Note how the transition associated with the 'next' event has an associated closure that obtains and validates the associated posted form data as the associated custom-defined Command object is stored into 'flow' scope. Flow scope is a
+          WebFlow 'special' analogous to 'session' scope but which-unsurprisingly-only exists for the duration of the flow.</p>
+          <p>How are the next/back events raised to the controller? They are generated as a response to the user interacting with the application and are specified in the corresponding 'operator2.gsp' view GSP. In this case, the events are generated
+          by/correspond to the two buttons associated with the form:</p>
+          <pre>
+...
+&lt;g:form action="calc"&gt;
+  &lt;label for="value"&gt;Operand 2:&lt;/label&gt;
+  &lt;g:textField name="value" value="${op2?.value}"/&gt;
+  &lt;br/&gt;
+  &lt;g:submitButton name="back" value="Back"&gt;&lt;/g:submitButton&gt;
+  &lt;g:submitButton name="next" value="Next"&gt;&lt;/g:submitButton&gt;
+&lt;/g:form&gt;
+...
+</pre>
+          <p>Under the covers, the generated form becomes:</p>
+          <pre>
+...
+&lt;form action="/Calc/calc/calc?_flowExecutionKey=_c06FB562D-5D87-0B93-A938-465ABAFAB026_kA42D2D04-3B12-C13D-B207-E68814B81AFC" 
+          method="post" &gt;
+  &lt;input type="hidden" name="_flowExecutionKey"
+             value="_c06FB562D-5D87-0B93-A938-465ABAFAB026_kA42D2D04-3B12-C13D-B207-E68814B81AFC" id="_flowExecutionKey" /&gt;
+  &lt;label for="operator"&gt;Operator:&lt;/label&gt;
+  &lt;select name="operator" id="operator"&gt;
+    &lt;option value="+" &gt;+&lt;/option&gt;
+    &lt;option value="-" &gt;-&lt;/option&gt;
+  &lt;/select&gt;
+  &lt;br/&gt;
+  &lt;input type="submit" name="_eventId_back" value="Back" id="_eventId_back" /&gt;
+  &lt;input type="submit" name="_eventId_next" value="Next" id="_eventId_next" /&gt;
+&lt;/form&gt;
+...
+</pre>
+          <p>It should now be clear how the events are raised and sent to the controller.</p>
+          <p>OK, so how does the server know what particular flow the generated events correspond to? The server generates and maintains a flow-unique identifier (similar to the well-known JSESSIONID) called '_flowExecutionKey.' By looking at the
+          "under the covers" code above, it is easy to see that all flow-related requests will contain this identifier.</p>
+          <p>If you can see the correspondences between flow/transition/view/form element/Command object, you should be able to see how the whole thing hangs together.</p>
+          <p>It should now be clear that there is a fair bit of work going on under the covers: the server has to maintain the current state of a flow on behalf of the user, it has to be able to parse an action out of an incoming request and
+          determine an appropriate transition and action closures, the correct HTML has to be generated, etc. Of course, there is also always the possibility that some exceptional circumstance may occur and this needs to be dealt with in 'sensible'
+          fashion as well. I'm ignoring exception handling for this posting (what a <a href="http://www.thefreedictionary.com/cop+out">cop-out</a>, eh!); it's not difficult but we've got enough to be going on with here.</p>
+          <p>If you had to build equivalent functionality "by hand" you'd find yourself with a fair-sized project at hand, with all that implies for quality, etc. It as also very doubtful that the hand-crafted attempt would be as clean and
+          expressive as Grails' DSL version.</p>
+          <p>WebFlow is one of those features (along with Groovy's inherent and unbeatable <a href="http://graemerocher.blogspot.com/2007/03/jruby-groovy-java-integration.html">interoperability with Java</a>, of course) that moves Grails away from
+          being only suitable for small-scale "tiny apps" to being truly enterprise-grade technology.</p>
+          <p>Give it a go!</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Grails, Programming</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Simple Subversion</h1>
+        <div class="entry-content">
+          <p>Took me about 30s to get a subversion repository up and running the other day.</p>
+          <p>I used the free <a href="http://www.visualsvn.com/server/">VisualSVN Server</a> running under an XPSP3 virtual machine on <a href="http://www.microsoft.com/windows/products/winfamily/virtualpc/overview.mspx">Microsoft Virtual PC 2007
+          SP1</a>.</p>
+          <p>Great stuff.</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Tools</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Continuous Integration</h1>
+        <div class="entry-content">
+          <p>In the far mists of time, I assisted a client with getting a project kicked off and running. Thanks to the developers who were actually running the project (not to me…), the project was eventually quite successful.</p>
+          <p>One aspect still rankles with me, however…</p>
+          <p>When the project was started, I brought up the idea of Continuous Integration (CI). "You should be using CruiseControl" I declared, flexing my intellectual muscles. And thus did it happen: the dev. team set up <a href=
+          "http://cruisecontrol.sourceforge.net/">CruiseControl</a> and <a href="http://en.wikipedia.org/wiki/Concurrent_Versions_System">CVS</a> and also constructed beautiful <a href="http://ant.apache.org/">Ant</a> build.xml scripts to automate
+          all aspects of their project. CruiseControl happily ensured that builds occurred on every check-in. The whole thing ran nicely.</p>
+          <p>To my way of thinking, however, it turned out that there was no value in the process; the team may as well have not bothered with CI and I eventually came to regret introducing it.</p>
+          <p>So what was missing?</p>
+          <p>Simple: testing.</p>
+          <p>CI is not about automating the build process, it is about automating the <em>testing suite</em> and reporting on the outcome such that code quality is driven upward.</p>
+          <p>This is what I neglected to make clear: <strong>CI is about driving code/system quality, not simply automation.</strong></p>
+          <p>I <em>should</em> have said "You should be using CruiseControl to automate the suite of tests that will be developed as an integral activity of the project." To be fair to the team, they did make a few unit tests available in the early
+          days, but workload and pressure of time curtailed that (and therein lies a lesson in its own right: budget more [in all your myriad metrics] for testing than you think is needed at first glance. …but I digress…).</p>
+          <p>Without the driver of an actively-maintained suite of tests and associated reports, CI became a distraction at best (100% test success rate all the time…whoopee). At worst, it became a cause for angst and <em>fear</em>: in the
+          angst-ridden minds of management, a 'medium'-sized project instantly grew to be a large, scary one due to its "infrastructure needs" and everybody knows that large projects always fail!</p>
+          <p>Enough history.</p>
+          <p>In A Festive Testing Article, I showed easyb used in conjunction with Cobertura and Gant. Here I will briefly show how all that can be placed under the control of a CI system.</p>
+          <p>My current CI tool of choice is <a href="https://hudson.dev.java.net/">Hudson</a>.</p>
+          <p>Hudson is a pure Java application, so installation is trivial: download a single war file and run. Actually, through the Magic of Java Web Start <a href=
+          "http://weblogs.java.net/blog/kohsuke/archive/2007/03/installing_huds.html">Installing Hudson just got even easier</a>.</p>
+          <p>All configuration is done via the web GUI (as we shall see), so no messing around with scary and obscure XML files.</p>
+          <p>Hudson has plugins for Cobertura and Gant and Subversion, so it's all a bit of a doddle…as this screenshot shows:</p>
+          <p><img src="wp-content/uploads/2008/12/hudson-plugins.jpg" width="85%"></p>
+          <p>Configuration for a project is trivial, as shown in this screenshot montage:</p>
+          <p><img src="wp-content/uploads/2008/12/hudson-calendar-config.jpg" width="85%"></p>
+          <p>Husdon provides a number of useful "information radiators" to show the status of a project. The overview page gives an "at a glance" feel for the project. I like the 'weather' analogy here:</p>
+          <p><img src="wp-content/uploads/2008/12/hudson-calendar-overview.jpg" width="85%"></p>
+          <p>More detailed reports are possible, as this montage shows:</p>
+          <p><img src="wp-content/uploads/2008/12/hudson-calendar-montage.jpg" width="85%"></p>
+          <p>A close look will show that <a href="http://en.wikipedia.org/wiki/RSS_(file_format)#Specifications">RSS feeds</a> are available as well.</p>
+          <p>The cobertura integration is as painless and easy as it is vital:</p>
+          <p><img src="wp-content/uploads/2008/12/hudson-cobertura.jpg" width="85%"></p>
+          <p>(It's interesting to see the effect of the compiler's code-inlining optimisation here.)</p>
+          <p>All in all, a good tool: simple, extensible and solid. What more could one want? Just remember: "It's the Tests, Stupid!"</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Tools</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">I Feel So Scrummy…</h1>
+        <div class="entry-content">
+          <p>…in a good way, that is :-)</p>
+          <p>See me at: <a href="http://www.scrumalliance.org/profiles/45966-bob-brown">http://www.scrumalli … iles/45966-bob-brown</a>.</p>
+          <p>And, if you need further proof:</p>
+          <p><img src="wp-content/uploads/2008/12/bobscrumcert.png"></p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Agile</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">A Festive Testing Article</h1>
+        <div class="entry-content">
+          <p>I have previously talked about using easyb for unit and/or acceptance testing.</p>
+          <p>When one talks about testing, one should always also talk about "code coverage." This is true regardless whether one is talking about Pascal or Prolog, C or Groovy.</p>
+          <p>One of the most effective tools for coverage testing for Groovy is <a href="http://cobertura.sourceforge.net/">cobertura</a></p>
+          <p>Since the festive season is nearly upon us, I have created a small Groovy class that generates the <a href="http://www.electricscotland.com/poetry/12days.htm">old</a>, <a href=
+          "http://www.christmascarnivals.com/12-days-of-christmas/12-day-christmas-poem.html">Catechism Song</a> "The Twelve Days of Christmas":</p>
+          <pre>
+public class Christmas {
+
+  static ordinal(d) {
+    def s
+    switch (d) {
+      case 1: s = "1st"; break
+      case 2: s = "2nd"; break
+      case 3: s = "3rd"; break
+      default: s = (d + "th"); break
+    }
+    s
+  }
+
+  static line(l) {
+    "t$ln"
+  }
+
+  static verse(day) {
+    def s = new StringBuilder("On the ${ordinal(day)} day of Christmas my true love gave to me:")
+    s &lt;&lt; 'n'
+    if (day &gt;= 12)
+      s &lt;&lt; line("twelve drummers drumming,")
+    if (day &gt;= 11)
+      s &lt;&lt; line("eleven pipers piping,")
+    if (day &gt;= 10)
+      s &lt;&lt; line("ten lords a-leaping,")
+    if (day &gt;= 9)
+      s &lt;&lt; line("nine ladies dancing,")
+    if (day &gt;= 8)
+      s &lt;&lt; line("eight maids a-milking,")
+    if (day &gt;= 7)
+      s &lt;&lt; line("seven swans a-swimming,")
+    if (day &gt;= 6)
+      s &lt;&lt; line("six geese a-laying,")
+    if (day &gt;= 5)
+      s &lt;&lt; line("five gold rings,")
+    if (day &gt;= 4)
+      s &lt;&lt; line("four calling birds,")
+    if (day &gt;= 3)
+      s &lt;&lt; line("three french hens,")
+    if (day &gt;= 2) {
+      s &lt;&lt; line("two turtle doves")
+      s &lt;&lt; line('and')
+    }
+    if (day &gt;= 1)
+      s &lt;&lt; line("a partridge in a pear tree.")
+
+    s
+  }
+
+  static void main(args) {
+    (0..11).each {day -&gt;
+      println verse(day)
+    }
+  }
+}
+</pre>
+          <p>The algorithm may not be the best, but it works well for my purpose here so let's see how Cobertura helps uncover the glaring <a href="http://www.c2.com/cgi/wiki?OffByOne">off-by-one bug</a> in this little work of art…</p>
+          <blockquote>
+            <p>On the 0th day of Christmas my true love gave to me:</p>
+            <p>On the 1st day of Christmas my true love gave to me:<br>
+            a partridge in a pear tree.</p>
+            <p>On the 2nd day of Christmas my true love gave to me:<br>
+            two turtle doves<br>
+            and<br>
+            a partridge in a pear tree.</p>
+            <p><em>…elided…</em></p>
+            <p>On the 11th day of Christmas my true love gave to me:<br>
+            eleven pipers piping,<br>
+            ten lords a-leaping,<br>
+            nine ladies dancing,<br>
+            eight maids a-milking,<br>
+            seven swans a-swimming,<br>
+            six geese a-laying,<br>
+            five gold rings,<br>
+            four calling birds,<br>
+            three french hens,<br>
+            two turtle doves<br>
+            and<br>
+            a partridge in a pear tree.</p>
+          </blockquote>
+          <p>Using cobertura requires a three-step process. in the first step, Cobertura instruments java class files so that usage counts are maintained. In the second step, the system under test's runtime classpath is changed to ensure that these
+          instrumented classes are used in place of the originals. The third step takes place after execution when Cobertura analyses the data and generates a report.</p>
+          <p>Take a look at the following gant script to see how all that is done:</p>
+          <pre>
+DEVTOOLS = 'c:/DEVTOOLS'
+dirSource = 'src'
+dirBuild = 'out'
+dirCoberturaHome = "${DEVTOOLS}/cobertura-1.8"
+dirCoberturaClasses = dirBuild + '/coberturaClasses'
+dirCoberturaReports = 'coberturaReports'
+fileCoberturaData = "cobertura.ser"
+
+includeTargets &lt;&lt; gant.targets.Clean
+cleanPattern &lt;&lt; '**/*~'
+cleanDirectory &lt;&lt; [ dirCoberturaReports ]
+
+ant.path(id: 'pathCobertura') {
+  fileset(dir: dirCoberturaHome, includes: 'lib/**/*.jar, cobertura.jar')
+}
+
+ant.taskdef(resource: 'tasks.properties', classpathref: 'pathCobertura')
+
+target(coberturaInstrumentation: 'Run Cobertura instrumentation') {
+  ant.'cobertura-instrument'(todir: dirCoberturaClasses) {
+    fileset(dir: dirBuild, includes: '*.class')
+  }
+}
+
+target(coberturaReports: 'Run Cobertura reporting') {
+  ant.'cobertura-report'(format: 'html', srcdir: dirSource,
+      destdir: dirCoberturaReports)
+}
+
+ant.taskdef(name: 'groovyc', classname: 'org.codehaus.groovy.ant.Groovyc')
+
+target(compile: 'Compile source to build directory') {
+  groovyc(srcdir: dirSource, destdir: dirBuild) {
+    javac(debug: 'on', debuglevel: 'lines,vars,source')
+  }
+}
+
+target(christmas: 'Run Christmas application') {
+  java(classname: 'Christmas', fork:true) {
+    classpath() {
+      pathelement(path: "C:/DEVTOOLS/groovy-1.6-beta-2/embeddable/groovy-all-1.6-beta-2.jar")
+      pathelement(path: dirCoberturaClasses)
+      path(refid: 'pathCobertura')
+    }
+  }
+}
+
+target(init: 'Initialise the build, given a clean start') {
+  depends(clean)
+
+  ant.mkdir(dir: dirCoberturaReports)
+
+  if (new File(fileCoberturaData).exists()) ant.delete(file: fileCoberturaData)
+}
+
+target(defaultTarget: 'Do Everything') {
+  depends(init)
+
+  compile()
+
+  coberturaInstrumentation()
+
+  christmas()
+
+  coberturaReports()
+}
+
+setDefaultTarget(defaultTarget)
+</pre>
+          <p>For this simple class, the coverage report points us straight to a problem: The twelfth verse is never requested.</p>
+          <p><img src="wp-content/uploads/2008/12/coverage.jpg"></p>
+          <p>the cause is simple,</p>
+          <pre>
+  static void main(args) {
+    (0..11).each {day -&gt;
+      println verse(day)
+    }
+  }
+</pre>
+          <p>instead of:</p>
+          <pre>
+  static void main(args) {
+    (1..12).each {day -&gt;
+      println verse(day)
+    }
+</pre>
+          <p>Well OK. Not <em>so</em> impressive it seems! After all in this situation we have a straightforward class and straightforward test. A simple code-inspection would probably have surfaced the bug, but you never know: this class of error
+          is depressingly prevalent in code.</p>
+          <p>Code coverage is valuable when testing is more complex and the System Under Test is much larger; it comes into is own when testing is the responsibility of all the members of a team (something that is a central tenet of <a href=
+          "http://www.extremeprogramming.org/">XP</a>, after all).</p>
+          <p>Getting Cobertura up and running is easy. Getting it integrated into a Continuous Integration system like hudson is <a href="http://hudson.gotdns.com/wiki/display/HUDSON/Cobertura+Plugin">also easy</a>.<br>
+          (By the way, if you were wondering: <a href="http://money.cnn.com/2005/11/28/news/funny/holiday_12days_pricetag/index.htm">the price tag of the shopping list laid out in the classic holiday song "The Twelve Days of Christmas" is sharply
+          higher this year</a>.)</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Groovy, Programming</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Another Couple of Interesting Tools</h1>
+        <div class="entry-content">
+          <p>These have both been useful to me on projects when I have been trying to get my head around reams of grungy C code (you know the type, where the programmer continually felt the need to use *(p + i) instead of p[i] <a href=
+          "http://en.wikipedia.org/wiki/Optimization_(computer_science)#Quotes">"because it is more efficient"</a>).</p>
+          <p>doxygen, <a href="http://www.stack.nl/~dimitri/doxygen/">http://www.stack.nl/~dimitri/doxygen/</a></p>
+          <blockquote>
+            <p>Doxygen is a documentation system for C++, C, Java, Objective-C, Python, IDL (Corba and Microsoft flavors), Fortran, VHDL, PHP, C#, and to some extent D.</p>
+          </blockquote>
+          <p>cscope, <a href="http://cscope.sourceforge.net/">http://cscope.sourceforge.net/</a></p>
+          <blockquote>
+            <p>Cscope is a developer's tool for browsing source code. It has an impeccable Unix pedigree, having been originally developed at Bell Labs back in the days of the PDP-11. Cscope was part of the official AT&amp;T Unix distribution for
+            many years, and has been used to manage projects involving 20 million lines of code!</p>
+          </blockquote>
+          <p>To a degree, modern IDEs can help in the problem spaces addressed by both these tools; sadly, one just can't rely on always having a modern IDE available, however.</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Tools</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Unit or Functional(*), That is the Question</h1>
+        <div class="entry-content">
+          <p>Another <a href="http://www.c2.com/cgi/wiki?LunchnLearn">lunchtime discussion</a>…"So. is easyb for unit testing or functional testing? Which is it?"</p>
+          <p>Does it have to be either? It is a testing tool that is driven by stories. These stories can be helping us to understand <em>either</em> how our units of code operate <em>or</em> what constitutes an acceptably-behaving system.</p>
+          <p>Since easyb is a Groovy DSL and since Groovy interoperates fully with Java, it is easy to incorporate a tool such as <a href="http://webtest.canoo.com/">Canoo Webtest</a>. For example:</p>
+          <pre>
+description "Testing a Web Application"
+
+narrative 'Can we test a web application in a scenario? Yes. Yes we can!', {
+  as_a "Starving Developer"
+  i_want "To test my web application"
+  so_that "I can get a better job elsewhere"
+}
+
+ant = new AntBuilder()
+
+webtest_home = 'C:/DEVTOOLS/Canoo WebTest 2.6'
+
+ant.taskdef(resource:'webtest.taskdef') {
+  classpath() {
+    pathelement(location:"$webtest_home/lib")
+    fileset(dir:"$webtest_home/lib", includes:"**/*.jar")
+    }
+}
+
+scenario "The Transentia Web Site Is Up and Running", {
+  given "The URL for the Transentia Web Site"
+  when "We look for the page subtitle"
+  then "We must see the appropriate byline", {
+
+  ant.testSpec(name:'groovy: Test Groovy Scripting at creation time'){
+    config([host:"www.transentia.com.au", basepath:'flatpress'])
+    steps() {
+      invoke(url:'index.php')
+      verifyXPath(xpath: "//p[@class='subtitle']", regex: true, text: '.*training.*')
+      }
+    }
+  }
+}
+</pre>
+          <p>It's good to look at this example and see the synergies Groovy brings to the task: would a 'pure' Java developer normally reuse ant as shown above?</p>
+          <p>A similar use of easyb is given in <a href="http://testearly.com/2008/03/12/functional-web-stories/">Functional web stories</a>, but that example uses <a href="http://selenium.openqa.org/">selenium</a>, not WebTest. There is also a
+          useful followup article covering the use of easyb fixtures to improve the script at <a href="http://thediscoblog.com/2008/05/16/easy-fixtures-easyb-style/">http://thediscoblog. … ixtures-easyb-style/</a>.</p>
+          <p>I like the idea of a single tool being able to drive various testing activities, I particularly like the way that this gives a consistent 'feel' to the reporting:</p>
+          <pre>
+ 1 scenario executed successfully
+
+  Story: transentia story
+   Description: Testing a Web Application
+   Narrative: Can we test a web application in a scenario? Yes. Yes we can!
+      As a Starving Developer
+      I want To test my web application
+      So that I can get a better job elsewhere
+
+    scenario The Transentia Web Site Is Up and Running
+      given The URL for the Transentia Web Site
+      when We look for the page subtitle
+      then We must see the appropriate byline
+</pre>
+          <p>(as an aside, this consistency of reporting style can also be achieved by getting easyb to output an XML report that can then be transformed in any which way…)</p>
+          <p>So my answer to the question is "easyb can be used in any way that makes sense, but consider the value of a consistent documentation stream."</p>
+          <p>Now, just to be complete and to show that I do "eat my own dogfood", here is the associated gant script:</p>
+          <pre>
+DEVTOOLS = 'c:/DEVTOOLS'
+dirEasybHome = "${DEVTOOLS}/easyb-0.9"
+dirWebtestHome = "${DEVTOOLS}/Canoo WebTest 2.6"
+dirReport = 'reports'
+includeTargets &lt;&lt; gant.targets.Clean
+cleanPattern &lt;&lt; '**/*~'
+cleanDirectory &lt;&lt; [ dirReport ]
+
+dirGantHome = ant.project.properties."environment.GANT_HOME"
+ant.path(id: 'pathGant') {
+   fileset(dir: dirGantHome, includes: 'lib/*.jar')
+}
+
+ant.path(id: 'pathWebtest') {
+   fileset(dir: dirWebtestHome, includes: 'lib/*.jar')
+}
+ant.path(id: 'pathEasyb') {
+   fileset(dir: dirEasybHome, includes: '*.jar')
+}
+
+ant.taskdef(name: "easyb", classname: "org.disco.easyb.ant.BehaviorRunnerTask", classpathref: 'pathEasyb')
+
+target(easyb: 'Run easyb tests') {
+  depends(init)
+  ant.easyb(failureProperty: "property.easyb.failed") {
+    classpath() {
+      path(refid: 'pathEasyb')
+      path(refid: 'pathWebtest')
+      path(refid: 'pathGant')
+    }
+
+    report(location: "${dirReport}/xml-report.xml", format: "xml")
+    report(location: "${dirReport}/story-report.txt", format: "txtstory")
+    report(location: "${dirReport}/behavior-report.xml", format: "txtspecification")
+
+    behaviors(dir: '.') {
+      include(name: "**/*.story")
+    }
+  }
+  ant.fail(if: "property.easyb.failed", message: "***easyb run failed")
+}
+
+target(init: 'Initialise the build, given a clean start') {
+  depends(clean)
+
+  ant.mkdir(dir: dirReport)
+}
+
+setDefaultTarget(easyb)
+</pre>
+          <p>This should reinforce the message from <em>Goodybye Ant, Hello Gant</em>.</p>
+          <p>(*)Just to say, I dislike the term "functional testing", I much prefer <em><a href="http://www.c2.com/cgi/wiki?AcceptanceTest">acceptance testing</a></em>.</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Tools</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="pagination">
+        <span class="next"><a href="DUMMY">Next »</a></span> <span class="previous"><a href="DUMMY">« Previous</a></span>
+      </div>
+    </div>
+  </div><!--#page-->
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script> 
+  <script src="js/site.js"></script>
+</body>
+</html>

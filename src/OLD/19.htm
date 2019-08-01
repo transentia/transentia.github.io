@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <title>Transentia - transentia pty. ltd.; development, consulting, training at the leading-edge of technology</title>
+  <link rel="stylesheet" type="text/css" media="screen, print, handheld" href="wp-content/themes/transentia/css/site.css">
+</head>
+<body>
+  <div id="page">
+    <div id="header">
+      <p><a href="../index.htm"><img src="wp-content/uploads/widgets/transentia-logo-red-glow.gif" border="0"></a></p>
+      <p class="old-content">transentia's old content; click on the logo to return to the new content</p>
+      <p id="blog-description">transentia pty. ltd.; development, consulting, training at the leading-edge of technology</p>
+    </div><!-- #header -->
+    <div id="content">
+      <div class="pagination">
+        <span class="next"><a href="DUMMY">Next »</a></span> <span class="previous"><a href="DUMMY">« Previous</a></span>
+      </div>
+      <div class="post hentry">
+        <h1 class="entry-title">"Elements Of Enterprise CI" Flyer</h1>
+        <div class="entry-content">
+          <p>One to remember:</p>
+          <blockquote>
+            <p><a href="http://www.anthillpro.com/html/resources/elements-enterprise-ci.html">This flyer</a> categorizes by levels of maturity various practices for Building, Deploying, Testing and Reporting that first appeared in our whitepaper
+            <a href="http://www.anthillpro.com/html/resources/white-papers">Enterprise Continuous Integration</a> Maturity Model. For a further description of these categories and practices please refer to the complete whitepaper.</p>
+          </blockquote>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Tools</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">You'll Never Be A Good Agile Developer!</h1>
+        <div class="entry-content">
+          <p>Had a rather frenzied conversation with a self-proclaimed agilist this lunchtime, during which I admitted that I couldn't claim complete mastery of any particular IDE.</p>
+          <p>"You'll Never Be A Good Agile Developer!" came the immediate pronouncement.</p>
+          <p>Take <em>that</em>! Put me in my place!</p>
+          <p>Apparently, in the mind of this young guru, mastery of every keyboard shortcut of an editor (although which <em>particular</em> editor this person had in mind remained unspecified. He's a Ruby fanboy I believe, so I'm guessing that it
+          would be something Mac-ish) was a prerequisite for agile development.</p>
+          <p>After a while, the conversation changed tack and this intense young thing-bemoaning the overall state of the I.T.world-pronounced that it would probably be better if he went back to Uni. and completed his Arts Degree.</p>
+          <p>Stepping <a href="http://www.cs.indiana.edu/metastuff/looking/lookingdir.html">back through the mirror</a>, I thought it would be fun to think about all the editors that I have failed to adequately exercise over the years.</p>
+          <p>Ignoring non developer-oriented things like Microsoft Word and Adobe FrameMaker, and oddities like runoff/[nt]roff/TeX and even odder things like <a href="http://www.ifcx.org/attach/Wings/WingsExample.html">Literate Programming</a>'s
+          tangle/weave I came up with this:</p>
+          <table border='0' width='50%'>
+            <tr>
+              <td>TOPS-20/SOS</td>
+              <td>TOPS-10/TECO</td>
+              <td>edlin</td>
+              <td>ed/ex/vi</td>
+              <td>Turbo Pascal</td>
+            </tr>
+            <tr>
+              <td>Turbo Prolog</td>
+              <td>USCD p-System Pascal</td>
+              <td>USCD p-System Modula-2</td>
+              <td>Inmos Occam Transputer Development System</td>
+              <td>Macintosh/BBEdit</td>
+            </tr>
+            <tr>
+              <td>Macintosh/Alpha</td>
+              <td>VMS/edit</td>
+              <td>Think/C</td>
+              <td>Apple Macintosh Programmers Workshop</td>
+              <td>Metroworks Modula-2</td>
+            </tr>
+            <tr>
+              <td>XEmacs</td>
+              <td>Project Oberon</td>
+              <td>Netbeans</td>
+              <td>Eclipse/MyEclipseIDE</td>
+              <td>IntelliJ</td>
+            </tr>
+            <tr>
+              <td>VisualAge for Java</td>
+              <td>JDeveloper</td>
+              <td>JBuilder</td>
+              <td>SunOS EditTool</td>
+              <td>Visual Studio</td>
+            </tr>
+          </table>
+          <p>(there are others…I'm pretty sure that the Simula 67 system I used for a while had a weird development 'environment' that I didn't really delve into; ditto for the eiffel system I used…)</p>
+          <p>Given all this, it is patently obvious that I'll never be A Good Agile Developer, but let's remember the <a href="http://agilemanifesto.org/">Agile Manifesto</a>, which states (in part):</p>
+          <blockquote>
+            <p>…we have come to value:</p>
+            <p><strong>Individuals and interactions</strong> over processes and tools…</p>
+          </blockquote>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Agile</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Using PrettyTime With Groovy</h1>
+        <div class="entry-content">
+          <p><a href="http://www.theserverside.com/">TheServerSide</a> just brought <a href="http://ocpsoft.com/prettytime/">PrettyTime</a> to my notice:</p>
+          <blockquote>
+            <p>PrettyTime is an OpenSource time formatting library. Completely customizable, PrettyTime creates human readable, relative timestamps like those seen on Digg, Twitter, and Facebook. It's simple, get started "right now!"</p>
+          </blockquote>
+          <p>My natural instinct was to give it a quick tryout. Of course, I used Groovy for my 'experiment':</p>
+          <pre>import com.ocpsoft.pretty.time.PrettyTime
+
+public class Test {
+
+static void main(args) {
+    def d = new Date()
+    def pt = new PrettyTime(d)
+
+    println "Now: $d"
+    [-3000, -100, -1, 1, 100, 1000].each { off -&gt;
+      def nd = d + off
+      println "(${nd}): ${pt.format(nd)}"
+    }
+  }
+}</pre>
+          <p>This gives:</p>
+          <pre>Now: Fri Jun 19 19:28:48 EST 2009
+(Mon Apr 02 19:28:48 EST 2001): 8 years ago
+(Wed Mar 11 19:28:48 EST 2009): 3 months ago
+(Thu Jun 18 19:28:48 EST 2009): 1 day ago
+(Sat Jun 20 19:28:48 EST 2009): 1 day from now
+(Sun Sep 27 19:28:48 EST 2009): 3 months from now
+(Thu Mar 15 19:28:48 EST 2012): 2 years from now</pre>
+          <p>Pretty rudimentary at the moment, but i18n support is coming, for instance.</p>
+          <p>Sometimes, it's little things like neat time formatting that can make the difference between users saying "great" or "gross." This may be worth keeping an eye on…</p>
+          <p><em>[edit]</em><br>
+          It didn't take long before a <a href="http://grails.org/plugin/pretty-time">Grails PrettyTime Plugin</a> appeared. Pretty impressive!</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Grails, Groovy, Programming</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Patching Groovy With Java</h1>
+        <div class="entry-content">
+          <p>"If Groovy is too slow for a particular operation, you can make use of Groovy's strong integration with Java (Groovy <em>is</em> Java, after all) and replace the slow Groovy implementation with one that is written in Java and which
+          should thus be more efficient."</p>
+          <p>Every book on Groovy includes some variation of this statement…I thought I'd take a quick look and see <em>how</em> this can be done.</p>
+          <p>There are, of course, many alternatives…most of which rely on some degree of intrusive source code change: alter the class containing the slow method so that it extends a Java class and then remove the offending Groovy method and
+          implement the replacement in the Java superclass; inject a Java 'helper' class and then change the slow method so that it defers to this helper; and so on.</p>
+          <p>We're talking Groovy so naturally there is a better, non-intrusive way.</p>
+          <p>Welcome to the <a href="http://docs.groovy-lang.org/latest/html/Using+the+Delegating+Meta+Class">Delegating MetaClass</a>:</p>
+          <blockquote>
+            <p>The idea is that any package.class can have a custom meta class loaded at startup time by placing it into a well known package with a well known name.</p>
+            <pre>groovy.runtime.metaclass.[YOURPACKAGE].[YOURCLASS]MetaClass</pre>
+          </blockquote>
+          <p>In times of yore, this used to be called a <a href="http://developer.apple.com/documentation/Mac/OSUtilities/OSUtilities-170.html">tail patch</a> and was a tool in every wild-eyed assembly-language-using coder's box of tricks. Nowadays
+          we are much more sophisticated ;-)</p>
+          <p>Consider this simple bit of Groovy:</p>
+          <pre>public class Main {
+  static void main(args) {
+    new Stuff().doSomething()
+  }
+}</pre>
+          <p>And:</p>
+          <pre>public class Stuff {
+  def doSomething = { -&gt; println 'Some slow Groovy stuff...' }
+}</pre>
+          <p>Running this trivial app gives:</p>
+          <pre>Some slow Groovy stuff...</pre>
+          <p>Let us assume that doSomething() turns out to be glacially slow, and moreover is a hotspot for our application. What's a boy/girl to do?</p>
+          <p>First, build a nice shiny piece of efficient Java code:</p>
+          <pre>package optimized;
+
+public class Stuff {
+  public Object doSomething() {
+    System.out.println ("Something efficient in Java.");
+    return null;
+  }
+}</pre>
+          <p><em>(there's nothing special about the package or the Class name, by the way; this just 'felt' like the best way…YMMV)</em></p>
+          <p>Now the Groovy Delegating MetaClass magic:</p>
+          <pre>package groovy.runtime.metaclass
+
+public class StuffMetaClass extends groovy.lang.DelegatingMetaClass {
+  private final def optimized = new optimized.Stuff()
+
+  @Override
+  StuffMetaClass(MetaClass delegate) {
+    super(delegate);
+  }
+
+  @Override
+  public Object invokeMethod(Object a_object, String a_methodName, Object[] a_arguments) {
+    (a_methodName == 'doSomething') ? optimized.doSomething() : super.invokeMethod(a_Object, a_methodName, a_arguments)
+  }
+}</pre>
+          <p>This simple bit of code looks to see if Stuff.doSomething() is being invoked, and if so kicks off to the Java (presumably optimized) version; anything else is allowed to proceed without interference.</p>
+          <p>Note ye well: <strong>this solution is completely non-intrusive: no source had to be altered, nothing needed recompiling.</strong></p>
+          <p>Run this, and you will see:</p>
+          <pre>Something efficient in Java.</pre>
+          <p>And there you have it.</p>
+          <p>This is a great way of putting temporary patches in place, or doing hit-and-run tracing of code…</p>
+          <p>I guess that there is a (not new, but still…) security concern to be aware of here too: lock up your classpath or fall foul of snooping/code injections.</p>
+          <p>And how's this for a business case: ship a 'slow' application and then dangle the "efficiency upgrade" in front of your users noses…there's no need for fancy patching toolkits, so it costs almost nothing to tell your users: "put
+          <em>this</em> jar <em>there</em> and hey-presto your new upgrade to SuperApp++ 3000 will be complete" ;-)</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Groovy, Programming</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">SpringSource ToolSuite 2.1 Supports Spring Batch</h1>
+        <div class="entry-content">
+          <p>There's a couple of nice graphical viewer/editor modes.</p>
+          <p>This one:</p>
+          <p><img src="wp-content/uploads/2009/06/sts-batch.jpg" alt="Spring Batch Picture 1" width="712" height="444"></p>
+          <p>And this one:</p>
+          <p><img src="wp-content/uploads/2009/06/sts-batch-graph.jpg" alt="Spring Batch Picture 2" width="712" height="444"></p>
+          <p>I wish I had found this out in time to incorporate it into my recent GroovyMag Article.</p>
+          <p>Better late than never, though!</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Groovy, Programming, Tools</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Another Book Finished</h1>
+        <div class="entry-content">
+          <p><a href="http://www.pragprog.com/titles/ahptl/pragmatic-thinking-and-learning">Pragmatic Thinking and Learning: Refactor Your Wetware</a>.</p>
+          <p><img src="wp-content/uploads/2009/06/ahptl.jpg" width="15%"></p>
+          <p>This topic is not really my "sort of thing" (I generally find that these books quickly devolve into platitudes and neat little homilies). Nonetheless, I did enjoy reading it.</p>
+          <p>I found the discussion on the <a href="http://blog.bruceabernethy.com/post/The-Dreyfus-Model-of-Skills-Acquisition.aspx">Dreyfuss model</a> and Nursing, and the relevance to the software profession interesting. These paragraphs in
+          particular resonated:</p>
+          <blockquote>
+            <p>Given that the highest-skilled developers are orders of magnitude more productive than the least-skilled developers, the current common salary structures for developers is simply inadequate. Like the nursing profession years ago, we
+            continually face the risk of losing a critical mass of expertise to management, competitors or other fields.</p>
+            <p>This tendency is made worse by the recent increases in outsourcing and offshoring development to cheaper countries. It's an unfortunate development in that it further cements the idea in people's minds that coding is just a mechanical
+            activity and can be sent away to the lowest bidder. It doesn't quite work that way, of course.</p>
+            <p>As in the nursing profession, experts at coding must continue to code and find a meaningful and rewarding career there. Setting a pay scale and a career ladder that reflects a top coder's value to the organization is the first step
+            toward making this a reality.</p>
+          </blockquote>
+          <p>I don't know if this really reflects the main thrust of the book, but it was interesting to read.</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Books</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Does This Constitute Brain Damage?</h1>
+        <div class="entry-content">
+          <p>Or maybe an eyesight problem?</p>
+          <p>Following on from my earlier posting giving my experiences with a USB-VGA desktop adaptor: If Two Heads Are Better Than One…</p>
+          <p>Sadly, the USB-VGA adaptor doesn't work correctly under Windows 7 (and in fact gave a blue screen crash…the first I've seen [although I have seen the NVidia driver crash and recover a few times, it never actually took anything down with
+          it: <a href="http://www.urbandictionary.com/define.php?term=boo-yah">Boo-Yah</a> Microsoft!). Back to dual monitors for me, sigh.</p>
+          <p>Hope the manufacturer can get a Windows 7 driver available quickly, I'm feeling cramped ;-(</p>
+        </div><!--/entry-content-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Interview Questions</h1>
+        <div class="entry-content">
+          <p>I have been trying to make sense of this recent management fad for getting candidates to write code in the interview and/or answer "probing" questions that attempt to uncover the candidate's inner depths.</p>
+          <p>When I came across Charles Miller's posting <a href="http://fishbowl.pastiche.org/2009/02/15/have_you_ever/">Have you ever…</a>, I knew that I was onto something good.</p>
+          <p>Whereas <a href="http://www.joelonsoftware.com/articles/GuerrillaInterviewing3.html">Joel Spolsky</a> talks intently about interviewing in a way that relates to this life, Charles apparently decided to take a more otherworldly approach
+          and use a set of <a href="http://wikileaks.org/wiki/Scientology_cult_Whole_Track_Security_Check">questions taken from Scientology</a>.</p>
+          <p>I'm guessing that either of these will be just as effective in determining the 'ideal' candidate…thus, I decided to check out the Scientology questions, to see what I could see.</p>
+          <p>Gems abound:</p>
+          <ul>
+            <li>Have you ever trapped a thetan?</li>
+            <li>Have you ever practised human sacrifice?</li>
+            <li>Have you ever assumed a beingness which was not rightfully yours?</li>
+            <li>Have you ever exterminated a species?</li>
+            <li>Have you ever interiorized a being into a machine?</li>
+            <li>Have you ever forced a body to survive against its owner's wishes?</li>
+          </ul>
+          <p>Hey! There are a few to which I could answer 'yes'; like:</p>
+          <ul>
+            <li>Have you ever deliberately trained people in untruths for power, or profit?</li>
+            <li>Have you ever warped an educational system?</li>
+            <li>Have you ever tortured another with electrical, or electronic, devices?</li>
+            <li>Have you ever arrested the development of a culture?</li>
+          </ul>
+          <p>(remember: I am a recovering academic!)</p>
+          <ul>
+            <li>Have you ever created an effect for which there was no apparent cause?</li>
+          </ul>
+          <p>(sure: that's what debuggers are for)</p>
+          <ul>
+            <li>Have you ever poisoned an atmosphere?</li>
+          </ul>
+          <p>(love those baked beans!)</p>
+          <p>There are some to which I answer: "I wish":</p>
+          <ul>
+            <li>Have you ever prided yourself on your wickedness?</li>
+            <li>Have you driven anyone insane?</li>
+          </ul>
+          <p>And think on this, when you think on me: <em>Have you given biological bodies a bad name?</em></p>
+          <p>Joel's Guerrilla Interviewing; Scientology: IMHO, one (management) fad is as good as any other.</p>
+          <p>I once had to sit through a whole day of some HR drone telling me that "The Brain Is Just Like A CD Stacker."</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Rant</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Trivial Groovy Micro-Benchmark</h1>
+        <div class="entry-content">
+          <p>Came across <a href="http://nycfintech.blogspot.com/2009/06/5-performance-tips-for-server-side.html">5 Performance Tips for Server Side Groovy</a> at <a href="http://groovyblogs.org/">Groovy Blogs</a> recently.</p>
+          <p>Point #2: "Be mindful of anonymous closures." got me thinking (and then hacking)…</p>
+          <p>If this sort of thing floats your boat, consider the following:</p>
+          <pre>def start = System.currentTimeMillis()
+def i = 0
+(1..100000000).each { i ++ }
+println "Each: ${System.currentTimeMillis() - start}"
+
+start = System.currentTimeMillis()
+i = 0
+for (x in 1..100000000) { i ++ }
+println "For: ${System.currentTimeMillis() - start}"</pre>
+          <p>In Groovy 1.6.3, using GroovyConsole, I get:</p>
+          <pre>Each: 10033
+For: 2973</pre>
+          <p>Clearly, making all those closures for each to work with has an effect.</p>
+          <p>Is it significant? YMMV, etc. Certainly, I am glad to know about this: it's the sort of thing that can bog server-side code down. Will I avoid using each (and the other collection-oriented closures)? No way! I accept that this sort of
+          thing is going to happen, Groovy <em>is</em> a dynamic language, after all. I will keep it in mind, however: <em>Forewarned, is forearmed</em>…</p>
+          <p>I can't resist the urge to reiterate <a href="http://en.wikipedia.org/wiki/Optimization_(computer_science)#Quotes">The Correct Way</a> to approach optimization.</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Groovy, Programming</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Groovy With…</h1>
+        <div class="entry-content">
+          <p>…surprises!</p>
+          <p>Following on from my earlier posting extolling the virtues of Groovy's 'with' closure.</p>
+          <p>This bit me a while back…</p>
+          <p>Groovy's Object.with(closure) method doesn't constitute a 'scope' and in fact global variables actually shadow the object instance ones.</p>
+          <p>Consider this script</p>
+          <pre>// file: with.groovy
+class X {
+  def x
+  def y
+  def a
+  def b
+  }
+  
+static main(args) {
+  def x = 99
+  def y = 88
+  new X(x: 42, y: 21, a: 0, b: 0).with {
+    println "x: $x, y: $y, a: $a, b: $b"
+    println "x: $it.x, y: $it.y, a: $it.a, b: $it.b"
+    }
+}
+
+main(args)
+// end with.groovy</pre>
+          <p>Execution in GroovyConsole gives:</p>
+          <pre>x: 99, y: 88, a: 0, b: 0
+x: 42, y: 21, a: 0, b: 0</pre>
+          <p>Note how on the first println $x is resolved to the global 'x', and so on.</p>
+          <p>It's not really a bug…in hindsight it makes sense (as is the way with hindsight ;-)).</p>
+          <p>It is REALLY (UNpleasantly) surprising when one comes across this issue intially, however.</p>
+          <p>The tip for novice players is: <em>always use the with closure's parameter to access fields</em>. <strong>Always</strong>.</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Groovy, Programming</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="pagination">
+        <span class="next"><a href="DUMMY">Next »</a></span> <span class="previous"><a href="DUMMY">« Previous</a></span>
+      </div>
+    </div>
+  </div><!--#page-->
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script> 
+  <script src="js/site.js"></script>
+</body>
+</html>

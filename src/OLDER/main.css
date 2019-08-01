@@ -1,0 +1,31 @@
+p, td,li, body
+  {
+  font-size: 10pt;
+  font-family: Verdana, Tahoma, Arial, Helvetica, Geneva, Sans-Serif;
+  }
+
+.quote
+  {
+  font-style:italic;
+  color: #666666;
+; margin: 0% 10%
+  }
+
+ul {
+	list-style : disc url("images/bull.png");
+}
+
+h3 { font-size:14pt; font-weight:normal; color: #099999; }
+
+a { text-decoration: none; color: Teal; }
+a:hover { text-decoration: underline; }
+
+.silver
+  {
+  font-style:italic;
+  font-size:xx-small;
+  color: silver;
+  }
+
+
+

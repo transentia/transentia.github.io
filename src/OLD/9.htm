@@ -1,0 +1,1265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <title>Transentia - transentia pty. ltd.; development, consulting, training at the leading-edge of technology</title>
+  <link rel="stylesheet" type="text/css" media="screen, print, handheld" href="wp-content/themes/transentia/css/site.css">
+</head>
+<body>
+  <div id="page">
+    <div id="header">
+      <p><a href="../index.htm"><img src="wp-content/uploads/widgets/transentia-logo-red-glow.gif" border="0"></a></p>
+      <p class="old-content">transentia's old content; click on the logo to return to the new content</p>
+      <p id="blog-description">transentia pty. ltd.; development, consulting, training at the leading-edge of technology</p>
+    </div><!-- #header -->
+    <div id="content">
+      <div class="pagination">
+        <span class="next"><a href="DUMMY">Next »</a></span> <span class="previous"><a href="DUMMY">« Previous</a></span>
+      </div>
+      <div class="post hentry">
+        <h1 class="entry-title">Nicely Put!</h1>
+        <div class="entry-content">
+          <p><a href="http://grails.markmail.org/message/is7ywnynj3ekhk4z?q=enterprise+level+grails">A recent conversation stream</a> on grails's user list:</p>
+          <pre>
+And indeed, 10k hits a day is just one hit every 10 seconds.
+The server will be pretty much idle, even if you don't optimize anything :-)
+
+[...snip...]
+
+&gt;&gt; Also is there anything that I have to take into account when building
+&gt;&gt; such an enterprise level web site that will probably have high
+&gt;&gt; traffic.
+&gt;&gt;
+&gt;&gt; Note: We may expect 10K daily hit.
+&gt;
+&gt; 10k a day and he's worrying about scalability? Sorry, but this is
+&gt; ridiculous (you can quote me on that). I know this might not be what
+&gt; you expected but I think it's important to set common misconceptions
+&gt; about scalability right whenever possible.
+&gt;
+&gt; Scalability has become one of those 'enterprise' catchall terms that
+&gt; effectively mean nothing but are commonly used for justifying overly
+&gt; complex solutions (or avoiding new approaches) nonetheless.
+&gt;
+&gt; Most companies worrying about scalability actually shouldn't because
+&gt; their products will most likely never reach an audience big enough for
+&gt; scalability issues to crop up. These companies had better invest their
+&gt; precious time in developing better products than dealing with
+&gt; non-existent problems like scalability.
+</pre>
+          <p>Indeed.</p>
+        </div><!--/entry-content-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Thank You, Dr. Cliff Click, Jr.</h1>
+        <div class="entry-content">
+          <p>A pretty good discussion regarding <a href="http://www.azulsystems.com/blog/cliff-click/2009-09-06-java-vs-c-performanceagain">Is Java faster than C/C++? The short answer is: <em>it depends</em>.</a></p>
+          <p>Of course, it won't stop all the "my XXX is bigger/smaller/slower/faster/prettier/ugglier/nicer/badder/happier/sadder/…/…" arguments, but it's a solid discussion anyway.</p>
+        </div><!--/entry-content-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Another GroovyMag 'Masterpiece': Gambling on Griffon And Grails Going Gangbusters</h1>
+        <div class="entry-content">
+          <p>Another <a href="http://www.groovymag.com/">GroovyMag</a> article.</p>
+          <p>Should stop the other ones from feeling lonely!</p>
+          <p>Somehow, the zip bundled with the article didn't have the full sources…don't know what happened. My apologies to all who tried to find them.</p>
+          <p>Never mind, <a href='wp-content/uploads/2010/05/Gr3.zip'>here they are</a>.</p>
+          <p>Maybe its a case of "Better Late Than Never"? Or "All Good Things Come To Those Who Wait"?</p>
+          <p>Enjoy!</p>
+          <hr>
+          <p><strong>Gr3</strong></p>
+          <p>Gambling on Griffon and Grails Going Gangbusters</p>
+          <p>Bob Brown</p>
+          <p>bob@transentia.com.au</p>
+          <p>http://www.transentia.com.au</p>
+          <p><em>The Grails and Griffon frameworks both strive to the same end: to bring the goodness of</em> Convention over Configuration <em>to your life. Individually, they are excellent technologies but when working together using the REST
+          architectural pattern they can enable you to achieve great things.</em></p>
+          <h1>A Brief Overview</h1>
+          <p>They go by many names: 'Pokies', "one-armed bandits", "slot machines", "fruit machines" and even "video gaming terminals." Some call them good clean fun and harmless entertainment; others denounce them as scourges on society, preying on
+          those members least able to afford feeding them. Governments are addicted to the tax they generate, and big business gets bigger profits from them each year. Socially-minded campaigners regularly call for them to be banned and in an
+          attempt to minimize their negative impact on his clientele, Russell "The (Social) Gladiator" Crowe took the unusual step of removing them from the clubhouse when he invested in his favorite Australian football team-the Sydney Rabbitohs-in
+          2007.</p>
+          <p>Given all this controversy, and also given my desire to explore the wonderful REST-ful world of Griffon and Grails, what else could I do but risk the ire of Russell and the many Rabitohs supporters and build a pokie (albeit very simple
+          and cashless) of my very own!</p>
+          <p>Figure 1 shows Gr3, the "Griffon, Grails and Groovy Pokie Machine."</p>
+          <p><img src="wp-content/uploads/2010/05/figure_1.png" alt="figure_1" title="figure_1" width="330" height="750"><br>
+          <em>Figure 1: The Gr3 Client Application</em></p>
+          <p>As the name suggests, this is a Griffon desktop application that talks to a Grails backend application. Griffon provides a REST plugin and Grails has native support for REST, so developing REST-style interactions is especially easy.</p>
+          <p>The Gr3 application is simple to use: select an amount to play with and press the 'Play' button. If lady luck deigns to smile on you, you will win. More likely, the heartless random number generator underlying things will more than
+          happily conspire to take your 'money' from you. The application displays a number of regularly-updating interesting statistics, most notably the overall totalizer value which reflects the total amount of money in the server's 'pot' at any
+          instant [1]. Each instance of Gr3 will add to and take money from this single pot as gameplay continues. There is also a simple preferences configuration GUI.</p>
+          <p>This application uses the "hot off the press" Grails 1.2.0-RC-1 and Griffon 0.3-SNAPSHOT versions.</p>
+          <h1>REST-Style Interactions</h1>
+          <p>REST defines a set of architectural principles for designing simple HTTP-oriented Web services. These principles are:</p>
+          <ul>
+            <li>Make proper use of the various defined HTTP methods</li>
+            <li>Expose all services as stateless services; assume that the client best knows how to manage its own state</li>
+            <li>Expose directory structure-like URIs that uniquely identify interesting or useful resources</li>
+            <li>Transfer data in structured form amenable to further processing using technologies such as XML, JSON (JavaScript Object Notation) or YAML (YAML Ain't Markup Language)</li>
+          </ul>
+          <p>REST is increasingly popular and is on its way to becoming a dominant technology due to its fundamental simplicity (especially when compared to the alternative [but more comprehensive] SOAP/XML-based ecosystem).</p>
+          <p>Figure 2 shows the REST-style interactions that take place between the Gr3Client and Gr3Server. Although the actual sequence is quite simple, there are some guiding rules that I have adopted:</p>
+          <ul>
+            <li>The register and unRegister operations are treated akin to Create and Delete and (as prescribed by REST) use the HTTP POST and DELETE methods. They return a plain text status string.</li>
+            <li>The play and win operations are treated as Update and so use the HTTP PUT method. They return a JSON object containing the most-up-to-date totalizer value.</li>
+            <li>The totalizer operation is purely idempotent [2] and so uses HTTP GET.</li>
+          </ul>
+          <p>While these principles may not be in keeping with a purist approach to REST, they are still quite appropriate and allow me to demonstrate various aspects of REST in Griffon and Grails. In any case, the pure REST approach is more
+          focussed on CRUD [3] update of network accessible resources than dealing with the more process-oriented service such as we have with Gr3Server.</p>
+          <p>This may sound rather complex but you will soon see that the support built into Grails and Griffon makes it all as easy as losing your shirt in Las Vegas. Figure 2 shows that the interaction between the Gr3Client and Gr3Server is really
+          quite simple.</p>
+          <p><img src="wp-content/uploads/2010/05/figure_2.png" alt="figure_2" title="figure_2" width="482" height="555"><br>
+          <em>Figure 2: Sequence Diagram Showing the Simple Interactions between Gr3Client and Gr3Server</em></p>
+          <h1>The 'Gr3Server' Grails WebApp</h1>
+          <p>This is the simpler of the two applications. It is made up of a single TotalizerController class, with a little bit of supporting code thrown in.</p>
+          <p>Let's get started.</p>
+          <p>Listing 1 shows the TotalizerController class in its entirety [4].</p>
+          <pre>
+package gr3
+
+class TotalizerController {
+  private static final JSON_CT = "application/json"
+  private static final TEXT_CT = "text/plain"
+  def totalizerService
+  def clientRegistryService
+  static allowedMethods =
+    [startAction: 'POST', stopAction: 'DELETE',
+     playAction: 'PUT', winAction: 'PUT',
+     totalizerAction: 'GET']
+  def beforeInterceptor = {
+    def remIp = request.remoteAddr
+    def registered = clientRegistryService.registered(remIp)
+    if (registered &amp;& (actionName == 'registerAction')) {
+      log.warn "Incoming register request from registered client: $remIp"
+      return false
+    }
+    else if ((! registered) &amp;& (actionName == 'unRegisterAction')) {
+      log.warn "Incoming unRegister request from unregistered client: $remIp"
+      return false
+    }
+  }
+  def registerAction = {
+    def remIp = request.remoteAddr
+    log.debug "Register: $remIp"
+    clientRegistryService.register(remIp)
+    render(text: "OK", contentType: TEXT_CT)
+  }
+  def unRegisterAction = {
+    def remIp = request.remoteAddr
+    log.debug "UnRegister: $remIp"
+    clientRegistryService.unRegister(remIp)
+    render(text: "OK", contentType: TEXT_CT)
+  }
+  def totalizerAction = {
+    log.debug "totalizerAction request from ${request.remoteAddr}"
+    render(contentType: JSON_CT) {
+      [tote: totalizerService.getCurrentValue()]
+    }
+  }
+  def playAction = {
+    def amt = params.int('amount')
+    def tote = totalizerService.accumulate(amt)
+    log.debug "playAction request from ${request.remoteAddr}: ${amt}; tote now: ${tote}"
+    render(contentType: JSON_CT) {
+      [tote: tote]
+    }
+  }
+  def winAction = {
+    def playValue = params.int('playValue')
+    def winnings = params.int('winnings')
+    def tote = totalizerService.accumulate(-winnings)
+    log.debug
+      "winAction request from ${request.remoteAddr}: *** WIN *** played: ${playValue}, won: ${winnings}; tote now: ${tote}"
+    render(contentType: JSON_CT) {
+      [tote: tote]
+    }
+  }
+}
+</pre>
+          <p><em>Listing 1: the Main TotalizerController class</em></p>
+          <p>This code is quite unremarkable. There are only a few points of interest, the first of these being the allowedMethods map. This is a standard facility in Grails that makes it possible to restrict how a given action closure may be
+          invoked. I have shown it here because it also helps make the correspondence between the code and my guiding rules for the REST interactions in this application clear.</p>
+          <p>A second point of interest concerns TotalizerController's reliance on two injected services. The TotalizerService (shown in Listing 2) is basically an extremely simple wrapper for an AtomicInteger, which represents the instantaneous
+          accumulated value of the global totalizer. The use of AtomicInteger, which is inherently thread safe, keeps the coding for the shared singleton service clean and clear and free from nasty synchronized blocks.</p>
+          <pre>
+[…elided…]
+
+class TotalizerService {
+  boolean transactional = false
+  private final tote = new AtomicInteger()
+  def getCurrentValue = { tote.get() }
+  def accumulate = {amt -&gt; tote.addAndGet(amt) }
+}
+</pre>
+          <p><em>Listing 2: the TotalizerService class</em></p>
+          <p>The third major point of interest in TotalizerController is the injected ClientRegistryService (shown in Listing 3).</p>
+          <pre>
+[…elided…]
+
+class ClientRegistryService implements InitializingBean {
+  def authorisedIPs
+  def clientRegistry
+  boolean transactional = false
+  def register = {ip -&gt; clientRegistry[ip] = true }
+  def registered = {ip -&gt; clientRegistry[ip] == true }
+  def unRegister = {ip -&gt; clientRegistry[ip] = false }
+  void afterPropertiesSet() {
+    def authorisedMap = [:]
+    for (ip in authorisedIPs)
+      authorisedMap[ip] = false
+    clientRegistry = authorisedMap.asSynchronized()
+  }
+}
+</pre>
+          <p><em>Listing 3: the ClientRegistryService class</em></p>
+          <p>ClientRegistryService is concerned with providing a simple veneer of security; it maintains a list of IP addresses and enforces the rule that only one client may be present at any given IP address. As shown in Figure 2, a client
+          registers itself at startup and unregisters at shutdown.</p>
+          <p>ClientRegistryService relies on having a configured list of IP address injected into it via the authorisedIPs local variable. It will restrict access to those clients only and will also maintain the connected status of these clients. To
+          achieve this operational rule, the service is defined to be an InitializingBean. This means that the underlying Spring Framework infrastructure will call into the defined afterPropertiesSet method after it has created the service instance
+          and subsequently injected any needed resources into that instance. The afterPropertiesSet method examines the injected authorisedIPs list and constructs a client status map according to the list's contents.</p>
+          <p>The authorisedIPs list is configured externally to the service via Grails' conf/spring/resources.groovy file, as shown in Listing 4.</p>
+          <pre>
+beans = {
+  xmlns util: "http://www.springframework.org/schema/util"
+
+  util.list(id: 'authorisedIPs') {
+    value '127.0.0.1'
+  }
+}
+</pre>
+          <p><em>Listing 4: resources.groovy, showing the Configuration of the authorisedIPs List</em></p>
+          <p>Note that this is a slightly 'artificial' example: for 'real' production-quality code I could (and probably should) have easily defined and initialized the actual requisite clientRegistry map instance via resources.groovy; this path
+          gave me a chance to introduce the useful InitializingBean facility though, so please forgive my slightly roundabout coding.</p>
+          <p>It is important that access to the clientRegistry be synchronized to guard against wayward concurrent update. The authorisedMap.asSynchronized() expression achieves this.</p>
+          <p>TotalizerController generally invokes the clientRegistryService from within its beforeInterceptor closure. This gives a single point of control for the access checks and helps keep the controller code DRY [5].</p>
+          <h2><em>REST-Style URL Mappings</em></h2>
+          <p>It is slightly "bad form" to directly expose the names of the underlying controller actions to the client application; doing so results in fragile code that potentially cannot be changed without affecting the client. Since "fearless
+          change" is one of the basic tenets of Agile development, I have established a series of indirect mappings in conf/URLMappings.groovy. This is shown in Listing 5.</p>
+          <pre>
+class UrlMappings {
+  static mappings = {
+    "/totalizer/play"(controller:"totalizer",
+      action: 'playAction', parseRequest:true)
+    "/totalizer/win"(controller:"totalizer",
+      action: 'winAction', parseRequest:true)
+    "/totalizer/register"(controller:"totalizer",
+      action: 'registerAction')
+    "/totalizer/unRegister"(controller:"totalizer",
+      action: 'unRegisterAction')
+    "/totalizer/totalizer"(controller:"totalizer",
+      action: 'totalizerAction')
+  […elided…]
+  }
+}
+</pre>
+          <p><em>Listing 5: REST URL Mappings</em></p>
+          <p>Of interest here is the way that the mappings for play and win also enable Grails' automatic JSON-parsing behavior.</p>
+          <h1>The 'Gr3Client' Griffon Desktop Application</h1>
+          <p>The client side portion of the pokie application is quite a lot bigger than the server-side portion that we have just examined. This is to be expected: GUI handling code is often quite involved and the client contains a fair bit more
+          functionality.</p>
+          <h2><em>The Main Application MVGGroup</em></h2>
+          <p>Every Griffon application consists of one or more groups of Model, View and Controller (called, naturally enough, an MVCGroup). In this section we'll take a look at the main MVG group; this is what produces the portion of the GUI shown
+          in Figure 1.</p>
+          <p>The underlying model is quite straightforward, as Listing 6 (excerpted) shows.</p>
+          <pre>
+import groovy.beans.Bindable
+class Gr3ClientModel {
+
+  […elided…]
+
+  @Bindable String playedValue = '$0'
+  @Bindable Integer plays = 0
+  @Bindable Boolean playButtonEnabled = true
+}
+</pre>
+          <p><em>Listing 6: the Main MVCGroup's Model Class</em></p>
+          <p>There is an @Bindable property for each value displayed in the view, as well as a property defining the state of the play button. The @Bindable annotation invokes an AST transformation [6] that wraps up the PropertyChangeSupport
+          facility that all Swing developers have learned to know and love.</p>
+          <p>The application's main view (shown in part in Listing 7) makes good use of Griffon's 'UberBuilder' to allow a view to be created using features from several underlying libraries (in this case, Swing and SwingX [7])</p>
+          <pre>
+[…elided…]
+
+def leftReelIcons = [imageIcon('/reel/card_figures_-_club_01.png'),
+        imageIcon('/reel/card_figures_-_diamond_01.png'),
+        imageIcon('/reel/attenzione_rotondo_archi_01.png'),
+        imageIcon('/reel/card_figures_-_heart_01.png'),
+        imageIcon('/reel/card_figures_-_spade_01.png')]
+def middleReelIcons = (leftReelIcons[2..-1] + leftReelIcons[0..1])
+def rightReelIcons = (middleReelIcons[2..-1] + middleReelIcons[0..1])
+def reelIcons = [left: leftReelIcons,
+                 middle: middleReelIcons, right: rightReelIcons]
+application(title: 'Gr3Client',
+        size: [320, 740],
+        resizable: false,
+        defaultCloseOperation: WindowConstants.DO_NOTHING_ON_CLOSE,
+        windowClosing: controller.exitAction,
+        locationByPlatform: true,
+        […elided…]) {
+  menuBar(mainMenuBar)
+  vbox(constraints: NORTH) {
+    jxheader(title: "Gr3",
+            description:
+              'Pokie Machine using Griffon, Grails and Groovy.',
+            icon: imageIcon('/griffon-icon-48x48.png'),
+            border: emptyBorder(4),
+            titleForeground: Color.RED,
+            backgroundPainter: new PinstripePainter(Color.LIGHT_GRAY)
+    panel() {
+      tableLayout(cellpadding: 4) {
+        tr {
+          td(align: 'left') {
+            label('Plays:')
+          }
+          td(align: 'right') {
+            label(id: 'plays', text: bind { model.plays})
+          }
+          td(align: 'left') {
+            label('Played:')
+          }
+          td(align: 'right') {
+            label(id: 'played', text: bind { model.playedValue})
+          }
+        }
+        tr {
+          td(align: 'left') {
+            label('Earnings:')
+          }
+          td(align: 'right') {
+            label(id: 'earnings', text: bind { model.earnings})
+          }
+          td(align: 'left') {
+            label('Totalizer:')
+          }
+          td(align: 'right') {
+            label(id: 'totalizer',
+                  text: bind { model.totalizerValue})
+          }
+        }
+      }
+    }
+  }
+  panel(new Spindle(), id: 'spindle',
+        border: loweredBevelBorder(), constraints: CENTER) {
+    borderLayout()
+    tableLayout(cellpadding: 4) {
+      tr {
+        for (reel in ['left', 'middle', 'right']) {
+          td(align: 'center') {
+            widget(id: "${reel}Reel".toString(),
+                   new Reel(icons: reelIcons[reel]))
+          }
+        }
+      }
+    }
+  }
+  panel(constraints: SOUTH) {
+    tableLayout(cellpadding: 4) {
+      tr {
+        buttonGroup(id: 'playValue').with {group -&gt;
+          for (v in [1, 2, 5, 10, 20, 50])
+            td {
+              radioButton(text: "\$$v".toString(),
+                          buttonGroup: group, selected: v == 20,
+                          actionCommand: "$v".toString())
+            }
+        }
+      }
+      tr {
+        td(colspan: 6, align: 'center') {
+          label(id: 'message', text: bind { model.message })
+        }
+      }
+      tr {
+        td(colspan: 6, align: 'center') {
+          button(playAction, id: 'playButton')
+        }
+      }
+    }
+  }
+}
+</pre>
+          <p><em>Listing 7: the Main MVCGroup's View</em></p>
+          <p>The clean, declarative nature of Listing 7 is a thing of beauty to my eyes! For those of us who have dreams formatted into discrete pages marked up by HTML, Groovy's tableLayout layout manager is A Good Thing indeed.</p>
+          <p>Of interest is the WindowClosing event handling. To allow the client to communicate with its server at shutdown time, custom exit-handling code is established in the application stanza. To allow the custom processing to work, it is
+          important to ensure that conf/Application.groovy is edited with:</p>
+          <pre>
+autoShutdown = false
+</pre>
+          <p>Note the way the 'playValue' Button group is defined. This adopts Josh Reed's tip for easing the creation of groups of mutually-exclusive radiobuttons. It's worth taking a look at Josh's site. See "Learn More" for the URL.</p>
+          <p>The Panel/Spindle teamup is also worth taking a look at. The documentation for the panel widget says: <em>"A javax.swing.JPanel is returned, unless the user passes in a subclass of JPanel as the value argument, in which case the value
+          argument is returned."</em> The Spindle class used here uses this oft-overlooked ability and is a 'bog-standard' class that extends JPanel so that the red 'win' line is painted across the panel and on top of the 'reels.'</p>
+          <p>The use of SwingX painters is discussed in "A Little Gloss: SwingX Painters", below.</p>
+          <p>The main MVCGroup's controller contains very little 'trickery' and all the REST-related work is offloaded to an injected ServerService class, so (in the interest of saving space) it won't be shown here. Various sections of the
+          controller will be examined as this article continues.</p>
+          <h2><em>Additional Conventional Handling</em></h2>
+          <p>The Gr3Client application is not only comprised of models, view and controllers; there are actions, menus and services as well. Gr3Client takes advantage of Griffon's conventional handling for these aretefacts in addition to the
+          standard MVC conventional handling.</p>
+          <p>Griffon processes actions and menus if they are contained in eponymously-named directories under griffon-app. Figure 3 shows the Gr3Client's resulting directory tree structure.</p>
+          <p><img src="wp-content/uploads/2010/05/figure_3.png" alt="figure_3" title="figure_3" width="304" height="413"><br>
+          <em>Figure 3: Additional Conventional Directories</em></p>
+          <p>It is also necessary to modify the entry for the MVCGroup in Application.groovy to be modified appropriately. For example:</p>
+          <pre>
+'Gr3Client' {
+  model = 'Gr3ClientModel'
+  controller = 'Gr3ClientController'
+  actions = 'Gr3ClientActions'
+  menus = 'Gr3ClientMenus'
+  view = 'Gr3ClientView'
+}
+</pre>
+          <p>Ordering is important in this definition: actions and menus are required to be processed first, since they are dependencies of the view.</p>
+          <p>In addition to making the code clearer, this feature also makes it slightly shorter. Consider this excerpt from actions/Gr3ClientActions.groovy:</p>
+          <pre>
+action(id: 'playAction',
+       name: 'Play',
+       closure: controller.playAction,
+       shortDescription: 'Play',
+       enabled: bind { model.playButtonEnabled }
+)
+</pre>
+          <p>Normally, the list of actions would be required to be wrapped in an actions {} stanza. By using this facility, the actions wrapper is assumed. The same is true of any menus defined by an application.</p>
+          <p>Services can be placed in a services directory and are recognized and injected where needed 'automagically.'</p>
+          <h2><em>Scheduling Periodic Updates</em></h2>
+          <p>The main view displays a global totalizer value that is continually updated. To achieve this, a 'background' instance of javax.swing.Timer is created during MVCGroup creation to periodically poll the Gr3Server and update the associated
+          model value. As would be expected, the code is very simple and is excerpted in Listing 8.</p>
+          <pre>
+import java.awt.event.ActionListener
+import java.text.NumberFormat
+
+class Gr3ClientController {
+
+  […elided…]
+
+  def serverService
+
+  private static final nf = NumberFormat.getCurrencyInstance()
+  def totalizerAction = {evt = null -&gt;
+    doOutside {
+      model.totalizerValue = nf.format(serverService.totalizerAction())
+    }
+  }
+  void mvcGroupInit(Map args) {
+    def timer = new javax.swing.Timer(1500, totalizerAction as ActionListener);
+    timer.setInitialDelay(500);
+    timer.start();
+
+[…elided…]
+</pre>
+          <p><em>Listing 8: Background Timer Handling</em></p>
+          <p>The totalizerAction closure is periodically executed by the timer in the context of Swing's Event Dispatching Thread (EDT). To ensure that the GUI remains responsive, the closure performs its time-consuming communications, formatting
+          and model update operations outside of the EDT. In a traditional Swing application, threading is quite awkward but the Groovy/Griffon SwingBuilder DSL makes life much easier.</p>
+          <p>Further points of interest in Listing 8 include the use of the standard Java java.text.NumberFormat facility to enable currency formatting, and Groovy's powerful capability that enables the totalizerAction closure to be coerced to an
+          instance of java.awt.event.ActionListener, which is what the Timer instance requires.</p>
+          <h2><em>The 'PrefsPanel' MVCGroup</em></h2>
+          <p>In addition to the main application MVCGroup, Gr3Client has an additional PrefsPanel MVCGroup accessible via the File-&gt;Preferences menu. This simple dialog is shown in Figure 4.</p>
+          <p><img src="wp-content/uploads/2010/05/figure_4.png" alt="figure_4" title="figure_4" width="352" height="232"><br>
+          <em>Figure 4: the Preferences MVCGroup Dialog</em></p>
+          <p>As Listing 9 shows, the model portion of the dialog's MVC triumvirate is straightforward; the model is simply a value and associated validity flag for each textfield.</p>
+          <pre>
+import groovy.beans.Bindable
+
+class PrefsPanelModel {
+  @Bindable String server = PrefsUtils.getServer()
+  @Bindable String port = PrefsUtils.getPort()
+  @Bindable Boolean serverTfValid = true
+  @Bindable Boolean portTfValid = true
+}
+</pre>
+          <p><em>Listing 9: the PrefsPanel Model class</em></p>
+          <p>The PrefsPanel's view (Listing 10) is similarly simple.</p>
+          <pre>
+panel(border: loweredBevelBorder(), constraints: CENTER) {
+  tableLayout(cellpadding: 2) {
+    tr {
+      td { label("Server:") }
+      td {
+        textField(id: 'server', columns: 24,
+          text: bind(source: model, 'server', mutual: true,
+            validator: { controller.isNonBlank(server) }))
+      }
+    }
+    tr {
+      td { label("Port:") }
+      td {
+        textField(id: 'port', columns: 5,
+          text: bind(source: model, 'port', mutual: true,
+            validator: { controller.isInteger(port) }))
+      }
+    }
+  }
+}
+</pre>
+          <p><em>Listing 10: an Excerpt from PrefsPanelView.groovy</em></p>
+          <p>Of interest here is the use of mutual binding. Mutual binding allows for view interactions to update the model (as is normal in a GUI application) and also allows the model to update the view component…a less frequently undertaken
+          activity. Given that validation is also required, almost the complete model/view binding syntax is on display here.</p>
+          <p>The PrefsPanelController is mostly concerned with setting up and performing validation of the textfields. What is not related to validation is concerned with persisting the various preferences values and controlling the view's
+          destruction.</p>
+          <pre>
+[…elided…]
+
+class PrefsPanelController {
+  // these will be injected by Griffon
+  def model
+  def view
+
+  final gb = BorderFactory.createLineBorder(Color.GRAY)
+  final rb = BorderFactory.createLineBorder(Color.RED)
+
+  def isNonBlank = {tf -&gt;
+    model.serverTfValid = (tf.text ==~ /\S+/)
+  }
+  def isInteger = {tf -&gt;
+    try {
+      def n = Integer.parseInt(tf.text)
+      if ( ! (0..Short.MAX_VALUE - 1).contains(n))
+        throw new IllegalArgumentException("Port out of range")
+      model.portTfValid = true
+      return n
+    } catch (x) { /* NumberFormatExn, IllegalArgumentExn*/
+      model.portTfValid = false
+    }
+  }
+  private handleSaveButton = {-&gt;
+    view.saveButton.enabled =
+      model.portTfValid &amp;& model.serverTfValid
+  }
+  void mvcGroupInit(Map args) {
+    // this method is called after model and view are injected
+    model.addPropertyChangeListener({evt -&gt;
+      handleSaveButton()
+    } as PropertyChangeListener)
+    model.addPropertyChangeListener("portTfValid", {evt -&gt;
+      view.port.border = model.portTfValid ? gb : rb
+    } as PropertyChangeListener)
+    model.addPropertyChangeListener("serverTfValid", {evt -&gt;
+      view.server.border = model.serverTfValid ? gb : rb
+    } as PropertyChangeListener)
+  }
+  def postInit() {
+    view.server.text = model.server = PrefsUtils.getServer()
+    view.port.text = model.port = PrefsUtils.getPort()
+    model.serverTfValid =  isNonBlank(view.server)
+    model.portTfValid = isInteger(view.port)
+  }
+  def closeWithoutSavingAction = {evt = null -&gt;
+    view.preferencesFrame.visible = false;
+    destroyMVCGroup('PrefsPanel')
+  }
+  def savePreferencesAction = {evt = null -&gt;
+    PrefsUtils.setServer(model.server)
+    PrefsUtils.setPort(model.port)
+    closeWithoutSavingAction evt
+  }
+}
+</pre>
+          <p><em>Listing 11: the PrefsPanelController class</em></p>
+          <h3>Validation</h3>
+          <p>Validation is one area where Griffon is still a rookie player. The basic framework is in place, but there are still a few 'wrinkles' that have yet to be worked out. The mvcGroupInit closure in Listing 11 shows how to react to changes in
+          the model properties and how to update the view appropriately. Figure 5 shows the result of this.</p>
+          <p><img src="wp-content/uploads/2010/05/figure_51.png" alt="figure_5" title="figure_5" width="352" height="232"><br>
+          <em>Figure 5: Indicating an Error</em></p>
+          <p>The postInit closure defined in PrefsPanelController is required to work around a small problem where the initial values for a model are not validated before being bound to the view component(s). One has to ensure that the model
+          <em>always</em> sees one change after binding so that validation can proceed [8].</p>
+          <p>This still provides a useful learning opportunity. The Gr3ClientController class contains this code:</p>
+          <pre>
+def preferencesAction = {evt = null -&gt;
+  def (m, v, c) = createMVCGroup('PrefsPanel')
+
+  c.postInit()
+}
+</pre>
+          <p>This excerpt shows the use of Groovy's multiple assignment facility to ease the processing of the list instance returned from the createMVCGroup method.</p>
+          <p>Griffon's powerhouse lead developer Andres Almiray has discussed an alternative-and probably more general-approach to this issue on the griffon-user mail list:<a href=
+          "http://archive.codehaus.org/lists/org.codehaus.griffon.user/msg/001701ca7885$a4925f40$edb71dc0$@com.au">Binding and validating seems at odds…</a>.</p>
+          <h3>Persisting Preferences Data</h3>
+          <p>Since Griffon is capable of generating a standalone application, an applet and a Java WebStart application from the same codebase, preferences handling is not as straightforward as one might think initially: where to store a
+          configuration file in the face of different operating system filesystem conventions and security schemes? Is the JNDI available? Is the Windows Registry an option? What API is most convenient? Something ostensibly so simple is actually
+          quite a problem for portable code [9].</p>
+          <p>The java.util.prefs package provides a way for applications to store and retrieve user and system preference and configuration data. The data is stored persistently in an implementation-dependent backing store but is accessed in a
+          consistent fashion regardless of type of code or underlying system.</p>
+          <p>The Gr3Client application wraps the Preferences API into a simple PreferenceUtils class, as shown in Listing 12.</p>
+          <pre>
+import java.util.prefs.Preferences
+
+class PrefsUtils {
+  private static final SERVER_KEY = 'server'
+  private static final DEFAULT_SERVER = 'localhost'
+  private static final PORT_KEY = 'port'
+  private static final DEFAULT_PORT = '8080'
+  private static final prefs = Preferences.userRoot().node('/Gr3')
+  static setServer = {s -&gt;
+    prefs.put(SERVER_KEY, s)
+    prefs.sync()
+  }
+  static getServer = {
+    prefs.sync()
+    prefs.get(SERVER_KEY, DEFAULT_SERVER)
+  }
+  static setPort = {p -&gt;
+    prefs.put(PORT_KEY, p)
+    prefs.sync()
+  }
+  static getPort = {
+    prefs.sync()
+    prefs.get(PORT_KEY, DEFAULT_PORT)
+  }
+}
+</pre>
+          <p><em>Listing 12: the PreferencesUtils class</em></p>
+          <p>At first sight, this code seems to contain lots of unnecessary syncs (which flush changes and refreshes the local cached data from the underlying persistent store). Strictly speaking this is indeed so, but I found that the regime I have
+          used here was very helpful when testing: I could manually 'munge' the preferences store [the windows registry in my case] and see those changes happen immediately. Frequent syncing actually represents quite a trivial overhead in the grand
+          scheme of things, so I left them in.</p>
+          <h2><em>Using the REST Plugin</em></h2>
+          <p>REST support in Griffon is provided courtesy of a plugin written by Andres Almiray. Andres' weblog (see "Learn More") is a "must see" site for any Griffon developer. Andres has written an equivalent plugin for Grails which makes a visit
+          to his weblog doubly rewarding.</p>
+          <p>Following normal Griffon practice, the REST plugin (version 0.2 at time of writing) is installed via:</p>
+          <pre>
+griffon install-plugin rest
+</pre>
+          <p>I have configured the REST plugin to only work its magic on services ("out of the box" it is configured to work on controllers). This line needs to be added/edited in conf/Application.groovy:</p>
+          <pre>
+griffon.rest.injectInto = ["service"]
+</pre>
+          <p>I have split the network-handling code into a separate service, created via the command line:</p>
+          <pre>
+griffon create-service ServerService
+</pre>
+          <p>ServerService is a very simple class. Listing 13 shows just one action closure from this class but the others are essentially identical.</p>
+          <pre>
+def playAction = {value -&gt;
+  withRest(id: 'play', uri: NetworkUtils.URI) {
+    def resp = put(path: 'play',
+            body: [amount: value],
+            requestContentType: JSON,
+            responseContentType: JSON)
+    assert resp.status == 200
+    resp.data.tote
+  }
+}
+</pre>
+          <p><em>Listing 13: Excerpted ServerService Action</em></p>
+          <p>The REST-related code is exceptionally clear! If you walk through the invocation sequence, you will be able to see easily how the incoming request and associated response is processed.</p>
+          <p>Note how automatic JSON response parsing makes for clean code: there is no need for either side to marshal/unmarshal the value for tote to/ from the textual on-the-wire representation, for example.</p>
+          <p>One slight subtlety is concerned with the id given to the withRest method. To quote the REST plugin's documentation: <em>"All dynamic methods will create a new http client when invoked unless you define an id: attribute. When this
+          attribute is supplied the client will be stored as a property on the instance's metaClass. You will be able to access it via regular property access or using the id: again."</em> This gives a nice 'tuning' ability in that it makes it
+          possible to reduce the number of instances that are created and almost immediately destroyed. The ServerService makes use of this facility: playAction and winAction share an id (play), totalizerAction has an unique id (and thus an unique
+          HTTPClient instance), while registerAction and unRegisterAction do not reuse connections (on the assumption that the time between register and unRegister operations could be very long and keeping an unused connection around would be
+          counterproductive).</p>
+          <h3>Configuring Logging Support</h3>
+          <p>Even though the syntax enabled by the REST plugin is quite simple, as I developed the application I still needed to see the request-response interaction between the Gr3Client and Gr3Server. To do this, I turned to that tried and trusted
+          standby: Log4J. Although Griffon uses Log4J internally, it does not actually make it available to an application at runtime.</p>
+          <p>Configuring run-time support for Log4J is not such a "no brainer" as it is for Grails, but is still a fairly simple 3-step process:</p>
+          <p>Step 1: Copy the log4j jar from the Griffon distribution's lib directory into the application's lib directory.<br>
+          Step 2: Create conf/Events.groovy with the contents shown in Listing 14.</p>
+          <pre>
+import org.apache.log4j.Logger
+
+onNewInstance = {klass, type, instance -&gt;
+  instance.metaClass.logger =
+    instance.metaClass.log =
+      Logger.getLogger("gr3Client.${klass.name}")
+}
+</pre>
+          <p><em>Listing 14: Events.groovy Needed for Logging</em></p>
+          <p>This is quite a 'shotgun' approach: it injects a log property into everything. A more sophisticated variation of this code ("Left as an exercise for the reader") would be better for 'production' use. For the current purposes, however,
+          it is fine.</p>
+          <p>Step 3: Add the code shown in Listing 15 to lifecycle/Initialize.groovy. This is mostly an 'inline' Log4J configuration file.</p>
+          <pre>
+import groovy.xml.DOMBuilder
+
+def xml = """
+&lt;log4j:configuration
+  xmlns:log4j="http://jakarta.apache.org/log4j/" debug="false"&gt;
+     &lt;appender
+              &gt;
+          &lt;param value="System.out" /&gt;
+          &lt;layout&gt;
+              &lt;param
+                      value="%d{ISO8601} %-5p  %c{1} - %m%n" /&gt;
+          &lt;/layout&gt;
+     &lt;/appender&gt;
+     &lt;category&gt;
+          &lt;priority value="DEBUG" /&gt;
+     &lt;/category&gt;
+     &lt;!-- Use DEBUG to see basic request/response info;
+          Use TRACE to see headers for HttpURLClient. --&gt;
+     &lt;category&gt;
+          &lt;priority value="TRACE" /&gt;
+     &lt;/category&gt;
+     &lt;category&gt;
+          &lt;priority value="INFO" /&gt;
+     &lt;/category&gt;
+     &lt;category&gt;
+          &lt;priority value="INFO" /&gt;
+     &lt;/category&gt;
+     &lt;category&gt;
+          &lt;priority value="TRACE" /&gt;
+     &lt;/category&gt;
+     &lt;root&gt;
+          &lt;priority value="DEBUG" /&gt;
+          &lt;appender-ref ref="console" /&gt;
+     &lt;/root&gt;
+&lt;/log4j:configuration&gt;
+"""
+
+def reader = new StringReader(xml)
+def doc = DOMBuilder.parse(reader)
+new org.apache.log4j.xml.DOMConfigurator().
+  configure(doc.documentElement)
+</pre>
+          <p><em>Listing 15: Inline Log4J Configuration</em></p>
+          <p>The above three steps will turn on some quite extensive (and very useful!) debugging output from the REST plugin, as this excerpt (Listing 16, showing a single 'play' interaction) illustrates:</p>
+          <pre>
+DEBUG RESTClient - PUT http://localhost:8080/Gr3Server/totalizer/play
+DEBUG wire - &gt;&gt; "PUT /Gr3Server/totalizer/play HTTP/1.1[EOL]"
+DEBUG wire - &gt;&gt; "Accept: */*[EOL]"
+DEBUG wire - &gt;&gt; "Content-Length: 13[EOL]"
+DEBUG wire - &gt;&gt; "Content-Type: application/json[EOL]"
+DEBUG wire - &gt;&gt; "Host: localhost:8080[EOL]"
+DEBUG wire - &gt;&gt; "Connection: Keep-Alive[EOL]"
+DEBUG wire - &gt;&gt; "User-Agent: Apache-HttpClient/4.0 (java 1.5)[EOL]"
+DEBUG wire - &gt;&gt; "Expect: 100-Continue[EOL]"
+DEBUG wire - &gt;&gt; "Accept-Encoding: gzip,deflate[EOL]"
+DEBUG wire - &gt;&gt; "[EOL]"
+DEBUG wire - &lt;&lt; "HTTP/1.1 100 Continue[EOL]"
+DEBUG wire - &lt;&lt; "[EOL]"
+DEBUG wire - &gt;&gt; "{"amount":20}"
+DEBUG wire - &lt;&lt; "HTTP/1.1 200 OK[EOL]"
+DEBUG wire - &lt;&lt; "Server: Apache-Coyote/1.1[EOL]"
+DEBUG wire - &lt;&lt; "Content-Type: application/json;charset=UTF-8[EOL]"
+DEBUG wire - &lt;&lt; "Transfer-Encoding: chunked[EOL]"
+DEBUG wire - &lt;&lt; "Date: Sat, 12 Dec 2009 11:34:05 GMT[EOL]"
+DEBUG wire - &lt;&lt; "[EOL]"
+DEBUG RESTClient - Response code: 200; found handler:
+  org.codehaus.groovy.runtime.MethodClosure@a4911d
+DEBUG RESTClient - Parsing response as: application/json
+DEBUG wire - &lt;&lt; "b[EOL]"
+DEBUG wire - &lt;&lt; "{"tote":40}"
+DEBUG wire - &lt;&lt; "[\r]"
+DEBUG wire - &lt;&lt; "[\n]"
+DEBUG wire - &lt;&lt; "0[EOL]"
+DEBUG wire - &lt;&lt; "[EOL]"
+DEBUG RESTClient-Parsed data to instance of: class
+  net.sf.json.JSONObject
+</pre>
+          <p><em>Listing 16: Debugging a REST Interaction</em></p>
+          <p>This configuration can be easily 'tweaked' for any purpose, of course.</p>
+          <p>Don't Panic! Recall that it is <em>still</em> quite "early days" for Griffon, and I believe that there has been some discussion aimed at eventually developing a logging plugin or addon. Forthcoming Spring framework support and the new
+          ArtefactManager will also make the sort of configuration currently being performed in onNewInstance easier and more targeted in the future.</p>
+          <h2><em>A Little Gloss: SwingX Painters</em></h2>
+          <p>For those not already familiar with the SwingX project, here is the overview blurb from the SwingX home page:</p>
+          <p><em>"Contains extensions to the Swing GUI toolkit, including new and enhanced components that provide functionality commonly required by rich client applications. Highlights include:</em></p>
+          <ul>
+            <li><em>Sorting, filtering, highlighting for tables, trees, and lists</em></li>
+            <li><em>Find/search</em></li>
+            <li><em>Auto-completion</em></li>
+            <li><em>Login/authentication framework</em></li>
+            <li><em>TreeTable component</em></li>
+            <li><em>Collapsible panel component</em></li>
+            <li><em>Date picker component</em></li>
+            <li><em>Tip-of-the-Day component</em></li>
+          </ul>
+          <p><em>Many of these features will eventually be incorporated into the Swing toolkit."</em></p>
+          <p>Griffon's SwingX plugin packages all this goodness up and makes it easy to use alongside the normal Swing components. Don't head down to the gaming tables without these components safely packed into your kitbag.</p>
+          <p>The SwingX JXHeader component supports a relatively new facility called painters. Listing 7 shows how a simple PinStripePainter can be defined and passed to the jxHeader stanza in the view builder and Figure 1 shows the results of this.
+          Not too shabby, but not particularly breathtaking, either.</p>
+          <p>Listing 17 shows a more 'beautiful' alternative using a CompoundPainter.</p>
+          <pre>
+def gloss = new GlossPainter(
+        paint: new Color(1.0f, 1.0f, 1.0f, 0.2f),
+        position: GlossPainter.GlossPosition.TOP)
+def stripes = new PinstripePainter(
+        paint: new Color(1.0f, 1.0f, 1.0f, 0.17f),
+        spacing: 5.0)
+def matte = new MattePainter(fillPaint: new Color(51, 51, 51))
+def cp = new CompoundPainter(matte, stripes, gloss)
+[…elided…]
+jxheader(title: "Gr3",
+      […elided…]
+      backgroundPainter: cp)
+</pre>
+          <p><em>Listing 17: a Compound Painter</em></p>
+          <p>As Figure 6 shows, this is much nicer and has a distinctly more 'modern' feel to it.</p>
+          <p><img src="wp-content/uploads/2010/05/figure_6.png" alt="figure_6" title="figure_6" width="330" height="242"><br>
+          <em>Figure 6: the Compound Painter "In Action"</em></p>
+          <h2><em>Win Evaluation</em></h2>
+          <p>To perform win evaluation, the Gr3ClientController's playAction closure calls the injected serverService. This is shown in Listing 18.</p>
+          <pre>
+def playAction = {evt = null -&gt;
+  doOutside {
+    def lr = view.leftReel
+    def mr = view.middleReel
+    def rr = view.rightReel
+    lr.activate()
+    mr.activate()
+    rr.activate()
+    edt {
+      view.spindle.repaint()
+    }
+    model.plays++
+    def playedAmount =
+      Integer.valueOf(view.playValue.selection.actionCommand)
+    def pTote = serverService.playAction(playedAmount)
+    model.totalizerValue = nf.format(pTote)
+    model.playedValue =
+      nf.format(playedAmount + nf.parse(model.playedValue))
+    def res = evaluator.evaluate(lr, mr, rr)
+    switch (res) {
+      case EvaluatorResult.SMALLWIN:
+      case EvaluatorResult.BIGWIN:
+        model.playButtonEnabled = false
+        def winnings =
+          winningsService.evaluate(res.multiplier, playedAmount)
+        model.earnings =
+          nf.format(winnings + nf.parse(model.earnings))
+        def wTote = serverService.winAction(playedAmount, winnings)
+        model.totalizerValue = nf.format(wTote)
+        switch (res) {
+          case EvaluatorResult.SMALLWIN:
+            model.message = "Congratulations! You just won: ${nf.format(winnings)}."
+            SoundUtils.smallWin()
+            break
+          case EvaluatorResult.BIGWIN:
+            model.message = "Hey BIG WINNER! You just won: ${nf.format(winnings)}."
+            SoundUtils.bigWin()
+            break
+        }
+        model.playButtonEnabled = true
+        break
+      default:
+        model.message = CondolencesUtils.condolences()
+        break
+    }
+  }
+}
+</pre>
+          <p><em>Listing 18: Win Evaluation</em></p>
+          <p>Within playAction threading issues are noteworthy, in particular the use of doOutside and edt to ensure correct and responsive view behavior.</p>
+          <p>Separating the evaluation into a separate service is beneficial and gives flexibility. It allows for the definition of a very simple ruleset like "A win occurs if each icon under the line is the same" or for more sophisticated rules
+          taking into account such things as diagonal or alternate arrangements and the actual icons involved.</p>
+          <p>Listing 19 shows one possible (very simple) evaluator.</p>
+          <pre>
+// simple function: a win is when all icons in the
+//   middle position are the same
+def evaluate = {lr, mr, rr -&gt;
+  // assume that all reels have the same number of icons
+  def mrm = mr.model
+  int mid = mrm.size() / 2
+  def le = lr.model.getElementAt(mid)
+  def me = mrm.getElementAt(mid)
+  def re = rr.model.getElementAt(mid)
+  (le == me) &amp;& (me == re) ?
+    EvaluatorResult.SMALLWIN : EvaluatorResult.LOSE
+}
+</pre>
+          <p><em>Listing 19: A Very Simple Win Evaluator</em></p>
+          <p>It is possible to easily replace this simple code with a more sophisticated evaluator with very little knock-on effect [10].</p>
+          <h2><em>A Little Whimsy: JFugue</em></h2>
+          <p>No pokie can possibly be considered playable if it doesn't have the capability to produce at least a few ear-splitting bells and whistles! In this case, incipient deafness comes courtesy of the excellent JFugue. In its own words:
+          <em>"JFugue is an open-source Java API for programming music without the complexities of MIDI."</em></p>
+          <p>Listing 20 shows how simple adding sound to your application can be.</p>
+          <pre>
+import org.jfugue.Pattern
+import org.jfugue.Player
+class SoundUtils {
+  private static final player = new Player()
+  private static final smallPattern =
+    new Pattern("T[Presto] I[Rock_Organ] Db4minH C5majH C5majW")
+  private static final bigPattern =
+    new Pattern(
+      "T[Presto] I[Rock_Organ] Db4minH C5majH C5majW C5majH Db4minH")
+  static smallWin = {-&gt; player.play(smallPattern) }
+  static bigWin = {-&gt; player.play(bigPattern) }
+}
+</pre>
+          <p><em>Listing 20: the SoundUtils class</em></p>
+          <p>If you look back to Listing 18, you will see how this code is used within the playAction closure.</p>
+          <h1>Wrapping Up</h1>
+          <p>I hope that I have been able to show you that it's not a gamble to use these technologies together. Both are powerful frameworks fully capable of permitting sophisticated development. The REST support in both makes writing distributed
+          applications simple while the ability to incorporate existing code such as Log4J and JFugue simply cannot be beat.</p>
+          <p>I leave you with this quote from one of the 'greats' of Science Fiction, writer and social commentator Robert Heinlein: <em>"There is no such thing as 'social gambling.' Either you are there to cut the other bloke's heart out and eat
+          it-or you're a sucker. If you don't like this choice-don't gamble."</em></p>
+          <h1>Learn More</h1>
+          <ul>
+            <li>Grails home page, <a href="http://groovy.codehaus.org">http://groovy.codehaus.org</a>
+            </li>
+            <li>Griffon home page, <a href="http://griffon.codehaus.org/">http://griffon.codehaus.org</a>
+            </li>
+            <li>Andres Almiray's Weblog, <a href="http://www.jroller.com/aalmiray/">http://www.jroller.com/aalmiray/</a>
+            </li>
+            <li>Griffon REST Plugin page, <a href="http://griffon.codehaus.org/Rest+Plugin">http://griffon.codehaus.org/Rest+Plugin</a>
+            </li>
+            <li>Painter Tutorial, <a href="http://swinglabs.org/docs/frameworks/painters/index.jsp">http://swinglabs.org/docs/frameworks/painters/index.jsp</a>
+            </li>
+            <li>JFugue, the Java API for Music Programming, <a href="http://jfugue.org/">http://jfugue.org/</a>
+            </li>
+            <li>Josh Reed's ButtonGroup shortcut, <a href="http://josh-in-antarctica.blogspot.com/2009/10/griffon-tip-silly-swingbuilder-tricks.html">http://josh-in-antarctica.blogspot.com/2009/10/griffon-tip-silly-swingbuilder-tricks.html</a>
+            </li>
+          </ul>
+          <p><em>Bob Brown is the director and owner of Transentia Pty. Ltd.. Based in beautiful Brisbane, Australia, Bob is a specialist in Enterprise Java and has found his niche identifying and applying leading-edge technologies and techniques to
+          customers' problems.</em></p>
+          <p>[1] As a youngling, I lived in Macau (the "Las Vegas of the East") for a few years. I clearly remember the astonishment I felt when I saw the Casinos totalizer boards in action for the first time. The amount displayed updates so rapidly
+          that the last 2-3 whole-dollar figures of the value are simply a continually-changing blur. The amount shown is strictly monotonically increasing, which added to the sense of awe I experienced.<br>
+          [2] An idempotent operation is one that has no side-effects and so can be repeated without changing the state of the system in any way; it is a pure read operation.<br>
+          [3] CRUD = Create, Retrieve, Update, Delete.<br>
+          [4] I will not go into the 'mechanics' of how to drive either Grails or Griffon here. The website for each technology (see "Learn More" for the URLs) covers those aspects very nicely.<br>
+          [5] Don't Repeat Yourself; a key tenet of any developer worth their stake at the table.<br>
+          [6] According to Groovy's documentation: <em>"AST Transformations provides Groovy with improved compile-time metaprogramming capabilities allowing powerful flexibility at the language level, without a runtime performance penalty."</em>
+          They give us compile-time code generation for boilerplate patterns, in other words.<br>
+          [7] SwingX support is provided by the swingx-builder plugin<br>
+          [8] Groovy Jira GROOVY-3939 tracks this issue, for the curious.<br>
+          [9] And all Java developers should aspire to write good portable code!<br>
+          [10] Indeed, I have a version that uses JBoss Drools but that's probably a story for another time…</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Grails, Griffon, Groovy, GroovyMag, Programming</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Capturing Build Info In Grails</h1>
+        <div class="entry-content">
+          <p>This is <a href="http://www.grails.org/plugin/build-info">pretty</a> <a href="http://splab.blogspot.com/2009/10/adding-hudson-and-svn-revision-number.html">much</a> <a href=
+          "http://amorproximi.blogspot.com/2008/11/hudson-and-grails.html">a</a> <a href="http://markmail.org/message/h2lxcedtpbxgraod">FAQ</a> (with <em>many</em> different solutions), but here is my approach (for Grails 1.2+, 1.3.0RC1+)…</p>
+          <p>It's rather simple: simply hook into Grails' compilation lifecycle by adding the following to scripts/_Events.groovy:</p>
+          <pre>// I COULD try munging resources.xml but then I would have to be careful that I didn't
+// tread over anything else in that file. This way, it's all separated out and under control...
+eventCompileStart = {binding -&gt;
+  // Capture the computer name in a cross-platform manner
+  // http://www.ehatchersolutions.com/JavaDevWithAnt/ant.html
+  ant.property(environment: "env")
+  ant.property(name: 'env.COMPUTERNAME', value: "${ant.antProject.properties.'env.HOSTNAME'}")
+
+  def now = new Date().format('dd/MMM/yyyy; kk:mm:ss')
+  ant.echo(message: 'Writing temporary.BuildInfo.groovy...')
+  ant.echo(message: "buildTime: ${now}")
+  ant.echo(message: "buildHost: ${ant.antProject.properties.'env.COMPUTERNAME'}")
+  ant.echo(message: "buildWho: ${ant.antProject.properties."user.name"}")
+  ant.mkdir(dir: 'src/groovy/temporary')
+  new File('src/groovy/temporary/BuildInfo.groovy').withWriter {writer -&gt;
+    writer &lt;&lt; """
+package temporary
+
+public interface BuildInfo {
+  String buildTime = '${now}'
+  String buildHost = '${ant.antProject.properties.'env.COMPUTERNAME'}'
+  String buildWho = '${ant.antProject.properties."user.name"}'
+}
+"""
+  }
+}</pre>
+          <p>Remember to add the src/groovy/temporary directory to your VCS's ignore list, otherwise you'll get all sorts of nastiness happening on checkin/update/… Indeed, one of the drivers that led me to this this approach was that I wanted to
+          capture this sort of stuff without needing to update any of my versioned files (application.properties or resources.{groovy,xml}, for instance).</p>
+          <p>Once the interface has been created it can be used as needed. Here's a bit of GSP, for example:</p>
+          <pre>
+        &lt;div style="color:#48802c;font-size:xx-small"&gt;
+          My Big Project&lt;br /&gt;
+          Environment: ${grails.util.Environment.current.name}.&lt;br /&gt;
+          Built by ${BuildInfo.buildWho}@${BuildInfo.buildHost}, at ${BuildInfo.buildTime}.
+        &lt;/div&gt;
+</pre>
+          <p>The thing I appreciate about this approach is that it can be modified to grab a snapshot of almost any darned thing you want to capture…the output from a script (conceivably even 'grails stats', although I haven't tried this), Hudson
+          build number, the result of a network ping test, database-y stuff…the skies the limit…</p>
+          <p>The major drawback: this script runs <em>every</em> time grails starts up…even if it is for something like run-app. I have learned to live with that however (although if anyone knows how to do better, please drop me a line…).</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Grails, Programming</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Grails' RemoteFunction Tag</h1>
+        <div class="entry-content">
+          <p>I've had to dig for the correct way to use this a few times now, so I am putting it here as a keepsake:</p>
+          <pre>
+
+&lt;bean:withBean beanName="page1Command"&gt;
+    &lt;bean:field property="postcode"/&gt;
+    &lt;bean:select property="businessType"/&gt;
+    &lt;bean:field property="campaignStart" precision="month"/&gt;
+    &lt;bean:field property="campaignEnd" precision="month"/&gt;
+    &lt;bean:select property="campaignSize" from="${Constants.CAMPAIGNSIZES}"
+            noSelection="['':'Choose the Campaign Size']"
+            onchange="${remoteFunction(action:'ajaxCampaign',params:'\'campaignSize=\'+escape(this.value)+\'&amp;postcode=\'+this.form.postcode.value',onFailure:'handleFailure(e);',onSuccess:'updateCampaignSizes(e);')}"/&gt;
+&lt;/bean:withBean&gt;
+</pre>
+          <p>The tricky bit (although it doesn't look like it) is getting multiple parameters passed through successfully. Always gives me trouble. <a href="http://ejvyas.blogspot.com/2009/08/passing-multiple-parameters-to.html">Other</a> <a href=
+          "http://archive.codehaus.org/lists/org.codehaus.grails.user/msg/23581162.post@talk.nabble.com">people</a> too.</p>
+          <p>PS: Kudos to <a href="http://www.anyware.co.uk/2005/">Marc Palmer</a> for his <a href="http://www.grails.org/plugin/bean-fields">Bean-Fields Plugin</a> (shown above). A real time-saver.</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Grails, Programming</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Five Pages Full Of Golden Words</h1>
+        <div class="entry-content">
+          <p>Here's a montage of the pages of an article I wrote for the April 2002 edition of Software Engineering Australia's 'Software' magazine.</p>
+          <p>I came across my copy of the magazine when I was clearing one of my bedrooms out a few days ago (after heavy rain seeped in through the flashing that sits between slab and wall and started the carpet rotting. Sigh.).</p>
+          <p>The article was entitled "Under the J2EE Umbrella." No prizes for guessing what the article was about :-)</p>
+          <p><img src="wp-content/uploads/2010/03/montage.png" alt="montage" title="montage" width="80%"></p>
+          <p>Neither SEA nor 'Software' exist any longer (wound up in 2005, <a href="http://www.builderau.com.au/news/soa/Software-Engineering-Australia-closes-doors/0,339028227,339181306,00.htm">I believe</a>) but sadly, I have no idea of the
+          copyright/ownership of these golden words so I can't actually publish the article.</p>
+          <p>Still, this should help me recall doing this, when I am old(er) and (more) forgetful.</p>
+          <p>I (currently) remember writing other articles for 'Software'…don't know if I still have copies of those lying around…</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Retrospectives</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">One Terrific Post On (Some) Grails' Performance Issues</h1>
+        <div class="entry-content">
+          <p>A great read!</p>
+          <p><a href="http://naleid.com/blog/2009/10/01/batch-import-performance-with-grails-and-mysql/">Batch Import Performance with Grails and MySQL</a></p>
+          <p>Some really useful comments, too!</p>
+          <p>Worth keeping a pointer to…</p>
+          <p>I particularly liked the passing comment:</p>
+          <blockquote>
+            <p>At this point, some people might be inclined to believe the myth that "grails is slow" and go through a painful rewrite in another "faster" language/technology.</p>
+            <p>Don't go there yet! It's only slow if you don't understand what's actually going on under the covers.</p>
+          </blockquote>
+          <p>Thanks to Ted Naleid (et. al.)</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Grails, Programming</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Another UML Tool</h1>
+        <div class="entry-content">
+          <p>This time it's the catchily-named <a href="http://yuml.me/">yUML.me</a>.</p>
+          <p>This is a web-driven application that can turn this:</p>
+          <pre>&lt;img src="http://yuml.me/diagram/scruffy/class/[note: Generated
+on the fly for transentia!{bg:pink}],[Customer]&lt;/&gt;1-orders 0..*&gt;[Order],
+[Order]++*-*&gt;[LineItem], [Order]-1&gt;[DeliveryMethod],
+[Order]*-*&gt;[Product], [Category]&lt; -&gt;[Product],
+[DeliveryMethod]^[National], [DeliveryMethod]^[International]"/&gt;.</pre>
+          <p>into this:</p>
+          <p><img src="wp-content/uploads/2010/03/yuml-example1.png" alt="yuml-example" title="yuml-example" width="435" height="659"></p>
+          <p>Interesting. I suspect that drawing a complex diagram would send one crazy, but its an interesting REST-y application.</p>
+          <p>Hmmm? With all this UML activity in the world, a body might get to thinking that UML was actually <em>useful</em> or something :-)</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Tools</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Playing With GPars</h1>
+        <div class="entry-content">
+          <p>Way, way, waaaay back, I became something of a minor Occam 'guru' (I actually implemented a fair proportion of a compiler/runtime for Occam 1) and I have maintained an (academic and practical) interest in the field throughout my career
+          (which is what I laughingly call what I do these days, see Will Code For Food for more ;-))</p>
+          <p>It's therefore natural for me to take a look at <a href="http://gpars.codehaus.org">GPars</a>.</p>
+          <p>In its own words, GPars is:</p>
+          <blockquote>
+            <p>an open-source concurrency library for Groovy that aims to give you multiple high-level abstractions for writing concurrent code in Groovy - map/reduce, fork/join, asynchronous closures, actors, agents, dataflow concurrency and other
+            concepts, which aim to make your Groovy code concurrent with little effort.</p>
+          </blockquote>
+          <p>Ever played the charmingly-named <a href="http://en.wikipedia.org/wiki/Chinese_whispers">Chinese Whispers game</a> at a party? That's what I'm going to play with here.</p>
+          <p>It's a very simple example of a pipelined processing task. This sort of thing is very common in signal processing, process control and image munging.</p>
+          <p>In the applications I build here, there will be a source thread generating messages which are each then sent through a chain of intermediate threads to a sink thread, which simply bounces the message back down the chain. On each
+          'sinkward' step the intermediaries may or may not munge the message in some way as it whispers it to the next step, so that the version that eventually makes its way back to the source may be changed in some unpredicatable way.</p>
+          <p>Here's the image to keep in your head:</p>
+          <p><img src="wp-content/uploads/2010/03/pipe.png" alt="pipe" title="pipe" width="672" height="225"></p>
+          <p>GPars provides several alternative ways of tackling this problem.</p>
+          <p>Scala made the idea of <a href="http://programming-scala.labs.oreilly.com/ch09.html">Actors</a> popular, so that's a good starting point.</p>
+          <p>This is what the GPars doco says about Actors:</p>
+          <blockquote>
+            <p>The actor support in gpars were inspired by the Actors library in Scala but have meanwhile gone beyond that.</p>
+            <p>Actors allow for a messaging-based concurrency model, built from independent active objects that exchange messages and have no mutable shared state.</p>
+          </blockquote>
+          <p>If you are a webby-person, you can think of an Actor as a Servlet…you won't go far wrong.</p>
+          <p>Coming up is a version of "Chinese Whispers" implemented using GPars' Actors:</p>
+          <pre>package chinesewhispers
+
+@GrabResolver(name = 'jboss', root = 'http://repository.jboss.org/maven2/')
+@Grab(group = 'org.codehaus.gpars', module = 'gpars', version = '0.9')
+
+import groovyx.gpars.actor.*
+import chinesewhispers.utils.Whisperer
+
+Actors.defaultPooledActorGroup.resize 16
+
+class Stop {}
+class Go {}
+
+final intermediaries = []
+
+def src = Actors.actor {index -&gt;
+  println "Source; Starting..."
+  react { Go go -&gt;
+    println "Source; time to 'Go'"
+    def msg = 'The sky is green, the trees are blue...SNAFU!'
+    println "Source; message is: $msg"
+    for (i in 0..&lt;8) {
+      intermediaries[1].sendAndContinue msg, { ix, reply -&gt;
+        println "Source[$ix]; received: '$reply'"
+      }.curry(i)
+    }
+    intermediaries[1].send(new Stop())
+    stop()
+    print "Source; ...Stopped."
+  }
+}
+
+intermediaries &lt;&lt; src
+
+for (i in 1..8) {
+  intermediaries &lt;&lt; Actors.messageHandler({ index -&gt;
+    when {Stop msg -&gt; intermediaries[index + 1].send msg; stop(); }
+    when {msg -&gt;
+      def sender = msg.sender
+      intermediaries[index + 1].sendAndContinue Whisperer.whisper("${msg}"), { reply -&gt;
+        sender.send reply
+      }
+    }
+  }.curry(i))
+}
+
+intermediaries &lt;&lt; Actors.messageHandler {
+  when { Stop msg -&gt; stop() }
+  when { msg -&gt; reply msg }
+}
+
+src &lt; &lt; new Go()
+
+intermediaries*.join()</pre>
+          <p>This simple script creates a list of Actors, with a source Actor first, followed by a number of essentially identical intermediary Actors and finally a sink Actor.</p>
+          <p>Here it all is, "in action" (pun intended):</p>
+          <p><img src="wp-content/uploads/2010/03/ChineseWhisperingActors.png" alt="ChineseWhisperingActors" title="ChineseWhisperingActors" width="603" height="292"><br>
+          GPars creates Actors in a runnable state so that it is easy to start things off by sending the Source a unique Go message.</p>
+          <p>Notice how each Actor sends a message and then allocates a closure to asynchrounously handle the appropriate return message. This ensures that intermediaries get new work as soon as possible, so the pipeline is always running at full
+          capacity. This makes for a very performant solution.</p>
+          <p>It's a truism that getting a parallel system off and running is fairly easy, but getting one to Stop properly can be surprisingly tricky. For this application, the Source Actor's last activity before it finishes is to send a
+          (guaranteed-to-be-unique, obviously) Stop message up the pipline. On receipt of a Stop, each intermediate Actor simply forwards the message and then terminates in a nice orderly fashion. the final Sink Actor receives the forwarded Stop and
+          simply stops without trying to send the message back down the chain of intermediaries (since the chain is effectively no longer there).</p>
+          <p>The messageHandler closure's distinct 'when' syntax makes the sort of message dependent processing shown here very easy.</p>
+          <p>The final line of the script simply waits for all Actors to finish shutting down before allowing the overall script to exit.</p>
+          <p>Simple, performant and easy to write and comprehend. What's not to like!</p>
+          <p>GPars actors are not perfect (they lack some of the Scala library's more subtle abilities such as pattern matching to guard message reception, and the ability to see the length of the incoming mesage queue), but they're not too shabby,
+          either.</p>
+          <p>For a second bite at the apple, here's the DataFlow version.</p>
+          <p>According the the doco:</p>
+          <blockquote>
+            <p>Dataflow concurrency offers an alternative concurrency model, which is inherently safe and robust. It puts emphasis on the data and their flow though your processes instead of the actual processes that manipulate the data. Dataflow
+            algorithms relieve developers from dealing with live-locks, race-conditions and make dead-ocks[sic] deterministic and thus 100% reproducible. If you don't get dead-locks in tests you won't get them in production.</p>
+          </blockquote>
+          <p>What does a Dataflow-based Chinese Whispers program look like? Viola:</p>
+          <pre>
+package chinesewhispers
+
+@GrabResolver(name = 'jboss', root = 'http://repository.jboss.org/maven2/')
+@Grab(group = 'org.codehaus.gpars', module = 'gpars', version = '0.9')
+
+import groovyx.gpars.dataflow.*
+import chinesewhispers.utils.Whisperer
+
+class Link {
+  final up = new DataFlowVariable()
+  final down = new DataFlowVariable()
+
+  Link(index) {
+    /*
+      up &gt;&gt; {println "The up[$index] variable has just been bound to $it"}
+      down &gt;&gt; {println "The down[$index] variable has just been bound to $it"}
+    */
+  }
+}
+
+final NINT = 8
+
+for (iteration in 0..&lt;8) {
+  final intermediaries = []
+  for (i in 0..&lt;NINT)
+    intermediaries &lt;&lt; new Link(i)
+
+  DataFlow.task {
+    intermediaries[0].up &lt;&lt; 'The sky is green, the trees are blue...SNAFU!'
+    println intermediaries[0].down.val
+  }
+
+  for (i in 1..&lt;NINT) {
+    DataFlow.task({ index -&gt;
+      intermediaries[index].up &lt;&lt; Whisperer.whisper(intermediaries[index - 1].up.val)
+    }.curry(i))
+    DataFlow.task({ index -&gt;
+      intermediaries[index - 1].down &lt;&lt; intermediaries[index].down.val
+    }.curry(i))
+  }
+
+  DataFlow.task {
+    intermediaries[NINT - 1].down &lt;&lt; "Did you REALLY mean to say: '${intermediaries[NINT - 1].up.val}'?"
+  }
+}
+"OK"
+</pre>
+          <p>Neat, eh? Simple assignment to a variable, or reading a variable's value performs inter-task communication. No messy send and receive mechanisms here!</p>
+          <p>Here's what it looks like when running inside IntelliJ:</p>
+          <p><img src="wp-content/uploads/2010/03/ChineseWhisperingDataflow.png" alt="ChineseWhisperingDataflow" title="ChineseWhisperingDataflow" width="655" height="199"></p>
+          <p>Of course, you lose a fair bit of flexibility, but for straightforward tasks the simplicity of the solution more than compensates…</p>
+          <p>Each bi-directional link between intermediary tasks is modelled as a Link with a separate 'up' and a 'down' variable. Although GPars offers alternatives, for this application I have chosen to use plain "Dataflow Variables", which are
+          write-once, read-many entities; each iteration through the main loop thus recreates the requisite Link instances (and hence the Dataflow Variables) from scratch.</p>
+          <p>Uncomment the body of the Link constructor and you'll be able to see the inter-task communication in action. Simple but very effective debugging:</p>
+          <p><img src="wp-content/uploads/2010/03/ChineseWhisperingDataflowDebug.png" alt="ChineseWhisperingDataflowDebug" title="ChineseWhisperingDataflowDebug" width="999" height="238"></p>
+          <p>Just for completeness sake (it's a minor supporting actor, not a star): here's the Whisperer class that the examples use:</p>
+          <pre>package chinesewhispers.utils
+
+class Whisperer {
+  final static r = new Random()
+
+  final static map = [
+          'sky': 'elephant',
+          'trees': 'kettles',
+          'green': 'effervescent',
+          'blue': 'smelly'
+  ]
+
+  static whisper(msg) {
+
+    if (r.nextBoolean())
+      return msg
+
+    def split = msg.split(/\W/).findAll { it }
+    def l = split.size()
+    def sel = r.nextInt(l)
+    def word = split[sel]
+
+    def w = map[word]
+    w ? msg.replace(word, w) : msg
+  }
+}
+</pre>
+          <p><a href="http://en.wikipedia.org/wiki/Porky_Pig">That's all folks</a>; two versions of the same application is enough for any mortal!</p>
+          <p>I am eagerly looking forward to the time when the work to integrate <a href="http://www.cs.kent.ac.uk/projects/ofa/jcsp/">JCSP</a> into GPars bears fruit.</p>
+          <p>By the way, each of these examples should happily work with GPars 0.9 and Groovy 1.7.1. Just copy the listings into GroovyConsole and go (you might need to bring the Whispers class inline into each application, but that's trivial to
+          do).</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: GPars, Groovy, Programming</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Grails' chainModel</h1>
+        <div class="entry-content">
+          <p>A question came up on the Grails mailing list recently regarding how to pass model data from one action to another.</p>
+          <p>The solution is to make use of chain() and the chainModel map. As the doco says:</p>
+          <blockquote>
+            <p>This dynamic property only exists in actions following the call to the chain method…</p>
+          </blockquote>
+          <p>Here's a trivial Grails controller class that illustrates How To Do It:</p>
+          <pre>
+package bob
+
+class TestController {
+  def index = {
+    chain(action:'doIt', model:[data:new Data(when:new Date(), what:"Hello, world")])
+  }
+
+  def doIt = {
+    render chainModel.data.what
+  }
+}
+
+class Data {
+  Date when
+  String what
+}
+</pre>
+          <p>I've used chain() several times before, but it's been good to refresh my understanding of chainModel.</p>
+          <p>The doco is <a href="http://grails.org/doc/latest/guide/6.%20The%20Web%20Layer.html#6.1.4Redirects%20and%20Chaining">here</a> and <a href="http://grails.org/doc/latest/ref/Controllers/chain.html">here</a>.</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Grails, Programming</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="pagination">
+        <span class="next"><a href="DUMMY">Next »</a></span> <span class="previous"><a href="DUMMY">« Previous</a></span>
+      </div>
+    </div>
+  </div><!--#page-->
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script> 
+  <script src="js/site.js"></script>
+</body>
+</html>

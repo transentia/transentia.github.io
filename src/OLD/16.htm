@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <title>Transentia - transentia pty. ltd.; development, consulting, training at the leading-edge of technology</title>
+  <link rel="stylesheet" type="text/css" media="screen, print, handheld" href="wp-content/themes/transentia/css/site.css">
+</head>
+<body>
+  <div id="page">
+    <div id="header">
+      <p><a href="../index.htm"><img src="wp-content/uploads/widgets/transentia-logo-red-glow.gif" border="0"></a></p>
+      <p class="old-content">transentia's old content; click on the logo to return to the new content</p>
+      <p id="blog-description">transentia pty. ltd.; development, consulting, training at the leading-edge of technology</p>
+    </div><!-- #header -->
+    <div id="content">
+      <div class="pagination">
+        <span class="next"><a href="DUMMY">Next »</a></span> <span class="previous"><a href="DUMMY">« Previous</a></span>
+      </div>
+      <div class="post hentry">
+        <h1 class="entry-title">What I Learned Today</h1>
+        <div class="entry-content">
+          <p>Inspired by <a href="http://markmail.org/message/cu47ng2krlguvq3d">this post</a>.</p>
+          <p>A nice Groovy snippet:</p>
+          <pre>def x = [a: 1, b: 2]
+def y = [x: 'hi', y: 'there']
+def z = [groovy: 'is', good: 'stuff']
+
+def e = new Expando(*:x, *:y, *:z)
+
+println e</pre>
+          <p>Running within GroovyConsole produces:</p>
+          <pre>groovy&gt; def x = [a: 1, b: 2]
+groovy&gt; def y = [x: 'hi', y: 'there']
+groovy&gt; def z = [groovy: 'is', good: 'stuff']
+groovy&gt; def e = new Expando(*:x, *:y, *:z)
+groovy&gt; println e
+
+{a=1, b=2, x=hi, y=there, groovy=is, good=stuff}
+</pre>
+          <p>There are more good examples hidden away in the documentation on <a href="http://docs.groovy-lang.org/latest/html/JN1035-Maps">Groovy Maps</a>.</p>
+          <p>And while I'm at it…I'll preserve this bit of List-y goodness (a Bob 'original') for posterity (otherwise it will get lost in the depths of my email, never to be seen again):</p>
+          <pre>[-90.0F, 0.0F, (25.0F..45.0F).findAll { it % 5.0F == 0.0F }, 90.0F].flatten().each { deg -&gt;
+  println deg
+}</pre>
+          <p>Produces:</p>
+          <pre>-90.0
+0.0
+25.0
+30.0
+35.0
+40.0
+45.0
+90.0
+</pre>
+          <p><em>[edit]</em><br>
+          I found an even simpler way:</p>
+          <pre>[-90.0F, 0.0F, (25.0F..45.0F).step(5), 90.0F].flatten().each { deg -&gt;
+  println deg
+}</pre>
+          <p>It's a shame that step() only takes an integer parameter, but that is OK for <em>this</em> case.</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Groovy, Programming</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Examples and Tests for SVG Animation</h1>
+        <div class="entry-content">
+          <p><a href="http://hoffmann.bplaced.net/svgtest/">A Useful Site For SVG-Heads</a>.</p>
+          <p>Microsoft should be <strong>ashamed</strong> of Internet Explorer in regards to <a href="http://www.w3.org/Graphics/SVG/">SVG</a>. Truly.</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Tools</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Another Book Read</h1>
+        <div class="entry-content">
+          <p>This time it's <a href="http://www.amazon.com/Phrasebook-Developers-Library-Jason-Clinton/dp/0672328976">Ruby Phrasebook</a> by James Clinton.</p>
+          <p><img src="wp-content/uploads/2009/07/ruby-phrasebook.jpg"></p>
+          <p>The price was right: AUD$19.95. I'll keep this beside me when I'm Ruby-ing, it's a useful memory-jogger to have.</p>
+          <p>&lt;aside&gt;<br>
+          I confess: I'm still trying to discover Ruby's "inner beauty." As a colleague says: in comparison with PHP or PERL, Ruby <em>is</em> a step forward. Apologies to any Ruby fanboy reading this, but It's got a lot of walking to do still, as
+          far as I can see. This is Java, circa 1999…green threads, pissy networking, incomplete (and sometimes just plain <em>wrong</em>) class library, weird little GUI packages: the lot. Been there, done that!<br>
+          &lt;/aside&gt;</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Books</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Room For Improvement?…Always!</h1>
+        <div class="entry-content">
+          <p>Following on from my earlier posting: The Perils Of Being A Smarty-Pants!…</p>
+          <p>While doing the washing up, I spotted a couple of ways of making the code more idiomatically 'Groovy.' These just popped into my head. Unbidden, I swear!</p>
+          <p>Fancy a curry?</p>
+          <pre>def fmt = String.&amp;format.curry("%.3f")
+
+@Override
+public String toString() {
+  """$m
+Weight(Pounds): ${fmt(getWeightPounds())}
+Weight(Tons): ${fmt(getWeightTons())}"""
+}</pre>
+          <p>Notice the way that I am now no longer having to respecify the printf format…Good Stuff!</p>
+          <p>Also see how the & operator converts a method to a closure so that it can be passed around…More Good Stuff!</p>
+          <p>Not sure that it buys much in THIS case, but one could also do:</p>
+          <pre>@Override
+public String toString() {
+  def s = new StringBuilder()
+  s &lt;&lt; "$m" &lt;&lt; 'n'
+  [ 'Pounds', 'Tons' ].each { prop -&gt;
+    s &lt;&lt; /  Weight($prop): ${fmt("getWeight$prop"())}/ &lt;&lt; 'n'
+  }
+  s.toString()
+}</pre>
+          <p>Sorry, no free set of stainless-steel steak knives, but there's also (I find this faintly ridiculous…or at least past the point of diminishing returns in terms of bang for buck for this situation):</p>
+          <pre>@Override
+public String toString() {
+  def prefix = 'getWeight'
+  def s = new StringBuilder()
+  s &lt;&lt; "$m" &lt;&lt; 'n'
+  this.class.declaredMethods.findAll {method -&gt;
+    method.name =~ prefix
+  }.each {
+    s &lt;&lt; /  Weight(${it.name - prefix}): ${fmt("$it.name"())}/ &lt;&lt; 'n' 
+  }
+  s.toString()
+}</pre>
+          <p>To quote the great philosopher, Homer (<a href="http://homy.tripod.com/brain.html">Simpson</a>, that is): "Shut up brain, or I'll stab you with a Q-tip."</p>
+          <p>Worth preserving for posterity (read: I need to store this in external memory…my internal RAM has too many bad blocks these days).</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Groovy, Programming</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Another Book Read: Version Control With Git</h1>
+        <div class="entry-content">
+          <p><a href="http://oreilly.com/catalog/9780596520120/">Version Control With Git</a>.</p>
+          <p><img src="wp-content/uploads/2009/07/git-book-cover.jpg"></p>
+          <p>Mostly skimmed, rather than read, to be truthful…it's that sort of book: good to keep around for when you'll need it but not really a "fun read" (unless your soul has a special place for Version Control Systems).</p>
+          <p>I was inspired to know more after posting Productivity With Grails And Git, and so I had to find out more.</p>
+          <p>Git looks worthy, and the book is a worthy exposition of Git's capabilities.</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Books, Grails, Programming</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">I Want One!</h1>
+        <div class="entry-content">
+          <p><img src="wp-content/uploads/2009/07/pr_bugatti_f.jpg"></p>
+          <p><a href="http://www.wired.com/reviews/product/pr_veyron_convertible">now</a>!</p>
+          <blockquote>
+            <p>…it is the greatest gasoline-powered vehicle that has ever been, or will ever be, built. Seriously.</p>
+            <p>…Take a moment and consider what Bugatti has done: Because a handful of billionaires demanded that the fastest car in the world be available topless, the Volkswagen-owned ultra-luxury automaker essentially broke the laws of physics.
+            Again.</p>
+            <p>The first Veyron is an engineering marvel. That's the one with the massively reinforced roof that helped keep the rest of the body from deforming into an amoebic tangle of graphite composite and exotic metal under the joint stresses
+            of lateral acceleration, horsepower and wind. It stands as one of the greatest achievements of the petroleum age. It required the intellectual might of one of the largest and arguably smartest car companies in the world to birth a car
+            that was not only faster than anything on the road, but easy enough to pilot that anyone could drive it. ("It killed my husband" is not the kind of country-club buzz that sells cars.)</p>
+            <p>…the Veyron's stats are legendary: 1,001 horsepower from a mid-mounted, 8.0-liter, 16-cylinder engine that gets air stuffed down its ravenous gullet by four massive turbochargers. All-wheel drive. A seven-speed, dual-clutch
+            transmission that switches gears faster than a state staffer ducking questions about the Appalachian Trail. Depending on how you define "production car," it is the fastest in the world. In the quickest Lamborghini ever produced, the
+            Murcielago LP640, you can hit 60 mph in 3.2 seconds. In the Grand Sport it takes a hair under 2.5. How does it feel to command that pace? Godlike.</p>
+            <p>…Bugatti offers seven different seat shapes, to accommodate the seven known varieties of billionaire: lust, gluttony, greed, sloth, wrath, envy and pride. Each is based around a carbon-fiber shell and available in whatever animal skin
+            the laws of your kingdom permit.</p>
+            <p>…Other luxury touches include a stereo, we're told. The CD player is custom-designed by Burmeister to operate skip-free at 250 miles per hour. We never turned it on. With the carbon fiber and polycarbonate roof removed, you have the
+            only soundtrack you need: the engine's growl (could be louder) and the roar of the twin air intakes, which suck air like a ??????? two rolls of quarters ?????????? quart of Sterno ??????? Las Vegas.</p>
+            <p>There's also a navigation system. It might be the finest example of passive aggression ever assembled; Bugatti's engineers clearly don't want you to use it. You can only program the system with a separate, 2005-vintage PDA. If you can
+            stomach the Windows Mobile interface long enough to set your destination, you get to view your route guidance in a tiny screen in the rearview mirror.</p>
+            <p>…the last king of the gas-guzzlers, forever the greatest. All hail.</p>
+          </blockquote>
+          <p>Somebody <em>please</em> give me a million or three so that I can afford it. Pretty please?</p>
+          <p>Sigh.</p>
+          <p><a href="http://www.algore.com/">Al Gore</a> would never forgive me!</p>
+          <p><em>[edit]</em><br>
+          As (himself newly [but much more modestly] reshod) Dr Paul King pointed out to me…<a href="http://www.youtube.com/watch?v=LO0PgyPWE3o">here's the Video</a>…phew!</p>
+        </div><!--/entry-content-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">The Perils Of Being A Smarty-Pants!</h1>
+        <div class="entry-content">
+          <p>My friend and colleage Alex Garrett, just posted <a href="http://lexecorp.com/2009/07/06/groovy-coding-a-pile-of-dirt/">Groovy coding a pile of dirt</a>.</p>
+          <p>Now, I thought his example could be improved, and came up with an example making use of Java's enums, which seemed a nice fit:</p>
+          <pre>enum Material {
+  CEMENT(131.0F, 20.0F),
+  DRYSAND(90.0F, 35.0F),
+  WETSAND(118.0F, 25.0F),
+  CLEANGRAVEL(118.0F, 37.5F),
+  SANDYGRAVEL(118.0F, 27.5F)
+
+  Material(D, thetaDegrees) {
+    this.D = D
+    this.theta = Math.toRadians(thetaDegrees)
+  }
+
+  final D
+  final theta
+}
+
+class ConicalPile {
+  private m
+  private h
+
+  def getWeightPounds() {
+    (Math.PI * h ** 3 * m.D) / (3 * (Math.cos(m.theta) ** 2))
+  }
+
+  def getWeightTons() {
+    getWeightPounds() / 2000.0F
+  }
+
+  @Override
+  public String toString() {
+    """$m
+  Weight(pounds): ${String.format("%.3f", getWeightPounds())}
+  Weight(tons): ${String.format("%.3f", getWeightTons())}"""
+  }
+}
+
+for (Material m : Material.values())
+  println new ConicalPile(m: m, h: 10.0F)</pre>
+          <p>Easy! Took 5 minutes. A nice easy diversion.</p>
+          <p>Not so fast there, cowboy…</p>
+          <p>That was the finished product…took me a bit of effort to get to it.</p>
+          <p>To see why, here's a simplified test application:</p>
+          <pre>enum T {
+  ALPHA(1, 2),
+  BETA(3, 4),
+  GAMMA(5, 6)
+
+  def x
+  def y
+
+  @Override
+  public String toString() {
+    "{x: $x, y: $y}"
+  }
+}
+
+println T.ALPHA</pre>
+          <p>Didn't work! Imagine my surprise! Gives:</p>
+          <pre>Caught: java.lang.ExceptionInInitializerError
+        at Test.class$(Test.groovy)
+        at Test.$get$$class$T(Test.groovy)
+        at Test.run(Test.groovy:20)</pre>
+          <p>So (on the assumption that enums are just specialised classes: <a class="externlink" title="Go to http://java.sun.com/j2se/1.5.0/docs/guide/language/enums.html" href="http://java.sun.com/j2se/1.5.0/docs/guide/language/enums.html">The
+          new enum declaration defines a full-fledged class (dubbed an <em>enum type</em>)</a>) I tried a Groovy-style constructor with named parameters:</p>
+          <pre>enum T {
+  ALPHA(x: 1, y: 2),
+  BETA(x: 3, y: 4),
+  GAMMA(x: 5, y: 6)
+
+  def x
+  def y
+
+  @Override
+  public String toString() {
+    "{x: $x, y: $y}"
+  }
+}
+
+println T.ALPHA</pre>
+          <p>Didn't work. One gets an almighty compiler error:</p>
+          <pre>Information:Compilation completed with 1 error and 0 warnings
+Information:1 error
+Information:0 warnings
+Error:BUG! exception in phase 'class generation' in source unit 'C:UsersBobDesktopAlexMaterialsrcTest.groovy' MapEntryExpression should not be visited here at
+ org.codehaus.groovy.classgen.AsmClassGenerator.visitMapEntryExpression(AsmClassGenerator.java:3058)at
+ org.codehaus.groovy.ast.expr.MapEntryExpression.visit(MapEntryExpression.java:37)at
+ org.codehaus.groovy.classgen.AsmClassGenerator.visitAndAutoboxBoolean(AsmClassGenerator.java:4029)at
+ org.codehaus.groovy.classgen.AsmClassGenerator.makeCallSite(AsmClassGenerator.java:1955)at
+ org.codehaus.groovy.classgen.AsmClassGenerator.makeCall(AsmClassGenerator.java:1789)at
+ org.codehaus.groovy.classgen.AsmClassGenerator.makeCall(AsmClassGenerator.java:1775)at
+ org.codehaus.groovy.classgen.AsmClassGenerator.visitStaticMethodCallExpression(AsmClassGenerator.java:2334)at
+ org.codehaus.groovy.ast.expr.StaticMethodCallExpression.visit(StaticMethodCallExpression.java:43)at
+ org.codehaus.groovy.classgen.AsmClassGenerator.visitAndAutoboxBoolean(AsmClassGenerator.java:4029)at
+ org.codehaus.groovy.classgen.AsmClassGenerator.visitCastExpression(AsmClassGenerator.java:1701)at
+ org.codehaus.groovy.classgen.AsmClassGenerator.assignmentCastAndVisit(AsmClassGenerator.java:3968)at
+ org.codehaus.groovy.classgen.AsmClassGenerator.evaluateEqual(AsmClassGenerator.java:3920)at
+ org.codehaus.groovy.classgen.AsmClassGenerator.visitBinaryExpression(AsmClassGenerator.java:1324)at
+ org.codehaus.groovy.ast.expr.BinaryExpression.visit(BinaryExpression.java:49)at
+ org.codehaus.groovy.classgen.AsmClassGenerator.visitAndAutoboxBoolean(AsmClassGenerator.java:4029)at
+ org.codehaus.groovy.classgen.AsmClassGenerator.visitExpressionStatement(AsmClassGenerator.java:1305)at
+ org.codehaus.groovy.ast.stmt.ExpressionStatement.visit(ExpressionStatement.java:40)at
+ org.codehaus.groovy.ast.CodeVisitorSupport.visitBlockStatement(CodeVisitorSupport.java:38)at
+ org.codehaus.groovy.ast.ClassCodeVisitorSupport.visitBlockStatement(ClassCodeVisitorSupport.java:129)at
+ org.codehaus.groovy.classgen.AsmClassGenerator.visitBlockStatement(AsmClassGenerator.java:665)at
+ org.codehaus.groovy.ast.stmt.BlockStatement.visit(BlockStatement.java:52)at
+ org.codehaus.groovy.ast.ClassCodeVisitorSupport.visitClassCodeContainer(ClassCodeVisitorSupport.java:73)at
+ org.codehaus.groovy.ast.ClassCodeVisitorSupport.visitConstructorOrMethod(ClassCodeVisitorSupport.java:80)at
+ org.codehaus.groovy.classgen.AsmClassGenerator.visitStdMethod(AsmClassGenerator.java:542)at
+ org.codehaus.groovy.classgen.AsmClassGenerator.visitConstructorOrMethod(AsmClassGenerator.java:518)at
+ org.codehaus.groovy.ast.ClassCodeVisitorSupport.visitMethod(ClassCodeVisitorSupport.java:88)at
+ org.codehaus.groovy.classgen.AsmClassGenerator.visitMethod(AsmClassGenerator.java:622)at
+ org.codehaus.groovy.ast.ClassNode.visitContents(ClassNode.java:1004)at
+ org.codehaus.groovy.ast.ClassCodeVisitorSupport.visitClass(ClassCodeVisitorSupport.java:48)at
+ org.codehaus.groovy.classgen.AsmClassGenerator.visitClass(AsmClassGenerator.java:243)at
+ org.codehaus.groovy.control.CompilationUnit$10.call(CompilationUnit.java:717)at
+ org.codehaus.groovy.control.CompilationUnit.applyToPrimaryClassNodes(CompilationUnit.java:924)at
+ org.codehaus.groovy.control.CompilationUnit.compile(CompilationUnit.java:462)at
+ org.codehaus.groovy.control.CompilationUnit.compile(CompilationUnit.java:443)at
+ org.jetbrains.groovy.compiler.rt.MyCompilationUnits.compile(MyCompilationUnits.java:52)at
+ org.jetbrains.groovy.compiler.rt.GroovycRunner.main(GroovycRunner.java:188)
+</pre>
+          <p>So much for guessing, which is essentially what I was doing.</p>
+          <p>So, back to a simpler, kinder Java-style, with a hand-crafted constructor (which I first tried as a pure Java class, and then 'mutated' back to Groovy):</p>
+          <pre>enum T {
+  ALPHA(1, 2),
+  BETA(3, 4),
+  GAMMA(5, 6)
+
+  T(x, y) {
+    this.x = x
+    this.y = y
+  }
+
+  def x
+  def y
+
+  @Override
+  public String toString() {
+    "{x: $x, y: $y}"
+  }
+}
+
+println T.ALPHA</pre>
+          <p>It flies! Viz:</p>
+          <pre>{x: 1, y: 2}</pre>
+          <p>Hence the example I lead with…</p>
+          <p>I'm assuming that I was being bitten by <a href="https://issues.apache.org/jira/browse/GROOVY-3276">http://jira.codehaus … g/browse/GROOVY-3276</a>, which is currently marked as Closed/Fixed. Hmmm.</p>
+          <p>##Hi ho. Hi ho. It's <a href="https://issues.apache.org/jira/browse/GROOVY-3613">off to Jira</a> I go…##</p>
+          <p><em>[edit]</em><br>
+          As has been pointed out to me:</p>
+          <blockquote>
+            <p>Your surprise #1 does not make much sense to me because even with regular classes, that convenience is not there.</p>
+            <pre>class T {
+        def x
+        def y
+
+        public String toString() {
+        "{x: $x, y: $y}"
+        }
+}</pre>
+            <p>new T(1, 2) // fails saying no matching constructor found</p>
+          </blockquote>
+          <p>I got my knickers knotted on this issue, it is true! Still:</p>
+          <blockquote>
+            <p>I would have also assumed that named parameters based constructor call would go through for enums as it does for regular classes. But that is about your 2nd surprise reported. To me also, that enhancement would make sense.</p>
+          </blockquote>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Groovy, Programming</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Java Technology and Development Courseware: Now DonationWare</h1>
+        <div class="entry-content">
+          <p><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=6584697">DonationWare!</a> <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=6584697"><img src=
+          "https://www.paypal.com/en_AU/i/btn/btn_donate_SM.gif" border="0" alt="" align="middle"></a></p>
+          <p>I am opening up old courseware to the world on a "pay if you like it" or have it free basis.</p>
+          <p>My fifth offering is <em>Java Technology and Development</em>.</p>
+          <p>(You will find other offerings in this site tagged with DonationWare.)</p>
+          <p>This course was started in ~1996 as Java was becoming popular. I stopped hacking it sometime around 2002, so it had a pretty good run. This version is from sometime in 2001 (it was pretty much the first "reasonably up-to-date" copy I
+          found in my archive…actually a big pile of CDs).</p>
+          <p>This course had a lot of mileage: it went around Australia and the US many times, it went around various bits of Asia a couple of times and it went to NZ a few times.</p>
+          <p>It was used by a team of presenters, each of whom presented it very differently (interestingly enough), and contributed bits and pieces and bugfixes to it (thanks, guys!). Nonetheless, it retained <em>my</em> somewhat cynical/quirky
+          view of the Java Universe.</p>
+          <p>It was presented under a few different banners. Never under the transentia banner in Australia.</p>
+          <p>It was even 'informally' licensed (meaning I pretty much got ripped-off!) to a US company for their purposes (whatever they were…I never really found out).</p>
+          <p>I have also presented Java courseware for a number of other organisations and I still believe that <em>this is the best</em>.</p>
+          <p>I remember presenting it for the very first time, to a local ISP in Darwin. After discussing Applets, I was talking about how Applets could be used to build a Tsunami-style <a href=
+          "http://en.wikipedia.org/wiki/Denial-of-service_attack">D.O.S. attack</a> and bring down a whole network. Suddenly one participant jumped up and walked out and I didn't see him for quite a whle. Turns out that he was the owner of the
+          company. He later explained that he had just spent a day madly reconfiguring his servers and network to be more resistant to the type of attack I had been talking about. I really scared the poor guy!</p>
+          <p>When the course first burst onto the world, the course participants were all keen and clever "early adopters": for exercises, it was enough to say "Here is a Java compiler, go build me an 'X'." and everyone had fun, and learned lots
+          along the way. By the time I knocked it on its head-no more early adopters were coming through and in some cases we had to deal with people who simply didn't want to know but were being told to follow the company line-the exercises were
+          having to be specified a lot more completely (it seemed like we had to detail practically every keypress and mouse movement). It wasn't so much fun at the end, sad to say!</p>
+          <p>I also recall telling my colleagues about one participant that really <em>did not know how to use her mouse</em> (this makes life really hard for an instructor; to this day, the phrase "No. Use the <em>other</em> mouse button." has
+          significance to us) and they were scoffing at me, thinking I was exaggerating. Until the time when one poor guy came back from presenting the course for the first time and said: "I was really shocked. I always thought you were laying it on
+          thick, but some of these participants didn't even know how to <em>type</em>, let along <em>program</em>." I paraphrase, but you get the idea.</p>
+          <p>Fun days…</p>
+          <p>Enough reminiscing! Here's the 'blurb':</p>
+          <div style="padding-left:10px;padding-right:10px;padding-top:10px;margin-left:20px;margin-right:20px;background:#FFFFCC;">
+            <p><img src="wp-content/uploads/2009/07/java-courseware-logo.png" alt=""></p>
+            <p><strong>Java Technology and Development</strong></p>
+            <p>A five-day hands-on overview of the Java language and environment</p>
+            <p><strong>Audience</strong></p>
+            <p>Programmers, Technical IT Managers, World-Wide Web Administrators and Developers, other IT Personnel and Consultants.</p>
+            <p><strong>Overview</strong></p>
+            <p>The Java programming language attracts enormous interest throughout the on-line community. IT professionals are also recognizing the importance of such technologies. This course will provide an understanding of what Java is, its
+            history, how it works and is used, its application areas, industry support, competing technologies, and so forth.</p>
+            <p>The course includes a number of practical exercises spread over the five-day period.</p>
+            <p><strong>Objective</strong></p>
+            <p>The aim of this course is to provide a proper description and overview of Java as a programming language and distributed system technology. At the end of the course the student will have a sufficient understanding of Java to enable
+            him or her to undertake software development using Java in various situations, including the development of executable content for the World-Wide Web and the construction of stand-alone applications.</p>
+            <p>Note: Java is strongly derived from C so knowledge of C or C++ is needed for this course.</p>
+            <p><strong>Day One: The Java Language</strong></p>
+            <p>An Overview of Java</p>
+            <p>An examination of why Java is the sensation it is; where it came from and what it can do:</p>
+            <ul>
+              <li>history</li>
+              <li>comparing Java to other languages</li>
+              <li>buzzwords: simple, object-oriented, distributed, robust, secure, architecture neutral, portable, interpreted, high-performance, multithreaded, and dynamic.</li>
+            </ul>
+            <p>The Basic Java Language</p>
+            <p>An overview of the more straightforward of Java's features together with a brief comparison of Java with its ancestors: C/C++:</p>
+            <ul>
+              <li>tokens</li>
+              <li>reserved words</li>
+              <li>types and data values</li>
+              <li>operators</li>
+              <li>garbage collection</li>
+            </ul>
+            <p>Java Tools</p>
+            <p>A look at Sun's Java Development Toolkit (JDK):</p>
+            <ul>
+              <li>why choose the JDK?</li>
+              <li>JDK for Windows95/NT4:
+                <ul>
+                  <li>appletviewer</li>
+                  <li>javac</li>
+                  <li>javah</li>
+                  <li>java</li>
+                  <li>javadoc</li>
+                  <li>javap</li>
+                  <li>jdb</li>
+                  <li>rmic</li>
+                  <li>jar</li>
+                  <li>javakey</li>
+                </ul>
+              </li>
+            </ul>
+            <p>A quick look at some other tools:</p>
+            <ul>
+              <li>IBM VisualAge for Java</li>
+              <li>Microsoft Visual J++</li>
+            </ul>
+            <p>Programming Java Applications</p>
+            <p>Writing standalone applications in Java:</p>
+            <ul>
+              <li>program structure and environment</li>
+              <li>application versus applet</li>
+              <li>a whole new phylum: aglets, servlets, beans</li>
+            </ul>
+            <p>More Basic Java</p>
+            <p>More data types:</p>
+            <ul>
+              <li>arrays</li>
+              <li>strings</li>
+            </ul>
+            <p>The flow of control:</p>
+            <ul>
+              <li>if, switch, for, while, do</li>
+              <li>labeled statements</li>
+            </ul>
+            <p>Some of the changes Java 1.1 has brought to the language:</p>
+            <ul>
+              <li>desktop colors</li>
+              <li>internationalization</li>
+              <li>deprecated features</li>
+              <li>'blank' finals</li>
+              <li>anonymous arrays</li>
+              <li>type wrappers</li>
+            </ul>
+            <p><strong>Day Two: More Java Language/Java Applets</strong></p>
+            <p>Object-Oriented Programming with Java</p>
+            <p>An examination of the features that make Java an Object-Oriented language:</p>
+            <ul>
+              <li>classes and objects</li>
+              <li>constructors and object finalization</li>
+              <li>methods, overriding and parameter passing</li>
+              <li>initializers</li>
+              <li>inheritance and the IS-A/HAS-A relationships</li>
+              <li>accessing run-time type information</li>
+              <li>encapsulation: packages visibility modifiers and techniques</li>
+              <li>abstract classes</li>
+              <li>interfaces</li>
+            </ul>
+            <p>The New Java 1.1 Object-Oriented Features</p>
+            <p>Java 1.1 introduced a number of features that substantially increased the power and flexibility of the language:</p>
+            <ul>
+              <li>reflection</li>
+              <li>inner classes:
+                <ul>
+                  <li>nested top-level classes</li>
+                  <li>member classes</li>
+                  <li>local classes</li>
+                  <li>anonymous classes</li>
+                </ul>
+              </li>
+              <li>instance initializers</li>
+            </ul>
+            <p>More Java Language</p>
+            <p>An examination of the ways in which Java promotes creating robust software:</p>
+            <ul>
+              <li>exceptions</li>
+              <li>using and understanding threads:
+                <ul>
+                  <li>the Runnable interface</li>
+                  <li>synchronization: mutual exclusion and critical sections</li>
+                  <li>conditions</li>
+                </ul>
+              </li>
+            </ul>
+            <p>Java Applets</p>
+            <p>Java and executable content on the World-Wide Web:</p>
+            <ul>
+              <li>applet capabilities</li>
+              <li>the &lt;APPLET&gt; tag</li>
+              <li>responsive applets</li>
+              <li>dual-purpose applets and applications</li>
+            </ul>
+            <p><strong>Day Three: User Interfaces & Java's Abstract Windowing Toolkit</strong></p>
+            <p>An AWT Overview</p>
+            <p>A look at the basic concepts underlying Java's "window on the world":</p>
+            <ul>
+              <li>the Abstract Windowing Toolkit (AWT):
+                <ul>
+                  <li>aim</li>
+                  <li>fundamental organization</li>
+                </ul>
+              </li>
+            </ul>
+            <p>Using Java for simple graphics programming:</p>
+            <ul>
+              <li>primitive graphics tools</li>
+              <li>sounds in applets</li>
+            </ul>
+            <p>Multimedia and Interactivity</p>
+            <p>Multimedia is one of the driving forces behind Java:</p>
+            <ul>
+              <li>color handling</li>
+              <li>fonts</li>
+              <li>images</li>
+              <li>animation and double buffering</li>
+            </ul>
+            <p>More AWT</p>
+            <p>The building blocks of a Java User Interface:</p>
+            <ul>
+              <li>components:
+                <ul>
+                  <li>button</li>
+                  <li>checkbox</li>
+                  <li>scrollbar</li>
+                  <li>menu</li>
+                  <li>label, text area and text field</li>
+                  <li>canvas</li>
+                </ul>
+              </li>
+              <li>containers:
+                <ul>
+                  <li>panel</li>
+                  <li>frame</li>
+                  <li>window</li>
+                  <li>dialog</li>
+                </ul>
+              </li>
+              <li>event handling</li>
+              <li>layout managers</li>
+            </ul>
+            <p>AWT Enhancements</p>
+            <p>The enhancements and changes that Java version 1.1 introduced:</p>
+            <ul>
+              <li>a new event model</li>
+              <li>delegation</li>
+              <li>listeners and adapters</li>
+              <li>lightweight components</li>
+              <li>printing</li>
+              <li>data transfer; copy and paste; drag and drop</li>
+            </ul>
+            <p>Java Foundation Classes</p>
+            <ul>
+              <li>Java 2D</li>
+              <li>model-view-controller paradigm</li>
+              <li>'swing' components</li>
+              <li>drag & drop</li>
+            </ul>
+            <p>The Stream Zoo</p>
+            <p>A look at some of the many classes for handling input/output:</p>
+            <ul>
+              <li>standard streams</li>
+              <li>"mix & match" capabilities</li>
+              <li>files</li>
+              <li>random access streams</li>
+              <li>tokenizers</li>
+              <li>serialization and externalization</li>
+              <li>writer classes</li>
+            </ul>
+            <p>The Java Utility Classes</p>
+            <p>An overview of the classes supplied to remove the need for developers to have to "reinvent the wheel":</p>
+            <ul>
+              <li>type wrappers</li>
+              <li>vector</li>
+              <li>enumeration</li>
+              <li>hashtable</li>
+              <li>property</li>
+              <li>random, stack, date, bitset</li>
+              <li>Java Collection Classes</li>
+            </ul>
+            <p><strong>Day Four: Advanced Java Programming</strong></p>
+            <p>Java Beans</p>
+            <p>An introduction to the Java-based component software infrastructure:</p>
+            <ul>
+              <li>why Java beans?</li>
+              <li>properties:
+                <ul>
+                  <li>simple</li>
+                  <li>indexed</li>
+                  <li>bound</li>
+                  <li>constrained</li>
+                </ul>
+              </li>
+              <li>events</li>
+              <li>methods</li>
+              <li>the BeanInfo class</li>
+            </ul>
+            <p>Security</p>
+            <p>An examination of why and how Java claims to be a secure programming environment for the World-Wide Web:</p>
+            <ul>
+              <li>the sandbox</li>
+              <li>the bytecode verifier</li>
+              <li>the class loader</li>
+              <li>the security manager</li>
+              <li>hostile attacks</li>
+              <li>code signing</li>
+              <li>access control lists</li>
+            </ul>
+            <p>Java Database Connectivity</p>
+            <p>A look at interfacing Java with SQL-based relational databases:</p>
+            <ul>
+              <li>the DriverManager class</li>
+              <li>drivers</li>
+              <li>connections</li>
+              <li>statements</li>
+              <li>SQL Utility classes</li>
+              <li>ResultSet handling</li>
+              <li>metadata</li>
+            </ul>
+            <p>Native Code</p>
+            <p>A look at the facilities that exist to allow Java to interact with other programming environments:</p>
+            <ul>
+              <li>Java Native Interface</li>
+              <li>Java invocation API</li>
+            </ul>
+            <p><strong>Day Five: Distributed Systems Using Java</strong></p>
+            <p>Java features aimed at making the development of distributed systems easier:</p>
+            <ul>
+              <li>URL</li>
+              <li>URLConnection</li>
+              <li>sockets:
+                <ul>
+                  <li>clients</li>
+                  <li>servers</li>
+                </ul>
+              </li>
+              <li>Remote Method Invocation
+                <ul>
+                  <li>naming</li>
+                  <li>clients</li>
+                  <li>servers</li>
+                  <li>stubs & skeletons</li>
+                  <li>security</li>
+                </ul>
+              </li>
+              <li>Servlets</li>
+              <li>Enterprise Java Beans</li>
+              <li>Java and CORBA</li>
+            </ul>
+            <p>The Future</p>
+            <p>An overview of some of the exciting developments currently happening in the Java world, such as JDBC, the "100% Java" initiative and the Network Computer.</p>
+            <p> </p>
+          </div>
+          <p>The course is now well and truly at End of Life.</p>
+          <p>I figure that it would be such a pity for it to end as a set of bits decaying away on my hard disk so I am opening it up to the world on as "as-is" basis:</p>
+          <p><a href="wp-content/uploads/2009/07/java-courseware-donationware.04.july.2009.zip">java-courseware-donationware.04.july.2009.zip</a></p>
+          <p>(MD5: 197bf97bf6020c2ca2ba440f87b59790; size: 6,615,799 bytes)</p>
+          <p>Some (unfortunately necessary) legalese:</p>
+          <ul>
+            <li>This content is provided "as-is", with no guarantees.</li>
+            <li>Feel free to use it, but not to abuse it (to give a couple of examples: don't make hundreds of copies for friends; don't claim it as your own work).</li>
+            <li>I retain copyright, so "<a href="http://en.wikipedia.org/wiki/All_rights_reserved">all rights reserved</a>."
+            </li>
+          </ul>
+          <p>Enjoy!</p>
+          <p>If you like it, or have any questions/comments, send me an email ( <em>
+          <script type="text/javascript">
+          // < ![CDATA[
+                    // obfuscate this stuff... var who = 'javacoursewaredonationware' var a = 'transentia' var b = 'com' var c = 'au' var s = who + '@' + a + '.' + b + '.' + c; document.write(s)
+                    // ]]&gt;
+          </script></em> ).</p>
+          <p>If you find this material useful, <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=6584697">please consider paying me a small amount</a>: <a href=
+          "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=6584697"><img src="https://www.paypal.com/en_AU/i/btn/btn_donate_SM.gif" border="0" alt="" align="middle"></a> via PayPal.</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: DonationWare, Java</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">SOAP/WebServices Courseware: Now DonationWare</h1>
+        <div class="entry-content">
+          <p><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=6565587">DonationWare!</a> <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=6565587"><img src=
+          "https://www.paypal.com/en_AU/i/btn/btn_donate_SM.gif" align="middle" border="0"></a></p>
+          <p>I am opening up old courseware to the world on a "pay if you like it" or have it free basis.</p>
+          <p>My fourth offering is <em>SOAP/WebServices Overview</em>.<br>
+          (You will find other offerings in this site's DonationWare Category.)</p>
+          <p>This course was created in mid-2003.</p>
+          <p>It was a quick, one-day overview/review of the current "state of the art."</p>
+          <p>How things change!</p>
+          <p>I remember going down to Sydney to give this course on behalf of "A Famous Database Company" for a group of South Korean V.I.P.s…who (it turned out) did not speak ANY English. The poor translator almost had a nervous breakdown. It was a
+          very strange session, almost surreal!</p>
+          <p>Here's the 'blurb':</p>
+          <div style="padding-left:10px;padding-right:10px;margin-left:20px;margin-right:20px;background:#FFFFCC;">
+            <br>
+            <p>The new internet-focussed software architectures now on the drawing boards of the World-Wide Web Consortium (W3C) and the major vendors are being planned around a triumvirate of standards-oriented XML-based technologies: SOAP, the
+            Simple Object Access Protocol; WebServices; and UDDI, the Universal Description Discovery and Integration system. These new technologies are fated to become ever more important as they slowly assume the role of underpinning major
+            initiatives such as Microsoft's .NET and grow to provide the foundation for much of what HP, IBM and the various members of the open source community are intending to provide for the next iteration of the Internet.</p>
+            <p>This session will provide an overview of the new business-to-business technologies that are being promulgated for what some cynics have called "basically a more object-oriented, somewhat buzzword-compliant upgrade to CGI" and others
+            have more charitably called the "grown up internet."</p>
+            <p> </p>
+          </div>
+          <p>The course is now well and truly at End of Life.</p>
+          <p>I figure that it would be such a pity for it to end as a set of bits decaying away on my hard disk so I am opening it up to the world on as "as-is" basis:</p>
+          <p><a href="wp-content/uploads/2009/07/sws-courseware-donationware.04.july.2009.zip">sws-courseware-donationware.04.july.2009.zip</a><br>
+          (MD5: 150f88d70d5a86d1129af4e21059594c; size: 6,692,573 bytes)</p>
+          <p>Some (unfortunately necessary) legalese:</p>
+          <ul>
+            <li>This content is provided "as-is", with no guarantees.</li>
+            <li>Feel free to use it, but not to abuse it (to give a couple of examples: don't make hundreds of copies for friends; don't claim it as your own work).</li>
+            <li>I retain copyright, so "<a href="http://en.wikipedia.org/wiki/All_rights_reserved">all rights reserved</a>."
+            </li>
+          </ul>
+          <p>Enjoy!</p>
+          <p>If you like it, or have any questions/comments, send me an email ( <em>
+          <script type="text/javascript">
+
+                        // obfuscate this stuff...
+                        var who = 'soapwebservicescoursewaredonationware';
+                        var a = 'transentia';
+                        var b = 'com';
+                        var c = 'au';
+                        var s = who + '@' + a + '.' + b + '.' + c;
+                        document.write(s)
+          </script></em> ).</p>
+          <p>If you find this material useful, <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=6565587">please consider paying me a small amount</a>: <a href=
+          "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=6565587"><img src="https://www.paypal.com/en_AU/i/btn/btn_donate_SM.gif" align="middle" border="0"></a> via PayPal.</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: DonationWare, SOA</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="pagination">
+        <span class="next"><a href="DUMMY">Next »</a></span> <span class="previous"><a href="../15/15.htm">« Previous</a></span>
+      </div>
+    </div>
+  </div><!--#page-->
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script> 
+  <script src="js/site.js"></script>
+</body>
+</html>

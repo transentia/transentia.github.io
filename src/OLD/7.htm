@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <title>Transentia - transentia pty. ltd.; development, consulting, training at the leading-edge of technology</title>
+  <link rel="stylesheet" type="text/css" media="screen, print, handheld" href="wp-content/themes/transentia/css/site.css">
+</head>
+<body>
+  <div id="page">
+    <div id="header">
+      <p><a href="../index.htm"><img src="wp-content/uploads/widgets/transentia-logo-red-glow.gif" border="0"></a></p>
+      <p class="old-content">transentia's old content; click on the logo to return to the new content</p>
+      <p id="blog-description">transentia pty. ltd.; development, consulting, training at the leading-edge of technology</p>
+    </div><!-- #header -->
+    <div id="content">
+      <div class="pagination">
+        <span class="next"><a href="DUMMY">Next »</a></span> <span class="previous"><a href="DUMMY">« Previous</a></span>
+      </div>
+      <div class="post hentry">
+        <h1 class="entry-title">SQL-99 Complete, Really</h1>
+        <div class="entry-content">
+          <p>This section of the <a href="http://kb.askmonty.org/en/sql-99">AskMonty Knowledgebase beta</a> contains the full text of the book <em>SQL-99 Complete, Really</em>, by Peter Gulutzan & Trudy Pelzer.</p>
+          <p>I have already admitted to being an SQL <a href="http://dictionary.reference.com/browse/klutz">Klutz</a>, so having this sort of thing readily at hand is very worthwhile.</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Tools</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Crazy Cool?</h1>
+        <div class="entry-content">
+          <p>I really can't decide whether this actually IS crazy cool, or just the ultimate in BWC*.</p>
+          <p>Still here it is…<a href="http://bellard.org/jslinux/">Linux booting into a PC emulated in JavaScript inside a browser</a>.</p>
+          <p>The obligatory screen shot:</p>
+          <p><img src="wp-content/uploads/2011/07/JSInBrowser.png" alt="" title="JSInBrowser" width="529" height="458"></p>
+          <p>It worked for me in IE9, on my iPad 1 and iPhone 4.</p>
+          <p>What it does do, it does surprisingly quickly: it boots faster than my <a href="thecus.com">linux-based NAS</a>…</p>
+          <p>Even the tcc compiler works!</p>
+          <p>Sadly, only lo0 exists.</p>
+          <p>As the developer suggests, this could be a great way of teaching introductory Linux/C.</p>
+          <p>* <small><em>Because We Can</em></small></p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Tools</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">A (Simple) GroovyMag Article</h1>
+        <div class="entry-content">
+          <p>Another <a href="http://www.groovymag.com/main.issues.description/id=35/?refer=http://groovymag.com/">GroovyMag</a> article has just been published:</p>
+          <p><img src="wp-content/uploads/2011/07/gm33_125.jpg" width="125" height="162"></p>
+          <p>This (quite short) one is "Playing Pass the Parcel with GPars" and was inspired by real-life events at a friend's child's birthday party!</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: GPars, GroovyMag</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">A Simple Bit of GPars</h1>
+        <div class="entry-content">
+          <p>I recently had a rather dull task to undertake: each time a (third-party) application bug manifested itself, I had to retrieve all the relevant logs from the supporting JBoss instance so that they could be mailed to the developer.</p>
+          <p>The logs were often quite large, which argued for using parallel download, rather than grabbing each file sequentially (the good ole' <a href="http://en.wikipedia.org/wiki/Space-time_tradeoff">space-time</a> tradeoff in yet another
+          guise).</p>
+          <p>I wanted to make everything as easy as possible for the support team that would come after me. This meant no mucking around with libraries, classpaths, etc.</p>
+          <p>My first thought was "<a href="http://www.supermanhomepage.com/">this looks like a job for GPars</a>."<br>
+          (My second thought was probably "time for a <a href="http://dictionary.reference.com/browse/cuppa">cuppa</a>", but that's not strictly relevant here…)</p>
+          <p>Thus:</p>
+          <pre>
+// avoid all the command-line classpath munging; add GPARS
+def GPARS_HOME='file:///C:/BIN/Groovy/gpars-all-0.12-beta-1-SNAPSHOT/'
+['jcsp-1.1-rc5.jar', 'netty-3.1.5.GA.jar', 'gpars-0.12-beta-1-SNAPSHOT.jar'].each {
+  this.class.classLoader.rootLoader.addURL(new URL("${GPARS_HOME}/${it}"))
+  }
+
+def retrieve = {file -&gt;
+  println "(${Thread.currentThread().name}); Downloading $file"
+  new File(file) &lt;&lt; "http://server/download?dir=log&amp;file=${file}".toURL().text
+  }
+
+groovyx.gpars.GParsPool.withPool {
+  ['Main.log', 'MainError.log', 'error.log', 'Subsystem.log',
+   'SubsystemError.log', 'boot.log', 'server.log'].eachParallel {
+    retrieve it
+    }
+  }
+</pre>
+          <p>It's not rocket-science, this, but I hope it shows just how damnned easy Groovy and <a href="http://gpars.codehaus.org/">GPars</a> make life…</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: GPars, Groovy, Programming</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">If I Said You Had A Beautiful Body, Would You Hold It Against Me?</h1>
+        <div class="entry-content">
+          <p>I have been meaning to put this stuff up for simply <em>ages</em>.</p>
+          <p>For the <a href="http://2009.osdc.com.au/">Open Source Developers' Conference 2009</a> I created a number of "mini fliers" that we placed around the conference's public areas in an effort to attract attendees to come to the Groovy BOF
+          that we were holding.</p>
+          <p>The first rule of advertising is to get people's attention. Doesn't matter how corny your effort is. Hell…the cornier the better!</p>
+          <p>Thus:</p>
+          <p><img src="wp-content/uploads/2011/05/groovy_osdc_beautiful_body.png" alt="" title="groovy_osdc_beautiful_body" width="776" height="155" style="border:1px solid #222222"></p>
+          <p>There are many more gems like this in the <a href='wp-content/uploads/2011/05/Groovy-Lines-For-OSDC-BOF.docx'>source document</a> (Microsoft Word format. Ahhh the <a href="http://en.wikipedia.org/wiki/Irony">irony</a>. Please don't hold
+          it against me…).</p>
+          <p>Hope these can be useful to someone else.</p>
+          <p>Enjoy!</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: GPars, Grails, Griffon, Groovy, Programming, Tools</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">In A Whimsical Mood</h1>
+        <div class="entry-content">
+          <p>Good morning Class! Welcome back to the Cervantes School of Software Wrangling!</p>
+          <p>This course is "Tiliting at Windmills 201."</p>
+          <p>I'm your lecturer Don Quixote.</p>
+          <p>We will begin with a snap quiz.</p>
+          <p>You have two well-established computer systems A and B. In accordance with its original design system B makes use of a small but signifiant proportion of system A's schema. It is proposed that system B should be enhanced, which will
+          require accessing a few additional tables from system A's schema.</p>
+          <p>Do you:</p>
+          <ol type='A'>
+            <li>Go ahead and grab the data you need, along the lines of what is already being done?</li>
+            <li>First espouse the concept of a "common integration language" and then promote the idea of linking the two systems together via some to-be-announced-Real-Soon-Now "integration layer"?</li>
+            <li>Place a huge purchase order for the latest silver bullet product espoused in last month's "What's Next! A busy CIO's guide to the latest trends in ICT" magazine, mandate that this product is now the "Enterprise Standard", and require
+            systems A & B should use this product for their new "Enterprise-level Interactions"?</li>
+          </ol>
+          <p>I'll give you a few seconds to think about it….</p>
+          <p>…time's up.</p>
+          <p>Now: those of you who answered 'A'…</p>
+          <p>Sigh. Did you learn nothing last year? Don't you remember "Complification 101″? Don't you remember the Three Principles: 'Complicate', 'Obfuscate', 'Procrastinate'? I am disappointed in you…you'll never get ahead in today's enterprise
+          with a can-do attitude like that.</p>
+          <p>OK. Who answered B?</p>
+          <p>That's more like it! Glad to see you 'B's were paying attention in "Elementary Enterprise Operations 101″ last year. Remember that this alternative gives you the advantage of being able to wander around the whole organisation declaiming
+          "Integration Layer" at every opportunity. This may not constitute a successful approach to building working software but it sure is a great way of building visibility with The Powers That Be…and what's more important, after all, eh?</p>
+          <p>NO, Mr. "I answered 'A'…I thought it was all about building software to do something useful"…it isn't. Really! Maybe you should be rethinking your career path while the year is still young?</p>
+          <p>Did anybody answer C? Ah. you must be from the "Software and Sales" double degree. I see bright futures ahead for you guys. This is the way to go! Even you 'B's need to take notice here. Maybe even consider taking "Hype and Hysteria
+          204″? There's always another silver bullet just around the corner and you don't want to miss out on the opportunities.</p>
+          <p>Who's left? You over there…you're a "Software Law" student aren't you? Kibitzing, I see…what are you looking so happy about? Wonderful, just wonderful: "Looking forward to all those failed implementations." This, class, is what you
+          should really be aspiring to if you really want to succeed! The software wrangling business is for mugs…why do you think that I am standing here in front of you and not sitting in front of a computer!</p>
+          <p>OK. With all this in mind, let's begin, shall we?</p>
+          <p>Today's lecture is entitled "A Picture Paints A Thousand Words. It Also Consumes Many Megabytes, Gives You RSI And Still Ends Up Less Useful Than A Single Line Of Code." Please open your books to the chapter entitled "Oracle Service
+          Bus"…</p>
+          <p><em>I've got to go now…some nice men in white coats have come to take me on holiday. How nice of them!</em></p>
+          <p>Seriously though…some 2004-vintage food for thought, entitled <a href="http://www.ebpml.org/site_updates.htm#40">Jump off the bus, take a cab!</a>:</p>
+          <blockquote>
+            <p>…<br>
+            A lot of companies have expressed the similarities between SOA and the concept of (hardware) Bus….I understand that a bus offers a "common interface infrastructure" and components can use the bus to communicate with each other, this is
+            pretty much where the analogy stops for SOA. SOA requires very little in the middle (other than a standard communication infrastructure, that we already have for free) and is inherently point to point and asynchronous, unlike most bus
+            architectures which require some centralized infrastructure and synchronous behavior. I would agree with the OASIS/BCM group that the only shared component in a SOA is a directory service.<br>
+            …</p>
+          </blockquote>
+          <p>Bear this quote in mind the next time some SOA-totin' salesman attempts to bale up your checkbook with an order for their latest and greatest centralised server-based product.</p>
+          <p>Also worth an "honourable mention" is this oldie-but-a-goodie from InfoQ: <a href="http://www.infoq.com/news/2007/08/esb-oriented-architecture">ESB-Oriented Architectures considered harmful</a>.</p>
+          <p>A final thought, as directed at the 'real' Don Quixote:</p>
+          <blockquote>
+            <p>And you, Señor Don Quixote, your head is going to end up a stranger to your neck.</p>
+          </blockquote>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Rant, Retrospectives, SOA</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Unit Testing XQuery Using OSB's API</h1>
+        <div class="entry-content">
+          <p>As regular readers (all one[?] of you) will know, I have recently been subjected to the <a href="http://www.crazymcphee.net/x/2010/07/12/the-ordeal-of-installing-oracle-service-bus-on-a-windows-based-developer-workstation/">woeful</a>
+          Oracle Service Bus.</p>
+          <p>Concomitant with my attempts to be a good modern developer, one of the first entries on my <em>Fings Wot I Need To Find Out More About</em> list went something like:</p>
+          <blockquote>
+            <p>Given that almost all of the actual 'code' in my system will be XQuery transformations, how do I unit-test those transformations with JUnit? It is obviously important that I use the weblogic API/Jars, not some external or third-party
+            system.</p>
+          </blockquote>
+          <p><strong>Roughly six months</strong> later I am finally in a position to answer that question!</p>
+          <p>Took me a few goes (turns out that there are a number of different potential red-herring APIs to filter out and reject, including BEAs <a href=
+          "http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.92.2337&amp;rep=rep1&amp;type=pdf">xdbc</a>), a number of visits to <a href="http://www.javamonamour.org/2010/05/xquery-and-unit-tests.html">other</a> <a href=
+          "http://biemond.blogspot.com/2008/11/using-xquery-in-jdeveloper-11g-and.html">people</a>'s <a href="http://blogs.oracle.com/knutvatsendvik/2010/03/unit_testing_framework_for_xquery.html">attempts</a> and about 20 messages on the Oracle
+          forum (gotta say I appreciated the comment "I just wanted to praise your discipline and devotion to research and investigation. Kudos!" that I picked up along the way…) but here I am.</p>
+          <p>This is the Groovy JUnit4 test class, just to prove that it can be done:</p>
+          <pre>package transentia.test
+
+import org.junit.*
+import transentia.XQueryTransformer
+
+class XQTest {
+  def xqt
+
+  @Before
+   void setup() {
+    xqt = new XQueryTransformer("xqueries/Messier.xq",
+                                 src: new File("xml/Messier.xml"),
+                                 str: 'hello, world',
+                                 n: 42,
+                                 b: true,
+                                 dt: new Date(),
+                                 f: Math.PI,
+                                 nd: null as Date)
+  }
+
+  @Test
+  void testTransform() {
+    xqt.withString { str -&gt;
+      println str
+    }
+  }
+
+  @Test
+  void testSlurping() {
+    xqt.withString { str -&gt;
+      def data = new XmlSlurper().parseText(str).declareNamespace(oth: "http://other")
+      assert data.'oth:m'.size() == 5
+      assert data.'oth:m'[3].text() == 'Scorpius'
+    }
+  }
+
+  @Test
+  void testParsing() {
+    xqt.withString { str -&gt;
+      def data = new XmlParser().parseText(str)
+      assert data.'oth:m'.size() == 5
+      assert data.'oth:m'[4].text() == 'Serpens'
+    }
+  }
+}</pre>
+          <p>Pretty trivial.</p>
+          <p>This is the XQuery that is under test:</p>
+          <p><img src="wp-content/uploads/2010/11/Messier.xq_.png" alt="" title="Messier.xq" width="600"></p>
+          <p>(Strangely, wordpress simply <em>refuses</em> to display this file without barfing. Can't for the life of me work out why, hence the above is an image. <a href='wp-content/uploads/2010/11/Messier.xq_.txt'>Here's the real file</a>)</p>
+          <p>Notice the &lt;destination:m?&gt; bit? That trailing question mark is a BEA extension to the standard XQuery language: <a href="http://download.oracle.com/docs/cd/E13167_01/aldsp/docs30/xquery/extensions.html">"Optional Indicator in
+          Direct Element and Attribute Constructors."</a> Very useful but not widely advertised/supported (which basically accounts for why it took me 6 months to work out how to handle it).</p>
+          <p>Next is the XML file:</p>
+          <pre>&lt;?xml version="1.0" standalone="yes" ?&gt;
+&lt;MESSIER xmlns="http://transentia"&gt;
+  &lt;M INDEX="1"&gt;
+    &lt;CONSTELLATION&gt;Taurus&lt;/CONSTELLATION&gt;
+    &lt;DESCRIPTION&gt;Diffuse Nebula&lt;/DESCRIPTION&gt;
+  &lt;/M&gt;
+  &lt;M INDEX="2"&gt;
+    &lt;CONSTELLATION&gt;Aqarius&lt;/CONSTELLATION&gt;
+    &lt;DESCRIPTION&gt;Globular Cluster&lt;/DESCRIPTION&gt;
+  &lt;/M&gt;
+  &lt;M INDEX="3"&gt;
+    &lt;CONSTELLATION&gt;Canes Venatici&lt;/CONSTELLATION&gt;
+    &lt;DESCRIPTION&gt;Globular Cluster&lt;/DESCRIPTION&gt;
+  &lt;/M&gt;
+  &lt;M INDEX="4"&gt;
+    &lt;CONSTELLATION&gt;Scorpius&lt;/CONSTELLATION&gt;
+    &lt;DESCRIPTION&gt;Globular Cluster&lt;/DESCRIPTION&gt;
+  &lt;/M&gt;
+  &lt;M INDEX="5"&gt;
+    &lt;CONSTELLATION&gt;Serpens&lt;/CONSTELLATION&gt;
+    &lt;DESCRIPTION&gt;Globular Cluster&lt;/DESCRIPTION&gt;
+  &lt;/M&gt;
+  &lt;M INDEX="6"&gt;
+    &lt;DESCRIPTION&gt;ONLY FOR TESTING&lt;/DESCRIPTION&gt;
+  &lt;/M&gt;
+&lt;/MESSIER&gt;</pre>
+          <p>This file is just a tiny amount of fixture data for testing.</p>
+          <p>The missing &lt;CONSTELLATION&gt; element within the final &lt;M&gt; element should 'trigger' the XQuery engine to elide the empty &lt;destination:m /&gt; element that it would normally produce; thus the tests are all expecting 5
+          elements in the transformed XML, not 6 as in the source.</p>
+          <p>And now…without further ado…the <a href="http://en.wikipedia.org/wiki/Pi%C3%A8ce_de_r%C3%A9sistance">pièce de résistance</a>:</p>
+          <pre>
+package transentia
+
+import org.apache.xmlbeans.XmlObject
+import org.apache.xmlbeans.XmlOptions
+import org.apache.xmlbeans.XmlDateTime
+import org.apache.xmlbeans.XmlBoolean
+import org.apache.xmlbeans.XmlInteger
+import org.apache.xmlbeans.XmlDouble
+import org.apache.xmlbeans.XmlString
+
+class XQueryTransformer {
+  private final resultXML
+
+  public XQueryTransformer(map, xQueryTransformSource) {
+
+    XmlObject xmlObject = XmlObject.Factory.newInstance()
+    XmlOptions options = new XmlOptions()
+
+    options.setXqueryVariables(createOptions(map))
+
+    XmlObject[] results = xmlObject.execQuery(new File(xQueryTransformSource).text, options)
+
+    resultXML = results[0].xmlText(new XmlOptions().setSavePrettyPrint().setSavePrettyPrintIndent(2))
+  }
+
+  private createOptions(map) {
+    def optionsMap = [:]
+    map.each { k, v -&gt;
+      switch (v?.class) {
+        case Date:
+          XmlDateTime dt = XmlDateTime.Factory.newInstance();
+          dt.setDateValue(v)
+          optionsMap.put(k, dt)
+          break
+        case Boolean:
+          XmlBoolean b = XmlBoolean.Factory.newInstance();
+          b.set(v)
+          optionsMap.put(k, b)
+          break
+        case [BigInteger, Integer, Long, Short, Byte, byte, short, int, long]:
+          XmlInteger i = XmlInteger.Factory.newInstance();
+          i.setBigIntegerValue(v as BigInteger)
+          optionsMap.put(k, i)
+          break
+        case [BigDecimal, Float, Double, float, double]:
+          XmlDouble xd = XmlDouble.Factory.newInstance();
+          xd.setDoubleValue(v as double)
+          optionsMap.put(k, xd)
+          break
+        case String:
+          XmlString string = XmlString.Factory.newInstance();
+          string.setStringValue(v);
+          optionsMap.put(k, string)
+          break
+        case File:
+          def txt = v.text
+
+          // look for the prologue &lt; ?xml ...?&gt; processing instruction
+          def m = txt =~ /(\&lt; \?xml[^&gt;]*\&gt;)/
+          if (m.count &gt; 0) {
+            def xmlPI = m[0][1]
+            txt = """${xmlPI}
+&lt;temp42:root42 xmlns:temp42='temp42'&gt;${txt[xmlPI.size()..-1]}&lt;/temp42&gt;
+"""
+          }
+          else
+            txt = "&lt;temp42:root42 xmlns:temp42='temp42'&gt;${txt}&lt;/temp42&gt;"
+
+          // all the messing around with xml processing instruction/adding a new root above is because
+          // selectChildren seems to be required. Don't know why...
+          optionsMap.put(k, XmlObject.Factory.parse(txt).selectChildren("temp42", "root42")[0])
+          break
+
+        case null:
+          XmlObject n = XmlObject.Factory.newInstance()
+          n.setNil()
+          optionsMap.put(k, n)
+          break
+
+        default:
+          throw new Exception("Unhandled type: ${v.class}")
+          break
+      }
+    }
+    optionsMap
+  }
+
+  def withString(c) {
+    c.call resultXML
+  }
+}
+</pre>
+          <p>I've before and I'll most likely say it again: <em>love</em> the Groovy switch statement!</p>
+          <p>A bit of clarification for the 'File' case is in order, I guess because it's quite confusing! I found that I had to wrap a dummy &lt;temp42:root42&gt; root element around the original root &lt;messier&gt; element in order to immediately
+          select only the single child element (the original &lt;/messier&gt;&lt;messier&gt;)…this is why I need to isolate the processing instruction: the opening tag has to go between the PI and the &lt;/messier&gt;&lt;messier&gt; tags. It seemed
+          easiest to do this with simple string manipulation…</p>
+          <p>Here is the tricky bit…the various jars that need to be placed on the classpath:</p>
+          <pre>
+oracle.nlsrtl_11.1.0\orai18n-collation.jar
+oracle.xdk_11.1.0\xquery.jar
+com.bea.core.xml.xmlbeans_2.0.0.0_2-5-1.jar
+com.bea.core.xquery.xmlbeans-interop_1.3.0.0.jar
+com.bea.core.binxml_1.3.0.0.jar
+oracle.xdk_11.1.0\xml.jar
+com.bea.core.xquery_1.3.0.0.jar
+oracle.xdk_11.1.0\xmlparserv2.jar
+com.bea.core.xquery.beaxmlbeans-interop_1.3.0.0.jar
+weblogic.server.modules.xquery_10.3.3.0.jar
+</pre>
+          <p>(Note the ordering: this is what <a href="http://confluence.jetbrains.net/display/IDEADEV/IDEA+X+EAP">IntelliJ X EAP</a> worked out for me; who am I to argue…)</p>
+          <p>And to cut out any confusion, here's what I have in my Intellij project:</p>
+          <pre>
+C:\DEVELOPMENT\XQueryTester&gt;tree /f /a
+Folder PATH listing for volume Bugblatter
+Volume serial number is 42E3-A91B
+C:.
+|   XQueryTester.iml
+|
+...
+|
++---lib
+|   |   com.bea.core.binxml_1.3.0.0.jar
+|   |   com.bea.core.xml.xmlbeans_2.0.0.0_2-5-1.jar
+|   |   com.bea.core.xquery.beaxmlbeans-interop_1.3.0.0.jar
+|   |   com.bea.core.xquery.xmlbeans-interop_1.3.0.0.jar
+|   |   com.bea.core.xquery_1.3.0.0.jar
+|   |
+|   +---modules
+|   |   \---features
+|   |           weblogic.server.modules.xquery_10.3.3.0.jar
+|   |
+|   +---oracle.nlsrtl_11.1.0
+|   |       orai18n-collation.jar
+|   |
+|   \---oracle.xdk_11.1.0
+|           xml.jar
+|           xmlparserv2.jar
+|           xquery.jar
+|
+...
+|
++---src
+|   \---transentia
+|       |   XQueryTransformer.groovy
+|       |
+|       \---test
+|               XQTest.groovy
+|
++---xml
+|       Messier.xml
+|
+\---xqueries
+        Messier.xq
+
+C:\DEVELOPMENT\XQueryTester&gt;
+</pre>
+          <p>All requisite jars can be found within the OSB 11g installation.</p>
+          <blockquote>
+            <p><strong>Update 2011 01 01</strong>; at least one person has read this and given me some feedback:</p>
+            <p><em>I needed to add com.bea.core.antlr_2.7.7.jar to the build path as<br>
+            well. Maybe it's because I use Eclipse and not IDEA.</em></p>
+            <p>Thanks, Morten!</p>
+          </blockquote>
+          <p>The proof, as 'they' say is in the pudding…</p>
+          <p>Here's the passing case:</p>
+          <p><img src="wp-content/uploads/2010/11/XQTestSuccess.png"></p>
+          <p>Now for the failing case (with the ? taken out of the XQuery transformation):</p>
+          <p><img src="wp-content/uploads/2010/11/XQTestFailure.png"></p>
+          <p>Take a good look at the way the failed assertion is represented in the above screenshot. Something else to love about Groovy!</p>
+          <p>Hope this helps some other OSB user actually trying to <em>embrace</em> good software engineering practices.</p>
+          <p>The above isn't perfect but it's better than nothing. Use it; improve it; share it. Please let me know what you have done…</p>
+          <p>Restating something I said in the Oracle SOA Suite forums:</p>
+          <blockquote>
+            <p>IMHO it is RIDICULOUS that what we are trying to achieve here is not clearly described and supported for OSB.</p>
+            <p>For something like Apache Camel or Spring Integration testing is a complete no-brainer. For OSB it seems almost impossible to do properly. For me this is a (/one of the) killer points AGAINST OSB.</p>
+          </blockquote>
+          <p>Its a shame that this is not available from Oracle but then one can't really expect them to go to all that trouble of carefully crafting a tool like OSB with maximum lock-in potential and then make the APIs openly accessible, can
+          one?<br>
+          (…and <strong>yes</strong> I <strong>do</strong> know the genesis of <a href="http://xmlbeans.apache.org/">Apache XMLBeans</a>…)</p>
+          <p>Ooohhhh…hope I'm not breaking any licensing rules here…don't want to tangle with Oracle's lawyers, after all!&lt;/messier&gt;&lt;/temp42&gt;</p>
+          <p><em>Edit</em><br>
+          I have had a number of people saying "but I don't use IntelliJ with OSB", or similar. For you guys, here is an Ant script that I knocked up:</p>
+          <pre>
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;project name="xquerytester" default="all"&gt;
+
+    &lt;property name="groovy.dir" location="S:/DEVTOOLS/groovy-2.0.0-beta-2"/&gt;
+
+    &lt;!-- Project Libraries --&gt;
+
+    &lt;path id="library.lib.classpath"&gt;
+        &lt;pathelement location="${basedir}/lib/com.bea.core.binxml_1.3.0.0.jar"/&gt;
+        &lt;pathelement location="${basedir}/lib/com.bea.core.xml.xmlbeans_2.0.0.0_2-5-1.jar"/&gt;
+        &lt;pathelement location="${basedir}/lib/com.bea.core.xquery.beaxmlbeans-interop_1.3.0.0.jar"/&gt;
+        &lt;pathelement location="${basedir}/lib/com.bea.core.xquery.xmlbeans-interop_1.3.0.0.jar"/&gt;
+        &lt;pathelement location="${basedir}/lib/com.bea.core.xquery_1.3.0.0.jar"/&gt;
+        &lt;pathelement location="${basedir}/lib/oracle.xdk_11.1.0/xml.jar"/&gt;
+        &lt;pathelement location="${basedir}/lib/oracle.xdk_11.1.0/xmlparserv2.jar"/&gt;
+        &lt;pathelement location="${basedir}/lib/oracle.xdk_11.1.0/xquery.jar"/&gt;
+        &lt;pathelement location="${basedir}/lib/oracle.nlsrtl_11.1.0/orai18n-collation.jar"/&gt;
+        &lt;pathelement location="${basedir}/lib/modules/features/weblogic.server.modules.xquery_10.3.3.0.jar"/&gt;
+    &lt;/path&gt;
+
+    &lt;path id="library.groovy-2.0.0-beta-2.classpath"&gt;
+        &lt;pathelement location="${groovy.dir}/lib/ant-1.8.2.jar"/&gt;
+        &lt;pathelement location="${groovy.dir}/lib/ant-antlr-1.8.2.jar"/&gt;
+        &lt;pathelement location="${groovy.dir}/lib/ant-junit-1.8.2.jar"/&gt;
+        &lt;pathelement location="${groovy.dir}/lib/ant-launcher-1.8.2.jar"/&gt;
+        &lt;pathelement location="${groovy.dir}/lib/antlr-2.7.7.jar"/&gt;
+        &lt;pathelement location="${groovy.dir}/lib/asm-3.3.1.jar"/&gt;
+        &lt;pathelement location="${groovy.dir}/lib/asm-analysis-3.3.1.jar"/&gt;
+        &lt;pathelement location="${groovy.dir}/lib/asm-commons-3.3.1.jar"/&gt;
+        &lt;pathelement location="${groovy.dir}/lib/asm-tree-3.3.1.jar"/&gt;
+        &lt;pathelement location="${groovy.dir}/lib/asm-util-3.3.1.jar"/&gt;
+        &lt;pathelement location="${groovy.dir}/lib/bsf-2.4.0.jar"/&gt;
+        &lt;pathelement location="${groovy.dir}/lib/commons-cli-1.2.jar"/&gt;
+        &lt;pathelement location="${groovy.dir}/lib/commons-logging-1.1.1.jar"/&gt;
+        &lt;pathelement location="${groovy.dir}/lib/extra166y-1.7.0.jar"/&gt;
+        &lt;pathelement location="${groovy.dir}/lib/gpars-0.12.jar"/&gt;
+        &lt;pathelement location="${groovy.dir}/lib/groovy-2.0.0-beta-2.jar"/&gt;
+        &lt;pathelement location="${groovy.dir}/lib/hamcrest-core-1.1.jar"/&gt;
+        &lt;pathelement location="${groovy.dir}/lib/ivy-2.2.0.jar"/&gt;
+        &lt;pathelement location="${groovy.dir}/lib/jansi-1.7.jar"/&gt;
+        &lt;pathelement location="${groovy.dir}/lib/jline-0.9.94.jar"/&gt;
+        &lt;pathelement location="${groovy.dir}/lib/jsp-api-2.0.jar"/&gt;
+        &lt;pathelement location="${groovy.dir}/lib/jsr166y-1.7.0.jar"/&gt;
+        &lt;pathelement location="${groovy.dir}/lib/junit-4.10.jar"/&gt;
+        &lt;pathelement location="${groovy.dir}/lib/servlet-api-2.4.jar"/&gt;
+        &lt;pathelement location="${groovy.dir}/lib/xmlpull-1.1.3.1.jar"/&gt;
+        &lt;pathelement location="${groovy.dir}/lib/xstream-1.4.1.jar"/&gt;
+    &lt;/path&gt;
+
+    &lt;taskdef name="groovyc" classname="org.codehaus.groovy.ant.Groovyc"
+             classpathref="library.groovy-2.0.0-beta-2.classpath"/&gt;
+
+    &lt;property name="build.dir" value="build"/&gt;
+
+    &lt;target name="test"&gt;
+        &lt;mkdir dir="${build.dir}"/&gt;
+        &lt;groovyc destdir="${build.dir}" fork="false" srcdir="src" classpathref="library.lib.classpath"/&gt;
+        &lt;junit fork="yes" haltonfailure="yes"&gt;
+            &lt;test name="transentia.test.XQTest" /&gt;
+            &lt;formatter type="plain" usefile="false" /&gt;
+            &lt;classpath&gt;
+                &lt;path refid="library.groovy-2.0.0-beta-2.classpath" /&gt;
+                &lt;path refid="library.lib.classpath" /&gt;
+                &lt;pathelement location="${build.dir}"/&gt;
+            &lt;/classpath&gt;
+        &lt;/junit&gt;
+
+    &lt;/target&gt;
+
+    &lt;target name="all" depends="test"/&gt;
+&lt;/project&gt;
+</pre>
+          <p>Hope it helps!</p>
+          <p><em>Edit 2</em><br>
+          I am told that:</p>
+          <blockquote>
+            <p>I am using 11.1.1.4 version of OSB and I had to replace one of the dependencies with a newer one…Now the code works even with the newer libraries that I'm using.</p>
+          </blockquote>
+          <p><em>Edit 3</em><br>
+          Zoltan Bíró has contacted me to say:</p>
+          <blockquote>
+            <p>if you don't mind, I updated and fixed your awesome OSB XQuery unit helper tool.</p>
+            <p><a href="https://github.com/foofighter69/OSBXQueryTester">https://github.com/foofighter69/OSBXQueryTester</a></p>
+          </blockquote>
+          <p>I don't mind at all. That's what it is there for.</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Groovy, OSB, Programming, Retrospectives, SOA, Tools, XQuery</p>
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">The Emperor's New Service Bus</h1>
+        <div class="entry-content">
+          <p>I'm going to previous topic here…</p>
+          <p>I am currently working on a pretty simple systems integration task: read from a small bunch of database tables, munge the data and call a variety of webservices. Fundamentally a simpler integration problem than the exemplar for Spring
+          Integration I worked up before. Pretty simple with Java and a framework like Spring Integration or Apache Camel; undoubtedly even simpler if I could add Groovy into the mix.</p>
+          <p>Organisation says: "Thou Shalt Use Oracle Service Bus."</p>
+          <p>Ever heard the joke about regular expressions: <em>Once upon a time a programmer had a problem. He decided to solve it using Regular Expressions. Then he had two problems.</em></p>
+          <p>Welcome to my world (with an OSB flavour) :-)</p>
+          <p>I'll try and capture a few thoughts and experiences below.</p>
+          <p>It is <strong>very rare</strong> that I react so strongly <em>against</em> a technology….can't really think of another example. I'm usually pretty gung-ho and even suffer from odd breakouts of evangelical fervour. I can even find a
+          place for UML in the nerd-ish pantheon :-) For this product all bets are off. I'm struggling to find a silver lining in the cloud.</p>
+          <p>I hope that if I break things up into small doses, you won't break down with sympathy tears…</p>
+          <h3>Positioning</h3>
+          <p>Why choose OSB vs a BPEL implementation? BPEL has an <a href="http://www.oasis-open.org/committees/tc_home.php?wg_abbrev=wsbpel">OASIS standard</a> behind it, is the richer language, is more mature and more expressive, has better
+          tooling, has multivendor support, can deal with state, timouts and long-running workflows…all the things that one needs in an integration setting. OSB does practically none of these things, so <a href=
+          "http://www.lyricsdepot.com/dionne-warwick/alfie.html">what's it all about, Larry</a>?</p>
+          <p>Ahhhh…perhaps that little 'multivendor' word gives us a clue? "So young to be so cynical", I hear you say.</p>
+          <p>I have heard it said that OSB is "high level" and the alternatives like <a href="http://camel.apache.org/">Apache Camel</a> and <a href="http://www.springsource.org/spring-integration">Spring Integration</a> are developers tools and as
+          such are too "low level" to be true solutions. Sigh. I thought that old argument for <a href="http://en.wikipedia.org/wiki/Computer-aided_software_engineering">CASE</a> was put to bed long ago. It's sad perhaps, but you still need
+          developers to do complex development. Don't believe me? Take a look at the average spreadsheet and then tell me how appropriate this "end-user engineering" idea is.</p>
+          <p>The task is not to find the most abstract or pretty tool but to put into the developers' sweaty hands the toolset capable of getting into the gnarly nooks and crannies of a problem space and still come out on top. Next time you hire a
+          carpenter or electrician or plumber, take a look into his/her toolbox. It won't be pretty but it will be varied and capable. I'll bet that it took the tradesperson quite a bit of training and experience to work effectively with everything
+          in it too…there is <em>no</em> magic bullet.</p>
+          <h3>Architectural</h3>
+          <p>"Stored Procedures migrate to Session Beans" used to be the J2EE catch-call (for very good reasons, IMHO, <a href="http://www.theserverside.com/discussions/thread.tss?thread_id=2613">YMMV</a>). In my current OSB-oriented project, this
+          seems to have become "Let's do as much as possible in stored procedures because it's too darned painful to even consider otherwise."</p>
+          <p>This is really <a href="http://idioms.thefreedictionary.com/go+against+the+grain">rubbing against the grain</a>!</p>
+          <p>It's interesting that these days, discussions regarding Systems Integration always bring up the "<a href="http://www.slideshare.net/gschmutz/oracle-soa-suite-11g-mediator-vs-oracle-service-bus-osb">VETRO pattern</a>": Validate, Enhance,
+          Transform, Route, Operate. This is great, as far as it goes. In my experience however VETRO is by far the easy side of SI. Prising and cajoling the requisite data out from the various niches, repositories, formats, access methods, security
+          regimes, etc. tends to be much more tricky and is a <b>necessary prerequisite</b>. It's sad, but I can't think of a catchy management friendly phrase for all this nasty boring legwork. The term "<a href=
+          "http://www.sas.com/technologies/analytics/datamining/">Data Mining</a>" is already taken, darn it! Regardless, I'm absolutely positive that no pretty picture is going to encapsulate the true reality of the SI task. I'm all for aspiring to
+          do better but hey…even in <a href="http://www.startrek.com/">Star Trek</a> they sometimes need to reverse the polarity of their <a href="http://en.wikipedia.org/wiki/Polaron">polaron</a> fields in new and untested ways, and when they do
+          they don't draw pretty pictures but rip off the access panel to their nearest <a href="http://en.wikipedia.org/wiki/Jefferies_tube">Jeffries tube</a>, get down on their hands and knees and crawl.</p>
+          <p>In the integration community these days, it is common to tip the hat to <a href="http://www.eaipatterns.com/eaipatterns.html">Gregor and Hopke's Enterprise Integration Patterns</a> work. The book sits on every "Integration Architect"'s
+          shelf and provides a useful reference work. It's very tempting to imagine architects sitting around designing systems using Star Trek-style dialog: "We'll hook this Incoming Polling Consumer to this Aggregator, then to this Resequencer
+          before Routing the incoming message to the outgoing Messaging Gateway." Leaving aside the issue that this scenario and reality correspond to each other in roughly the same way that Star Trek corresponds to the NASA, let's take a look at
+          OSB's support for patterns.</p>
+          <p>There's a few: various species of polling consumer, a bit of routing, some basic message transformation and then…you're on your own.</p>
+          <p>It is extremely cumbersome to do anything other than broad brush-stroke flows…I feel that I am being forced to spatter stored procedures, triggers, <a href="http://articles.techrepublic.com.com/5100-10878_11-5218671.html">DBMS_ALERT</a>
+          calls and odd little support tables throughout my database, along with (as simple as possible) snippets of Java in the OSB application in a desperate attempt get OSB to do something useful.</p>
+          <p>I frequently repeat the following mantras: "OSB is just a dumb pipe" and "Let's keep OSB as dumb as possible."</p>
+          <p>I simply can't bring myself contemplate the effort needed to deal with all the callouts to all the Java objects needed to deal with any sort of sophisticated API or complex processing.</p>
+          <p>I'm pretty sure that I could replace much of the mess that has grown up as a result of OSB's pathetically limited capabilities with a couple of standard Java collection classes mixed in with a decent polling implementation such as in
+          Apache Camel or Spring Integration.</p>
+          <p>Compare and contrast with Camel, which has <a href="http://camel.apache.org/enterprise-integration-patterns.html">direct support</a> for about 50 of these patterns. That previous link also provides links to a nifty library of icons for
+          them all, in various formats…very useful. Spring Integration also directly supports several of these patterns "out of the box."</p>
+          <p>Seems to me (cynic that I am) that OSB successfully implements just two patterns: the "sell copies of Weblogic" pattern and the "extract lots of money from customers" pattern.</p>
+          <p>What goes into OSB, stays in OSB. For all but the simplest bit of work one typically needs to develop additional helper tools/applications/scripts, etc. Tools like JPA and Camel are by design flexible and make it possible to create
+          these tools by reusing elements of the 'main' development path (a part of the object model, or a transformer, say). OSB does not…quite the reverse, in fact (it is very much [Oracle Weblogic] server-side-only, for example). Any
+          'investment'/effort put into OSB is in reality not going towards infrastructure development but is instead just bringing into existence another closed, siloed system. An <em>instant</em> legacy problem. The only investment that one does
+          with OSB is investing into Oracle's share price. This is unacceptable. It need not be this way. We have tools available that can be used to enhance our infrastructure, not fragment it, that can work <em>with</em> our Objects and APIs, not
+          make an all-out (but subtle) effort to supplant them.</p>
+          <h3>Development/Engineering</h3>
+          <p>OSB has an "everything is XML" approach (OK I acknowledge that it's slowly <a href="http://download.oracle.com/docs/html/E15866_01/jejb.htm">divesting</a> itself of this, but there's a way to go yet before the alternatives are anything
+          approaching useable). I like XML as much as the next guy, probably more; it's a great <em>interchange</em> format, but requiring it for all internal channels as well is a bit much: one ends up touching the in-flight data
+          (translating/extracting/recomposing) too many times. With JPA and JAX-RPC, one can in essence and after a little housekeeping do:</p>
+          <pre>
+WebService.doSomething(DBEntity.findByPrimaryKey(pk));
+</pre>
+          <p>The equivalent OSB (with Database JCA Adapters in place) is horrendous, simply horrendous!</p>
+          <p>Don't get me started on the Database JCA Adapters! They are supported in OSB but cannot (yet) be created via OSB's Eclipse-based tooling. This means that one is required to use JDeveloper 11g to create the adapter bindings appropriate
+          for the underlying databases and then manually copy the resulting batch of files (a group of up to 5 files for each table being used) into the Eclipse project. Automate <em>those</em> build steps, I challenge you!</p>
+          <p>It gets worse: an OSB proxy created to service a JCA adaptor is extremely fragile: changes to a database table requires a regeneration of the adapter files (or more like a recreation from scratch…manual click, click, <a href=
+          "http://www.ildado.com/bingo_nicknames.html">clickety, click</a>). Any slight change to an adapter forces a regeneration of the associated OSB proxy…which blows away any business logic (== pretty drawing) associated with the message flow.
+          One is then forced to recreate the flow from scratch by hand (more manual click, click, clickety, click). Ghastly. Tedious. Error prone. Nonsense. It's in the nature of the systems integration task that changes happen often. One gets tired
+          of (re)drawing OSB's pretty pictures very quickly, let me <a href="http://en.wikipedia.org/wiki/Testify_(Phil_Collins_album)">testify</a>.</p>
+          <p>One gets around this by splitting a flow into upper and lower levels: the upper level simply forwards to the lower level with as little effort as possible. The lower level flow does all the real work and is unaffected by changes to the
+          adapter or upper level flow.</p>
+          <p>Some things might get cleaned up in the future (Oracle/BEA's XQuery implementation is curently only partial [no module support], for instance) but I'm not holding my breath.</p>
+          <p>There's even worse: OSB seems to confuse database <strong>polling</strong> frequency with database <strong>locking</strong> time: tell an adapter to poll every 10 secs and it seems to go away and lock all other processes out of the
+          database for the next 10 secs, polling away in <a href="http://en.wikipedia.org/wiki/Splendid_isolation">splendid isolation</a>. This can lead to performance issues and effectively ties all adapters to a very short polling cycle. That's a
+          bit of a surprise and can lead to some subtle 'issues' arising, let me tell you…</p>
+          <p>I a great fan of these adapters…I simply love the way that they get 'stuck' every now and then (often when the underlying database is itself under some load). They often get 'unstuck' as well. Usually…sometimes…. I love going into
+          production with systems that 'usually' work OK (that was sarcasm, in case you are <a href="http://the-big-bang-theory.com/quotes/character/Sheldon/">sarcastically-challenged</a> :-)).</p>
+          <p>OSB is completely <a href="http://forums.oracle.com/forums/thread.jspa?threadID=1075167">stateless</a>. To create something as simple as an "I have sent out a total of <em>n</em> messages" counter requires introducing a Java callout
+          with an absurd amount of glue coding. Some things simply aren't worth doing…</p>
+          <p>A good tool makes it easy to develop clear, relevant solutions close to the "problem space" without unnecessary obtuse 'ceremony' getting in the way. OSB is not such a tool, sadly.</p>
+          <p>You know the acronym <a href="http://www.c2.com/cgi/wiki?DontRepeatYourself">DRY</a>? Well, forget it!</p>
+          <p>One can try to apply a <a href="http://forums.oracle.com/forums/thread.jspa?threadID=927438">workaround</a> and achieve a degree of DRY-ish-ness but the spaghetti flows that result aren't worth the hassle. Here's the issue: the process
+          of munging a solution to fit in with OSB's way of doing things results in a horrid unclear mess. Really. The cure ends up being worse than the disease: the resulting diagram becomes simply unintelligible…<em>much</em> less clear than the
+          equivalent plain-old-text representation in Java.</p>
+          <p>Not convinced? OK, Mr./Mrs. Smarty-Pants: what values are being assigned and logged here?</p>
+          <p><img src="wp-content/uploads/2020/08/osb-pipeline-163x300.png" alt="" title="osb-pipeline" width="163" height="300"></p>
+          <p>To find out, you have to engage in a storm of clicking through the pretty icons and juggling Eclipe's idiosyncratic idea of view focus control. After a while you will find that your wrists need to recover from their little workout,
+          giving you time reflect on the fact that you'd be able to find out <em>instantly</em> when perusing a textual source, no clickety-click investigation needed. There's a big difference between <em>reading</em> and <em>scanning</em> code;
+          oftentimes the latter is what we <em>need</em> to do…and quickly.</p>
+          <p>On a related note, it's hard to make the correspondence between trace logging output and the actual code. Consider, for illustration, that all service callouts have the same fixed label: "Service Callout." It can be slightly awkward to
+          pin down which "Service Callout" just logged something.</p>
+          <p>While it may be appealing to the naive or hopeful, Mouse-Hand Engineering…drawing pretty pictures…doesn't really ease the development task. That's just the nature of our complicated world…sad, but that's life.</p>
+          <p>(You know, I was going to use the phrase "Right-Hand Engineering" but felt it was slightly too risque ;-))<br>
+          (And don't get me started [<a href="?s=UML">again</a>] on UML, I've already thrown it a bone once in this posting :-))</p>
+          <p>Oh for the ability to "comment out" or bypass sections of a flow! It continually frustrates me that in most so-called modern languages, one cannot nest comments (something that Pascal had all worked out), but OSB drives me potty. Would
+          the industry (yes, even this fad-ridden, silver-bullet-seeking, flavour-of-the-month driven IT industry) accept a textual language without a commenting convention, I wonder? This issue also relates to testing (see below).</p>
+          <p>Here's a cute feature: every message that enters the system is given an unique message ID. Except that it isn't actually unique, darn it! As a message is passed between services, each service allocates it a brand new ID. This is dumb,
+          dumb, <a href="http://www.imdb.com/title/tt0109686/">dumb</a>! One is forced either to fiddle with and refer to header fields all the time, or do what I did and use a message's database-allocated <a href=
+          "http://thinkoracle.blogspot.com/2005/06/natural-vs-synthetic-keys.html">synthtic (surrogate) primary key</a> as the message ID. Way to make it easy for us, OSB!</p>
+          <p>Error handling is <a href="http://forums.oracle.com/forums/thread.jspa?messageID=4449336&amp;#4449336">broken</a>. I know I'm being picky but something a little more than "something bad happened somewhere in some downstream flow or
+          other" would be helpful. There are rumors of patches for this issue; good luck is all I can say.</p>
+          <p>One can't get at system parameters/classpath resources, etc. without falling back to Java. To do anything slightly out of OSB's (putative) "sweet spot", one falls back to Java…so why not use a Java-based framework?</p>
+          <p>Testing. Ha ha haaaah!</p>
+          <p>How does one go about testing a drawing? This is probably the #1 question on the OSB forum.</p>
+          <p>Yes, the OSB console web application allows one to "test drive" the various componentry. Surely we can do better than hand-driven integration testing, however. Tools like <a href="http://www.citrusframework.org/index.html">citrus</a>
+          and <a href="http://soapui.org/">SoapUI</a> come close but don't ring the bell for me…</p>
+          <p><a href="http://blogs.oracle.com/MarkSmith/2008/08/oracle_service_bus_and_unit_te.html">Mark Smith gives an overview of the ridiculous process of creating testing stubs/proxies and the associated rewiring required when testing a proxy
+          service's flow</a>. If a flow must be progressively rewired in order to be 'tested', is the flow actually being tested, I ask (rhetorically)?</p>
+          <p>Unit testing XQuery transformations should be simple, but isn't…there's no doco and a closed implementation. Writing testing flows in OSB seems ridiculous to me. Unit tests shouldn't need a service bus and you shouldn't be forced into
+          integration-style testing for your atomic code units. Something smells quite wrong here.</p>
+          <p>I'll probably pontificate on this some another time…for now, its in my "tried and failed to do something of value for the project" basket.</p>
+          <p>It may be a little churlish of me to point this out, but the XQuery editor always has <em>some</em> reason or other why it won't let you do something…even dragging a dateTime onto a String:</p>
+          <p><img src="wp-content/uploads/2010/09/cantxquery-300x71.png" alt="" title="cantxquery" width="300" height="71"></p>
+          <p>The editor gets in the way <em>many more times</em> than it helps. As <a href="http://rogervdkimmenade.blogspot.com/2009/07/xquery-use-within-osb-watch-out.html">Roger van de Kimmenade also noted</a>, it can get so completely messed up
+          that it can't do anything except show a blank screen. It can sometimes (usually when opening a file) even rewrite a transformation as it sees fit…blowing any hand-made changes away in the process. This is problematic 'cos (as I have just
+          pointed out) you have to do pretty much everything by hand. You Have Been Warned (hmmm…maybe Oracle should trademark this phrase. Hey: maybe <em>I</em> should…).</p>
+          <p>I particularly enjoy the fact that-although OSB is BEA Weblogic Server at its heart-OSB can't readily create HTML. "Hang On a min., " you say "isn't HTML just a variant of XML at heart? Surely OSB should be happy with HTML!" Surely.
+          After I asked roughly the same question on the OSB forums, Manoj Neelapu was kind enough to work up a way of doing it. The eventual solution requires a gnarly combination of <a href=
+          "http://blogs.oracle.com/mneelapu/2010/09/how_to_serve_html_through_osb.html">two</a> <a href="http://blogs.oracle.com/mneelapu/2010/09/how_to_avoid_xml_declaration_in_the_response.html">techniques</a>, however.</p>
+          <p>Remember VETRO? In my current project, I have to process an incoming message which is defined by an XSD file included into an XSD file that is referenced by the service's WSDL. If you followed that chain without getting confused you are
+          doing better than OSB. Because of the include chain, OSB's validate step won't find the message type. The WSDL and XSDs are from a third-party vendor and so I'm loathe to touch/munge them.</p>
+          <p>This means that OSB is only capable of '…ETRO.' Quality stuff, this!</p>
+          <p>Deployment is 'strange' as well. Took me a while to find the <a href="http://www.oracle.com/technetwork/middleware/docs/middleware-093940.html">up-to-date doco</a> telling you how to script the creation of an OSB domain from scratch.
+          There are <a href="http://biemond.blogspot.com/search/label/WLST">a few helpful posts</a> out there telling you what to script <b>after</b> you get this beastie but so far this in in the same basket as XQuery unit testing. Seems to me that
+          "Thou shalt not apply your existing deployment plan to a new domain." Not if you want to keep your sanity, anyway.</p>
+          <h3>Other</h3>
+          <p>In no particular order:</p>
+          <ul>
+            <li>Eclipse IDE console's "scroll lock" doesn't work. You search through a long log trace looking for something and then-just as the line appears-the console refreshes, leaving you staring at the latest line to be added. <a href=
+            "http://en.wikipedia.org/wiki/Charlie_Brown">Good grief</a> but this is frustrating! I like Eclipse, have used it lots over the years (by choice, note!) but in this incarnation it is simply hateful, darn it!
+            </li>
+            <li>From the sublime to the ridiculous: sometimes the console doesn't actually deign to show anything at all. Many times I hear: "Bob. A message has gone missing again." I now know that 9 times out of 10 what has actually happened is
+            that the Eclipse console is blocking the server as it is trying to send debugging to System.out (I'm not directly using System.out please note…I'm not <em>that</em> naive). A quick keypress into the window unfreezes everything and Lo! I
+            have miraculously found the missing message. It's strange but even miracles can get old, fast.</li>
+            <li>JDeveloper periodically corrupts a project. One may work on a project for a week and then BAM! it fails to load up in the morning (this may be a local SOE issue but its still frustrating and I don't get hassles from any other
+            apps).</li>
+            <li>There exists a <a href="http://forums.oracle.com/forums/forum.jspa?forumID=320">fairly small user community</a>. The Oracle forums are really not that active or useful. Apologies to those members out that that have tried their best
+            to help me out…this comment is not intended to be an indictment of you guys (I AM grateful, really, I AM!). I am just trying to identify issues caused by community size & experience.
+            </li>
+            <li>OSB's Eclipse tooling tries to deploy all the projects it can find…even if they are closed. This can lead to weird situations. You Have Been Warned…</li>
+            <li>It's not just the older versions, either. In the latest update, Eclipse seems to take ages to realise that a change has happened and that a deployment refresh is needed…and then sometimes fails to see that a redeploy has
+            happened.</li>
+            <li>…and what has happened to Weblogic? Even a simple change to a datasource's configuration now requires a reboot. Shocking!</li>
+            <li>The weblogic log browser is…'idiosyncratic.' You can be eagerly following a chain of logging messages…clicking from one page to the next…homing in on the cause of all life's woes…feeling the expectation of a debugging session drawing
+            to a close welling up inside…and then <em>bloody thing</em> will decide to show page 0 again. Just for <a href="http://www.imdb.com/title/tt0118655/">shits and giggles</a>, it'll be so confused that you will have to start a new web
+            browser session. You quickly learn to munge the parameters displayed in the address bar, <a href="http://en.wikipedia.org/wiki/The_Outing">not that there's anything wrong with that</a>, of course…
+            </li>
+          </ul>
+          <p>My colleague <a href="http://davidninnes.blogspot.com/">David</a> has introduced me to a term that sums all this up nicely: <a href="http://www.urbandictionary.com/define.php?term=Complification">complification</a>. To <a href=
+          "http://www.urbandictionary.com/define.php?term=complify">complify</a> something is <em>"To dramatically increase the difficulty of something for no good or apparent reason."</em></p>
+          <p>Of course, I am an ingenious guy and I can pull some sort of solution to all of these things out of my expansive…err…mind. <a href="http://www.last-word.com/">AFWSE</a> is also my friend in many situations (but see my earlier comments
+          regarding the size and vitality of the user community).</p>
+          <p>I am sure that you, dear browser, also pride yourself on your ingenuity and proven ability to wrestle a recalcitrant universe into shape.</p>
+          <p>This, Of course, is also the trouble! Ego comes riding into town…</p>
+          <p>My (rhetorical) question is: should we have to be so ingenious? Especially when many of the 'issues' are those that OSB in and of itself causes?</p>
+          <p>So here we are: back to the title…I can't help but imagine that somewhere within Oracle there is a poor, downtrodden group afraid to tell King Larry that OSB just doesn't make sense.</p>
+          <p>Guys, let me try. I'll be the plucky little boy from the crowd (I hope that remember your <a href="http://en.wikipedia.org/wiki/The_Emperor's_New_Clothes">Hans Christian Anderson fairy tale</a>?) that doesn't understand he should be
+          following the party line…</p>
+          <p>Larry, listen up! In my (not-so-)humble-opinion there are much <a href="http://camel.apache.org/">better</a> ways to skin the integration cat that what I see here. OSB isn't a worthy member of your product lineup. Don't lead your
+          customers down this particular garden path. The last decade has seen some good steady quiet progress in areas such as testing, interoperability and frameworks (to name but a few), please don't set this industry back to the pre-2000s with
+          this regressive, locked-down, locked-in, half-baked 'thing.' Please!</p>
+          <p>Phew! Said it. I Feel much better now!</p>
+          <p>Lest you think that I am losing it, <a href="http://www.crazymcphee.net/x/2010/07/12/the-ordeal-of-installing-oracle-service-bus-on-a-windows-based-developer-workstation/">I'm not the only person saying this sort of thing</a>.</p>
+          <p>You know…the story doesn't really say what happened to that plucky little boy from the crowd. Maybe he was showered in riches for saving the King's honor. More likely, he was beheaded for embarrasing the high-and-mighty.</p>
+          <p><em>[edit]</em><br>
+          Some almost immediate-and pretty much equally jaundiced and cynical (although slightly more generic)-reaction.</p>
+          <blockquote>
+            <p>Thank you - a rather excellent way to start my day :-)</p>
+            <p>Now let me also share something. You may or may not agree. Oracle makes a lot (LOT) of money by sending in the consultants.</p>
+            <p>The consultants get called in when the local team comes up with zip because it's so damned hard to get the Oracle tools to work.</p>
+            <p>Consultants are charged out at $2k / day and become an on-going income stream as the client needs lots of refresh (code change) activity.</p>
+            <p>It serves the likes of the big consulting houses to have internally trained specialists who know nothing else but these ghastly tools.</p>
+            <p>In fact some outside consultants cash in big time by spending all their time focusing on nothing but - discovering all the tips and tricks from the Oracle paid guys.</p>
+            <p>I think this has been going on since I first entered the industry and it's a great model. Not for the industry nor the profession, but for money making monsters of which Oracle is one of the best.</p>
+            <p>There, my take…take it or leave it, but it's ultimate raison d'etre of the Closed source movement and some clients just gravitate to it…</p>
+          </blockquote>
+          <p>I'll leave the sender anonymous…no sense in taking other people's career down alongside my own ;-)</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: OSB, Rant, Retrospectives, SOA</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">How The World Will End</h1>
+        <div class="entry-content">
+          <p>Working with a third-party system recently has shown me how the world will end:</p>
+          <pre>
+WARNING! System error has occurred due to "%1". Disaster will result unless you "%2" IMMEDIATELY.
+</pre>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Rant</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">More Java Futures Speculation</h1>
+        <div class="entry-content">
+          <p>For what it is worth, here are my current postulations and position regarding "Where to now, for Java"…</p>
+          <p>Consider this: Microsoft's customers don't buy into C# (regardless of what most techies will tell you), they buy the Visual Studio packaged, pre-canned development pathway to development nirvana. They take on a particular packaged view
+          of the world. Then they pretty much sit back and go where Microsoft leads them. It's a well-marketed, appealling, popular, putatively risk-free and well-trodden strategy.</p>
+          <p>(Dont' kid yourself that the marketing is actually <em>real</em>, however. Script-kiddies will produce script-kiddy grade coding, regardless of the quality of the marketing, or the prettiness of the tool. Trust me, I've seen the code!
+          The <em>only</em> way out of this is training and experience. There's a cost there, both dollars and time, so the professional managers that now rule our world will do almost anything to avoid that cost.)</p>
+          <p>The Microsoft market is notoriously <em>not</em> innovation-driven. The customers and practitioners typically don't care less about better ways of skinning the cat, as long as it gets skinned somehow.</p>
+          <p>On the surface, this seems fine and dandy but let's look around our modern world to see if innovation actually is or is not needed…</p>
+          <ul>
+            <li>I am pretty happy that I don't drive a Model-T Ford: love those modern innovations like anti-lock brakes, seatbelts, aircon, airbags pneumatic tyres and suspension systems. I am VERY happy that I don't have to ride a horse…or a
+            donkey.</li>
+            <li>I'm grateful for penicillin.</li>
+            <li>Being able to step into a Boeing 747 to travel half-way around the planet has certainly changed my life.</li>
+            <li>
+              <em>Love</em> the <a href="http://en.wikipedia.org/wiki/Lidocaine">lidocaine</a> that my dentist pumps into me before digging around inside one of my teeth's root canals.
+            </li>
+            <li>I often remark at the way modern materials have changed the game of Tennis (sometimes for the worse but the actual rackets are indubitably superior to those of yore).</li>
+            <li>Let's not forget that ASP.Net is better because of the influence of JSP/JSF technology, and that JSP/JSP (especially JSF) is better because of ASP.Net…that raw competition has been good for all concerned.</li>
+          </ul>
+          <p>Innovation <em>does</em> make a difference, it seems.</p>
+          <p>Oh well. That was then, this is now.</p>
+          <p>(It is interesting to note that Microsoft is <a href="http://www.infoq.com/news/2010/05/STM-Dropped">finding it hard to add new features into C#</a> nowadays: the customers are effectively saying "we dont' need no stinkin'
+          innovation"…)</p>
+          <p>So: I see Java becoming Oracle's C# analogue.</p>
+          <p>All Java's best features…all those features that make it attractive to Oracle the tool vendor (a mature, stable, efficient, cross-platform execution environment with minimum cost of development and support but with maximum market
+          penetration)…will be 'deprecated'/no longer mentioned. They will still be there and still be relevant but they will be pushed under the covers. You won't see them and Oracle will educate you to let you know that you don't even need to see
+          them. What you'll 'need' is to buy their product set. The product set that has been carefully engineered and (especially) advertised to sit right in the sweet-spot of minimum effort to produce and maximum profitability…for Oracle.</p>
+          <p>You'll be bombarded with marketing and other influences to ensure that you forget those Java communities and competitors out there (you know, the ones that <strong>have</strong> benefitted your world over the past 10-15 years); Oracle's
+          sales team will be happy to explain to you why you don't need the likes of Apache.org, the JCP, Spring, JBoss, etc. any more.</p>
+          <p>As long as you cross their palms with copious quantities of gold, Oracle will show you the One True Way.</p>
+          <p>Hopefully, there will be <em>some</em> sort of convergence between what Oracle will feed you and what you actually need.</p>
+          <p>Just remember what happens to a drug addict when he/she can't pay their dealer…</p>
+          <p>The current Java-based multi-vendor marketplace simply won't be able to survive under such conditions.</p>
+          <p>Don't believe me? Want proof? Answer me this, then: what's the second-best selling C# IDE in the windows world? There pretty much isn't one, is there! Or this: what's the alternative framework to ASP.Net? Again, there ain't no such
+          animal…</p>
+          <p><a href="http://www.wtso.net/movie-comments/195-2-The_Simpsons_1619_Thank_God_It039s_Doomsday.html">It's the end of the world, people</a>!</p>
+          <p>Perhaps one day in 2025, some manager with an atavistic streak of innovation in his/her DNA will suddenly pause the "Oracle Charge-O-Meter" on his/her pay-per-cycle copy of "Oracle Developer Brain Enhancement Interface for the
+          Enterprise 17.7c" and think: "You know, what we need is a way of building <em>Open</em> Systems and not being beholden to a single monopolistic vendor! Wonder why no-one ever thought of that before?" I'm assuming that about 100 cycles
+          after detecting such a wayward and unprofitable thought, the "Oracle License Mangager" will take appropriate remedial action…</p>
+          <p>Whoops! There I go! Again with the Open Systems thing…</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Java, Rant</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="pagination">
+        <span class="next"><a href="DUMMY">Next »</a></span> <span class="previous"><a href="DUMMY">« Previous</a></span>
+      </div>
+    </div>
+  </div><!--#page-->
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script> 
+  <script src="js/site.js"></script>
+</body>
+</html>

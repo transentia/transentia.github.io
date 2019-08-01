@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <title>Transentia - transentia pty. ltd.; development, consulting, training at the leading-edge of technology</title>
+  <link rel="stylesheet" type="text/css" media="screen, print, handheld" href="wp-content/themes/transentia/css/site.css">
+</head>
+<body>
+  <div id="page">
+    <div id="header">
+      <p><a href="../index.htm"><img src="wp-content/uploads/widgets/transentia-logo-red-glow.gif" border="0"></a></p>
+      <p class="old-content">transentia's old content; click on the logo to return to the new content</p>
+      <p id="blog-description">transentia pty. ltd.; development, consulting, training at the leading-edge of technology</p>
+    </div><!-- #header -->
+    <div id="content">
+      <div class="pagination">
+        <span class="next"><a href="DUMMY">Next »</a></span> <span class="previous"><a href="DUMMY">« Previous</a></span>
+      </div>
+      <div class="post hentry">
+        <h1 class="entry-title">Signatures Past And Present</h1>
+        <div class="entry-content">
+          <p>A few of the email signatures I have used through the ages.</p>
+          <p>Just collecting them here for posterity, and for a bit of fun.</p>
+          <p>Gotta love <a href="http://www.terrypratchettbooks.com/">Terry Pratchett</a>'s nicely warped view of things:</p>
+          <pre>    .(         | "Build a fire for a man, 
+   /%/         |    and he'll be warm for a day.
+  (%(%))       |  Set a man on fire,
+ .-'..`-.      |    and he'll be warm for the rest of his life."
+ `-'.'`-'dd    |  --Terry Pratchett</pre>
+          <p>And a nice <a href="http://www.implementingscrum.com/2009/02/04/scrum-coach-consultant-mentor-super-hero/">comeback</a> that puts me in my place:</p>
+          <pre>"Give a man a fish,
+   and you'll feed him for a day. 
+ Teach a man to fish,
+   and he'll buy a funny hat. 
+ Talk to a hungry man about fish,
+   and you're a consultant."</pre>
+          <p>Some <a href="http://www.progarchives.com/">prog-rock</a> philosophy sums things up for me:</p>
+          <pre>"And so with gods and men
+ The sheep remain inside their pen,
+ Though many times they've seen the way to leave."
+ -- Genesis, "Firth of Fith"</pre>
+          <pre>"electricity made us angels 
+   and money made us fools, 
+ but fear of future shackled us
+   to gods who ride the backs of mules."
+ -- Bill Nelson</pre>
+          <p>The following came from Charles Handy's <a href="http://www.amazon.com/Empty-Raincoat-Charles-Handy/dp/0099301253">The Empty Raincoat</a>:</p>
+          <pre>"A good job is like 
+ an inside-out donut."</pre>
+          <p><a href="http://www.hrfolks.com/knowledgebank/future%20of%20mgmt/empty%20raincoat.pdf">So</a>: a good job should have a well-defined centre, with lots of fluffyness around it (giving opportunity and variety).</p>
+        </div><!--/entry-content-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Avoiding XML DTD/Schema Lookups</h1>
+        <div class="entry-content">
+          <p>It's a common need (especially when developing simple, standalone XML-based apps.): avoiding having to go to the network to resolve DTD/Schema lookups…</p>
+          <p>I keep forgetting how (and I was just asked how), so here is a snippet to jog my memory:</p>
+          <pre>public static Document parseXMLDocument(String file)
+    throws FileNotFoundException, ParserConfigurationException, 
+           SAXException, IOException
+  {
+  InputSource in = new InputSource(new FileReader(file));
+  DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+  factory.setValidating(false);
+
+  DocumentBuilder db = factory.newDocumentBuilder();
+  db.setEntityResolver(new EntityResolver()
+      {
+        public InputSource resolveEntity(String publicId, String systemId)
+        {
+        return new InputSource(new StringReader(""));
+        }
+      });
+
+  Document doc = db.parse(in);
+
+  return doc;
+  }</pre>
+          <p>Yes, it's quick-and-dirty; yes, it will mean that you can't ever validate against a schema and yes, it is occassionally useful.</p>
+          <p>There's a similar example <a href="http://www.devdaily.com/java/jwarehouse/netbeans-src/schema2beans/rt/src/org/netbeans/modules/schema2beans/NullEntityResolver.java.shtml">here</a>.</p>
+          <p>Hope its useful for someone else…</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Tools</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">A Cuteness Interlude</h1>
+        <div class="entry-content">
+          <p>This will brighten your day, I <em>guarantee</em>!</p>
+          <p><img src="wp-content/uploads/2009/03/baby-echidna.jpg"></p>
+          <p>A baby Echidna, one of Australia's unique <a href="http://www.aussie-info.com/identity/fauna/echidna.php">monotremes</a>.</p>
+        </div><!--/entry-content-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Why Java?</h1>
+        <div class="entry-content">
+          <p>I am often asked questions like: "Isn't Java too old now?" or "C# is better on the desktop, so why shouldn't we use it for our next enterprise project?" or even "Java is far too difficult for <em>our</em> dev. team. I'm told that C# is
+          much easier, so shouldn't we go that way?"</p>
+          <p>I always answer that the respective Java and .Net technologies are roughly equivalent (I have my preference, of course) but that there are <em>important</em> differences in the <em>ethos of the developer communities</em> that IMHO make
+          Java a better choice overall.</p>
+          <p>I don't want to get into a flame war here, but <a href="http://blog.briandicroce.com/2009/03/10/dear-vb-developer/">Dear Developer…</a> reinforces this quite nicely:</p>
+          <blockquote>
+            <p>Here's my point: some of the most influential books on software development and programming such as …hold a vast, deep and rich knowledge of the craft of software development that VB/VB.NET developers are mostly ignorant of. …they
+            should take a look at Enterprise Library from the Patterns and Practices Group at Microsoft (…) for it can save them time, cost and effort in common development situations. I even tell them that it is open source, which means they have
+            access to the code. However, I don't get much excitement from their part, …, I haven't even heard of one VB developer simply using Enterprise Library in his projects. The same goes for projects like nHibernate, the Castle project, NUnit,
+            even mocking tools like Rhino.Mocks and Moq. That's very sad, because by not using some of these tools, VB developers tend to stay far behind common practices such as TDD and technologies like ORM tools…</p>
+          </blockquote>
+          <p>It comes down to: which group of developers is going to create better quality software? This is <strong>not</strong> a "my for loop has better syntax than yours" question, but a question that speaks to the fundamental ethos of the
+          developer group; to their willingness and ability to embrace and improve with new tools and techniques.</p>
+          <p>I have witnessed several .Net teams operate and it has always seemed to me that they have been pushed into adopting the technology and are looking for the minimal step to take, for the minimal change to their toolkit or their technique
+          toolbox, for the quickest way to return to their comfort zone.</p>
+          <p>This is not universal, of course (trust me; I have seen things come from the Java/J2EE communities that would curl your hair!) but my experiences point to the truth of what I have written.</p>
+          <p>To me, <em>this</em> is the key differentiator.</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Java</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">An Interesting Project</h1>
+        <div class="entry-content">
+          <p><a href="http://agileinaflash.blogspot.com/">Agile: In A Flash</a></p>
+          <p>Jeff Langr and Tim Ottinger present The Agile In a Flash project, which will result in a book and replenishable deck of at least 52 flash cards.</p>
+          <p>It's an interesting site, with lots of little flash cards, like this:</p>
+          <p><img src="wp-content/uploads/2009/03/becks-directive.jpg"></p>
+          <p>(<a href="http://agileinaflash.blogspot.com/2009/03/make-it-work-make-it-right-make-it-fast.html">Make It Work, Make It Right, Make It Fast</a>)</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Agile</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">That About Sums It Up</h1>
+        <div class="entry-content">
+          <p><a href="http://www.infoq.com/resource/articles/agile-testing-book-excerpt/en/resources/CrispinGregoryAgileTesting_Chp21.pdf">Chapter 21</a> of <a href=
+          "http://www.amazon.com/Agile-Testing-Practical-Addison-Wesley-Signature/dp/0321534468/ref=pd_bbs_sr_1?ie=UTF8&amp;s=books&amp;qid=1237925293&amp;sr=8-1">Agile Testing: A Practical Guide for Testers and Agile Teams by Lisa Crispin and Janet
+          Gregory</a> starts with the following image:</p>
+          <p><img src="wp-content/uploads/2009/03/key-success-factors.jpg"></p>
+          <p>This mindmap pretty much sums up what it takes to <em>"…help testers succeed on agile teams and help agile teams succeed at delivering a high-quality product."</em></p>
+          <p>Thanks to <a href="http://www.infoq.com">infoq.com</a> for <a href="http://www.infoq.com/articles/agile-testing-book-excerpt">publishing</a> this excerpt.</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Agile</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Virtual Developer</h1>
+        <div class="entry-content">
+          <p>My colleague and friend Alex Garrett has <a href="http://lexecorp.com/2009/03/23/the-command-line-world-and-more/">just</a> <a href="http://lexecorp.com/2009/03/24/mapping-colinux-to-vista/">blogged</a> <a href=
+          "http://lexecorp.com/2009/03/24/a-mixed-desktop/">about</a> the remarkable <a href="http://www.colinux.org/">Cooperative Linux</a>.</p>
+          <p>This has prompted me to give Microsoft's <a href="http://www.microsoft.com/windows/products/winfamily/virtualpc/default.mspx">VirtualPC 2007</a> a plug. I know it isn't trendy to say this, but the product is really very good (it's
+          actually a brought-in product, so all you Microsoft haters out there can cut me some slack). It's reliable, fast (makes good use of the real underlying silicon), is very faithful in its virtualization and (unlike most of its competitors)
+          doesn't litter the system with virtual adaptors, etc.</p>
+          <p>It'll <a href="http://vpc.visualwin.com/">run</a> a lot of <a href="http://blog.windowsvirtualization.com/downloads">stuff</a> and there are some nice tools and <a href="http://blogs.msdn.com/virtual_pc_guy/default.aspx">blogs</a>
+          <a href="http://www.robertmoir.co.uk/win/VirtualPC2004FAQ.html">out there</a>, don't let anyone tell you otherwise.</p>
+          <p>It's free, just like it's slightly <a href="http://www.microsoft.com/windowsserversystem/virtualserver/default.aspx">bigger brother</a>.</p>
+          <p>I have used this extensively while developing several products, notably QNX Neutrino Real-Time OS.</p>
+          <p>As with all virtualization products, VirtualPC is truly excellent for assisting with testing and learning-situations where it is important to be able to "roll back the clock and start again." VirtualPC makes it possible to do this with
+          a few clicks; it's a lot more difficult with a tool like CoLinux (or <a href="http://wubi-installer.org/">Wubi</a>, say).</p>
+          <p>At this point in time, I still prefer VirtualPC to <a href="http://www.vmware.com">the</a> <a href="http://www.virtualbox.org/">competitors</a>.</p>
+          <p>The <a href="http://blogs.technet.com/virtualization/archive/2009/02/15/Microsoft-and-Red-Hat-Joint-Technical-Support.aspx">Virtualization Interoperability Pact</a> between Microsoft and Redhat also keeps life interesting in this
+          space.</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Tools</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Unacceptable</h1>
+        <div class="entry-content">
+          <p>Simply unacceptable.</p>
+          <p><a href="http://www.theage.com.au/national/labors-blogwatch-plan-hits-whirlpool-of-dissent-20090321-951z.html">http://www.theage.co … t-20090321-951z.html</a>:</p>
+          <blockquote>
+            <p>THE Government will begin trawling blog sites as part of a new media monitoring strategy, with documents singling out a website critical of Communications Minister Stephen Conroy for special mention.</p>
+            <p>Soon after Senator Conroy praised Singapore's Government for reducing monitoring of blogs, tender documents issued by the Department of Broadband, Communications and the Digital Economy reveal it is looking for a "comprehensive
+            digital monitoring service for print and electronic media".</p>
+          </blockquote>
+          <p>Stalin <a href="http://www.historylearningsite.co.uk/Stalins%20Russia.htm">tried this</a>, leading to <a href="http://en.wikipedia.org/wiki/Samizdat">Samizdat</a>: the clandestine copying and distribution of government-suppressed
+          literature or other media.</p>
+          <p><a href="http://www.theage.com.au/opinion/net-filter-smacks-of-big-brother-20090320-94fa.html">http://www.theage.co … r-20090320-94fa.html</a>:</p>
+          <blockquote>
+            <p>From the start of his role to the present, Conroy has answered critics of this scheme only with pious conceit. Question the principles of a filtering initiative that could offer Australians the sort of internet experience currently
+            enjoyed in China, and you'll get, at best, a mulish reply. At worst, you'll be charged with a partiality to child pornography.</p>
+          </blockquote>
+          <p><a href="http://www.itwire.com/content/view/23944/1023/">http://www.itwire.co … ent/view/23944/1023/</a>:</p>
+          <blockquote>
+            <p>This is not China. This is not pre-cold-war Soviet Union. This not North Korea or Myanmar. This is not Iran. This is not even Malaysia or Indonesia.</p>
+            <p>This is Australia, a country that is sort of like a cross between America and England, with better weather, nicer cities, an easier going lifestyle, but the same time honoured, cherished values of democracy and the freedom to pursue
+            happiness.</p>
+            <p>All of sudden, however, it seems that we're living in a climate of fear induced by the current Federal Government.</p>
+          </blockquote>
+          <p><a href="http://www.abc.net.au/rn/backgroundbriefing/stories/2009/2512171.htm">http://www.abc.net.a … ies/2009/2512171.htm</a>:</p>
+          <blockquote>
+            <p>In the name of protecting children, the government will decree we'll be forbidden to see 'unwanted' and 'inappropriate' things on the web. But exactly what that means is a secret, and the thin end of the censorship wedge.</p>
+          </blockquote>
+          <p>I have referenced this before, but it is worth repeating:</p>
+          <p>Probably a better alternative approach is described at <a href="http://forums.overclockers.com.au/showpost.php?p=9724645&amp;postcount=15">http://forums.overcl … 45&amp;postcount=15</a>:</p>
+          <blockquote>
+            <p>The best and easiest solution would be to offer a 100% tax rebate (refunded with a tax return) to anyone who purchases their choice of commercially available internet filter from the existing market place.</p>
+          </blockquote>
+          <p>Senator Steven Conroy should go. And soon.</p>
+          <p>Sadly, I'm old enough and cynical enough to believe that his replacement would probably be worse.</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Rant</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Someone Had To Say It Eventually</h1>
+        <div class="entry-content">
+          <p>"Why Grails Matters To A Java Developer?"</p>
+          <p>Why? well…<a href="http://www.itexto.net/devkico/?p=344">because RoR and Grails suddenly showed us that working with the JEE is amazingly boring.</a></p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Grails, Programming</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">10 Must-Know Topics For Software Architects In 2009</h1>
+        <div class="entry-content">
+          <p><a href="http://hinchcliffe.org/archive/2009/03/17/16712.aspx">http://hinchcliffe.o … 009/03/17/16712.aspx</a></p>
+          <p>A few interesting quotes:</p>
+          <blockquote>
+            <p>The hegemony of traditional 3 and 4-tier application models, heavyweight run-time platforms, and classical service-oriented architecture that has dominated for about a decade is now literally being torn asunder by a raft of new
+            approaches for designing and architecting applications.</p>
+          </blockquote>
+          <p>Quite. Compare and contrast <a href="http://www.grails.org">Grails</a> and the traditional J2EE stack 'enhanced' by BEA Weblogic Workshop.</p>
+          <blockquote>
+            <p>Certain application designs can greatly benefit from the advantages of document or resource-centric storage approaches. Performance in particular can be much higher with non-relational databases; there are often surprisingly low
+            ceilings to the scale of relational databases, even with clustering and grid computing. And then there is abstraction impedance, which not only can create a lot more overhead when programming but also hurts run-time performance by
+            maintaining several different representations of the data at one time during a service request….. While many applications will continue to get along just fine with relational databases and object-relational mapping, this is the first
+            time that mainstream database alternatives are readily available for those that are increasingly in need of them.</p>
+          </blockquote>
+          <p>As I said a few postings back, with reference to SQL: "I can't work out why the data-oriented community is so resistant to the <em>clear</em> need to evolve away from this rubbish." Maybe the time has come? Can just say "To Heck With
+          It", and quietly bypass the relational database (or, to be more accurate: show a degree of maturity in our use of the technology by applying the tool where it is best suited and bringing in <a href="http://www.db4o.com">other</a> <a href=
+          "http://couchdb.apache.org/">tools</a> where they are most appropriate)?</p>
+          <p>I remember when SQL was just an upstart newcomer and <a href="http://en.wikipedia.org/wiki/CODASYL">CODASYL</a> data stores ruled the roost…times <em>do</em> change…</p>
+          <blockquote>
+            <p>Dynamic Languages…bring the latest best practices and design patterns, something that is not happening as frequently with older platforms. The tipping point has arrived however, and dynamic languages are beginning to take the center
+            stage in a significant percentage of new projects. Software architects should be prepared.</p>
+          </blockquote>
+          <p>"But, but, but…aren't they too slow? Don't they use too much memory? Aren't they too 'weird'?" I hear you say. &lt;sigh&gt;</p>
+          <p>We live in interesting times…</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Grails, Programming</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="pagination">
+        <span class="next"><a href="DUMMY">Next »</a></span> <span class="previous"><a href="../26/26.htm">« Previous</a></span>
+      </div>
+    </div>
+  </div><!--#page-->
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script> 
+  <script src="js/site.js"></script>
+</body>
+</html>

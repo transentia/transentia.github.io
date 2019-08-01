@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <title>Transentia - transentia pty. ltd.; development, consulting, training at the leading-edge of technology</title>
+  <link rel="stylesheet" type="text/css" media="screen, print, handheld" href="wp-content/themes/transentia/css/site.css">
+</head>
+<body>
+  <div id="page">
+    <div id="header">
+      <p><a href="../index.htm"><img src="wp-content/uploads/widgets/transentia-logo-red-glow.gif" border="0"></a></p>
+      <p class="old-content">transentia's old content; click on the logo to return to the new content</p>
+      <p id="blog-description">transentia pty. ltd.; development, consulting, training at the leading-edge of technology</p>
+    </div><!-- #header -->
+    <div id="content">
+      <div class="pagination">
+        <span class="next"><a href="DUMMY">Next »</a></span> <span class="previous"><a href="DUMMY">« Previous</a></span>
+      </div>
+      <div class="post hentry">
+        <h1 class="entry-title">A Few Ribbons Around The Griffon's Tail</h1>
+        <div class="entry-content">
+          <p>Following on from my earlier experiment with Griffon, I thought I'd have a play with a few more plugins.</p>
+          <p>First ribbon to hang around the Griffon's tail was the CodeNarc Groovy-oriented static analysis plugin.</p>
+          <p>Installation was a little rough: the usual magic invocation:</p>
+          <pre>griffon install-plugin codenarc</pre>
+          <p>didn't work. I had to download the <a href="http://svn.codehaus.org/griffon/plugins/griffon-codenarc/trunk/griffon-codenarc-0.1.zip">plugins's zip</a> by hand and install it as:</p>
+          <pre>griffon install-plugin griffon-codenarc-0.1.zip</pre>
+          <p>Once that minor hurdle was overcome, however, it was a smooth as silk!</p>
+          <p>Running:</p>
+          <pre>griffon codenarc</pre>
+          <p>produced a simple report called "CodeNarcAntReport.html" in the project's root directory:</p>
+          <p><img src="wp-content/uploads/2009/06/griffon-gt-codenarc.png"></p>
+          <p>The code looks pretty good…a few "no-no's" there, but otherwise things are OK.</p>
+          <p>Although I didn't change any options for this little investigation, it's worthwhile noting that the plugin is configurable through a number of entries in griffon-app/conf/Config.groovy.</p>
+          <p>The second ribbon to adorn my increasingly-beautiful Griffon was the splashscreen plugin.</p>
+          <p>This time, installation went brainlessly well:</p>
+          <pre>griffon install-plugin splash</pre>
+          <p>The plugin adds a couple of lines of code to griffon-app/lifecycle/Initialize.groovy:</p>
+          <pre>def splashScreen = SplashScreen.getInstance()
+
+// Setting a splash image
+//URL url = this.class.getResource("mySplash.jpg")
+//splashScreen.setImage(url)
+//
+// Setting Status Text
+// SplashScreen.getInstance().showStatus("Initializing the Controller")
+splashScreen.splash()
+splashScreen.waitForSplash()</pre>
+          <p>It's pretty clear how this works, 'nuff said?</p>
+          <p>It's pretty early days for Griffon, so there isn't (yet) an extensive list of plugins. It's a great facility, though and I am sure that people will bring more to the table as time goes by.</p>
+          <p>My Griffon's a bit more beautiful now. What bells and whistles are you going to add to yours?</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Griffon, Groovy, Programming</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Converting Legacy Rails Apps To Grails</h1>
+        <div class="entry-content">
+          <p>Gotta <em>love</em> the title! And the <em>chutzpah</em>!</p>
+          <p>There's a series over on <a href="http://www.troymaxventures.com/">Alex Kotchnev's Blog</a> that aims to convert a Rails app to a Grails one.</p>
+          <p>Here's the opening paragraph:</p>
+          <blockquote>
+            <p>It is hard to describe the pleasure of writing the title above, especially the "legacy" part :-) Although lately the jumping up and down of Ruby & Rails fanboys has subsided a little, after <a href=
+            "http://www.oreillynet.com/ruby/blog/2007/09/7_reasons_i_switched_back_to_p_1.html">people started realizing</a> that Rails is not going to kill anything (much less Java, hell if PHP people start going back to PHP that says A
+            LOT!!!).</p>
+          </blockquote>
+          <p>He uses Netbeans to assisst.</p>
+          <ul>
+            <li>
+              <a href="http://www.troymaxventures.com/2008/10/converting-legacy-rails-apps-to-grails.htm">General Project Setup</a>
+            </li>
+            <li>
+              <a href="http://www.troymaxventures.com/2008/10/converting-legacy-rails-apps-to-grails_31.html">The Domain</a>
+            </li>
+            <li>
+              <a href="http://www.troymaxventures.com/2009/05/converting-legacy-rails-apps-to-grails.html">The Controllers</a>
+            </li>
+            <li>
+              <a href="http://www.troymaxventures.com/2009/05/converting-legacy-rails-apps-to-grails_05.html">The Views</a>
+            </li>
+            <li>One more is due: plugins (I'll update this entry if/when it happens)</li>
+          </ul>
+          <blockquote>
+            <p>So, now that you have all this good info, <strong>START MIGRATING THAT RAILS APP THAT YOU'VE BEEN EYEING, WOULD YA !!???!!!</strong></p>
+          </blockquote>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Grails, Programming</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">GroovyMag June Issue…Now 80% Bob Brown Free!</h1>
+        <div class="entry-content">
+          <p>Another <a href="http://groovymag.com">GroovyMag</a> article.</p>
+          <p>This time I'm blathering on about using Groovy with <a href="http://static.springsource.org/spring-batch/">Spring Batch</a>.</p>
+          <p><img src="wp-content/uploads/2009/06/gm8_400.jpg" alt=""></p>
+          <p>Worth <em>every cent</em> of the USD$4.99.</p>
+          <p><em>[edit]</em><br>
+          Some feedback from one happy reader:</p>
+          <blockquote>
+            <p>Hi Bob,</p>
+            <p>Thanks for the hint. This is an excellent article.</p>
+            <p>It should not be to difficult now, to integrate spring-batch with grails-apps…</p>
+          </blockquote>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Groovy, GroovyMag, Programming</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Absolutely!</h1>
+        <div class="entry-content">
+          <p><img src="wp-content/uploads/2009/06/css-awesome.jpg"></p>
+          <p>(<a href="http://www.overclockers.com.au/image.php?pic=images/newspics/5jun/14.jpg">http://www.overclock … newspics/5jun/14.jpg</a>)</p>
+          <p>Nicely skewers the "CSS positioning is the best technology since sliced bread" brigade!</p>
+          <p>There must be tens of millions of pages out there that look just like this…</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Rant</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">National "Change Your Password Day"</h1>
+        <div class="entry-content">
+          <p>Today.</p>
+          <p><a href="http://news.bbc.co.uk/2/hi/asia-pacific/1184103.stm">Just do it</a>.</p>
+          <p>The Australian Federal Government has a site promoting <a href="http://www.staysmartonline.gov.au/awareness-week">National E-security Awareness Week 2009</a>.</p>
+        </div><!--/entry-content-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">A Little Griffon Tip</h1>
+        <div class="entry-content">
+          <p>I just want to ensure that I remember <a href="http://markmail.org/message/x3zkvnqh444b2ug7">this tip</a>. How better to do it than to post it here…</p>
+          <pre>
+import java.awt.Graphics
+import groovy.swing.SwingBuilder
+import javax.swing.JPanel
+import java.awt.Color
+
+class CanvasPanel extends JPanel {
+   Closure draw
+
+   @Override
+   protected void paintComponent(Graphics g) {
+      super.paintComponent(g)
+      if(draw) draw(this,g)
+   }
+}
+</pre>
+          <p>Usage is as simple as:</p>
+          <pre>
+new SwingBuilder().edt {
+  frame( title: "RED", size: [200,200], visible: true ) {
+    panel( new CanvasPanel(draw: { p, g -&gt;
+       g.color = Color.RED
+       g.fillRect 0, 0, p.width, p.height
+    }))
+  }
+</pre>
+          <p>Here's the result:</p>
+          <p><img src="wp-content/uploads/2009/06/griffon-red.jpg"></p>
+          <p>I know it is <em>extremely simple</em>, but it's the sort of thing that can be very useful and is also just the sort of thing that slips one's mind!</p>
+          <p>Thanks to <a href="http://www.jroller.com/aalmiray/">Andres Almiray</a>!</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Griffon, Groovy, Programming</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Riding The Griffon</h1>
+        <div class="entry-content">
+          <p>Here's a first for this website: a real, (hopefully) useful desktop application for you to take home and play with!</p>
+          <p><a href="wp-content/uploads/2009/06/gt.zip">Here it is, all zipped up and ready to go</a>. See the enclosed README.txt for wise words regarding how to use it.</p>
+          <p>I had the brilliant idea of using my MFC device (an <a href="http://h20271.www2.hp.com/SMB-AP/cache/269982-0-0-190-121.html?jumpid=reg_R1002_SGEN&amp;pos=1">HP OfficeJet 7410</a>) to scan multiple happy snaps in one go. While this idea
+          would undoubtedly save me scanning time, it leaves the problem of how to extract these multiple images from a single scan, such as the one shown here:</p>
+          <p><img src="wp-content/uploads/2009/06/griffon-gt-app.jpg" width="480" height="292"></p>
+          <p>You can see the major problem with this idea: the various 'real' images will be placed on the scanner bed haphazardly and so will be rotated at odd angles. Processing with a 'normal' application (such as the excellent <a href=
+          "http://www.getpaint.net">Paint.NET</a>) would require too much grunt work for my taste, quickly leading to boredom and possible RSI.</p>
+          <p>I couldn't find anything out there in the GoogleVerse that did what I wanted so I took this as a challenge and did what any self-respecting programming nerd would do: wrote my own application. 'GT' lets me select the boundary of an
+          embedded image within a scan file, and then extract and automatically rotate the desired image ready for saving as a PNG file.</p>
+          <p>Since I am quickly becoming a GR8 (Groovy/Grails/Griffon/Gant/…) tragic, Griffon was the natural choice for this little project.</p>
+          <p>Although it is early days yet for the project, Griffon aims to bring the same "Configuration by Convention" goodness to desktop GUI development that Grails has brought to Web development. In fact, Griffon 'borrows' heavily from Grails:
+          many of the build scripts, etc. are straight carry-overs, meaning that anybody familiar with Grails can get started easily.</p>
+          <p>This is all that is needed to get started:</p>
+          <pre>
+griffon create-app GT
+cd GT
+griffon run-app
+</pre>
+          <p>These three shell commands give a simple immediately runnable application:</p>
+          <p><img src="wp-content/uploads/2009/06/groffon-gt-first.png"></p>
+          <p>As with Grails, Griffon imposes a clear MVC structure for the code and also creates a standrd project filesystem heirarchy:</p>
+          <p><img src="wp-content/uploads/2009/06/griffon-gt-filesystem.png"></p>
+          <p>Simplicity is the watchword, as can be seen by looking at the code statistics for the finished application:</p>
+          <p><img src="wp-content/uploads/2009/06/griffon-gt-stats.png"></p>
+          <p>Note that the bulk of the application lies in the 3rd party Java graphics-processing code and this is what inflates the lines of code statistics.</p>
+          <p>While I'm here, a big "thank you" is due to <a href="http://forums.sun.com/profile.jspa?userID=550123">prometheuzz</a> for making the code for the "Rotating Calipers" algorithm <a href=
+          "http://www.iruimte.nl/calipers/RotatingCalipers.zip">available</a> (see the Java package bk.geom.rotatingcalipers). This algorithm is used to find the bounding box of a polygon, regardless of whether that polygon is absolutely aligned
+          with the XY axes or not. There is a good demonstration applet of this at <a href="http://www.iruimte.nl/calipers/">http://www.iruimte.nl/calipers/</a>.</p>
+          <p>Enough background. Time to take a short ramble through (the most important parts of) the MVC triad…</p>
+          <p><strong>models/GTModel.groovy</strong></p>
+          <pre>
+import groovy.beans.Bindable
+import javax.swing.ImageIcon
+
+class GTModel {
+  [...elided...]
+  @Bindable boolean saveAsEnabled = false
+  @Bindable String file
+  @Bindable ImageIcon image
+  @Bindable ImageIcon destinationImage
+  @Bindable String labelText = 'Welcome!'
+}
+</pre>
+          <p>In a typical Swing application, bits of model typically get spread through various components. By bringing everything together, Griffon makes it much easier to understand what's what.</p>
+          <p>This excerpt also shows one of the nicest things about Griffon: the @Bindable annotation, which encapsulates the observerable/observer pattern. We'll come back to this in a while.</p>
+          <p><strong>views/GTView.groovy</strong></p>
+          <p>Simple! A thing of beauty…</p>
+          <pre>
+import static java.awt.BorderLayout.*
+import javax.swing.JSplitPane
+import java.awt.Color
+
+build(GTActions)
+
+application(title: 'GT',
+            pack: true,
+            locationByPlatform: true,
+            iconImage: imageIcon('/griffon-icon-48x48.png').image,
+            iconImages: [imageIcon('/griffon-icon-48x48.png').image,
+            imageIcon('/griffon-icon-32x32.png').image,
+            imageIcon('/griffon-icon-16x16.png').image]
+) {
+
+  menuBar(build(GTMenuBar))
+
+  panel(border: emptyBorder(6)) {
+    borderLayout()
+    splitPane(id: "splitter",
+              preferredSize: [1024, 768],
+              dividerLocation: 512,
+              orientation: JSplitPane.HORIZONTAL_SPLIT,
+              constraints: CENTER,
+              border: lineBorder(color: Color.BLACK, thickness: 1)) {
+      panel(id: 'sourceImagePanel') {
+        borderLayout()
+        build(GTSourceImagePanel)
+      }
+      panel(id: 'destinationImagePanel') {
+        borderLayout()
+        build(GTDestinationImagePanel)
+      }
+    }
+    label(id: 'status',
+          constraints: SOUTH,
+          border: emptyBorder(4),
+          text: bind { model.labelText })
+  }
+}
+</pre>
+          <p>For those familiar with plain Java Swing, this should be a complete breath of fresh air.</p>
+          <p>Very little glue code is required here; the Swing containment hierarchy is clear and the layout policies are easy to see.</p>
+          <p>Some may be happy to see that there are no anonymous inner classes in use: Groovy's closures allow for much a cleaner implementation. <em>I've been teaching Java since about 1998 and I have observed that course participants often have
+          trouble 'trusting' anonymous inner classes. Even though they are custom-designed for the sort of glue code required to join a button and its action together, I have observed that many participants' first instinct is to avoid them. It
+          hasn't helped that many IDEs haven't worked well with them, either. Hopefully, closures will be more easily comprehended and thus better accepted.</em></p>
+          <p>The 'status' label shows how the model.labelText is 'automagically' bound to the 'text' property in the label component. Any changes to model.labelText (as will be seen in the controller code, later) will be reflected in the label's
+          text value. Once again, this substantially helps to cleans up the code.</p>
+          <p>Griffon allows complex code to be broken into sub-scripts that are then included via the build() method. This technique is used to isolate action definitions and menu definitions and also to "break down" the various panel content GUIs
+          into separate files for ease of comprehension.</p>
+          <p>Griffon allows Swing-style action definitions to be streamlined, as shown in this excerpt from <strong>views/GTActions.groovy</strong>:</p>
+          <pre>
+actions {
+  action(id: 'saveAsAction',
+         name: 'Save As...',
+         mnemonic: 'S',
+         smallIcon: builder.imageIcon("/disk.png"),
+         accelerator: shortcut('S'),
+         enabled: bind { model.saveAsEnabled },
+         closure: controller.saveAsActionClosure
+  )
+  action(id: 'mirrorYAction',
+         name: 'Mirror on Y Axis',
+         smallIcon: builder.imageIcon('/shape_flip_vertical.png'),
+         enabled: bind { model.saveAsEnabled },
+         closure: controller.mirrorYActionClosure
+  )
+[...elided...]
+}
+</pre>
+          <p>It is easy to see the Griffon 'goodness' here: the use of closures, the use of bindings, the use of the GUI builder facilies (to obtain an appropriate icon resource), and shortcut handling. Taken together, this gives a clean,
+          declarative style that I find very valuable.</p>
+          <p>(By the way, for plain Swing, the <a href="https://sam.dev.java.net/">Swing Action Manager</a> provides somewhat similar capabilities…).</p>
+          <p>The use of the actions can be seen in this excerpt from <strong>views/GTMenuBar.groovy</strong>:</p>
+          <pre>
+import static griffon.util.GriffonApplicationUtils.*
+
+menuBar = menuBar {
+  if (!isMacOSX) {
+    menu(text: 'File', mnemonic: 'F') {
+      menuItem(exitAction)
+    }
+  }
+  menu(text: 'Source', mnemonic: 'S') {
+    menuItem(openAction)
+    separator()
+    menuItem(extractAction)
+    menuItem(clearAction)
+  }
+[...elided...]
+}
+
+return menuBar
+</pre>
+          <p>It is also interesting to see that Griffon makes it easy to keep the various platform-specific foibles in mind.</p>
+          <p>To round off this tour through the view's code, here is the <strong>views/GTDestinationImagePanel.groovy</strong> file:</p>
+          <pre>
+import static java.awt.BorderLayout.*
+import javax.swing.JLabel
+import java.awt.Color
+import org.jdesktop.swingx.painter.PinstripePainter
+
+jxheader(title: "Destination",
+         description: 'Display and manipulate the isolated portion of the source image.',
+         border: emptyBorder(4),
+         constraints: NORTH)
+scrollPane(id: 'scrollPane',
+           constraints: CENTER) {
+  jxlabel(id: 'destination',
+          icon: bind { model.destinationImage },
+          constraints: CENTER,
+          horizontalAlignment: JLabel.CENTER_ALIGNMENT,
+          border: loweredBevelBorder(),
+          backgroundPainter: new PinstripePainter(Color.LIGHT_GRAY))
+}
+hbox(constraints: SOUTH, border: emptyBorder(4)) {
+  button(rotate90LeftAction, text: '')
+  hstrut(8)
+  button(rotate90RightAction, text: '')
+  hstrut(8)
+  button(mirrorXAction, text: '')
+  hstrut(8)
+  button(mirrorYAction, text: '')
+  hglue()
+  button(saveAsAction)
+}
+</pre>
+          <p>The most interesting aspect of this code is the way that the facilities made available by the use of the SwingXBuilder Plugin (jxheader, jxlabel and the PinstripePainter background painter) are seamlessly incorporated into the view.</p>
+          <p>This is really quite pretty code; it would be beautiful but for the various import statements. I'd like Griffon (or perhaps Groovy itself: there's <a href="http://docs.codehaus.org/display/GroovyJSR/Groovy+DevCon+5">something similar
+          afoot</a> with respect to <a href="http://docs.groovy-lang.org/latest/html/Grape">Grape</a>, but this isn't quite the same thing…) to do something about them…they seem somehow 'ugly' and don't really add much to things.</p>
+          <p><strong>controllers/GTController.groovy</strong></p>
+          <p>This is the third major part of the MVC triumvirate.</p>
+          <p>Here's a fairly cut-down overview of the controller:</p>
+          <pre>
+class GTController {
+
+  def model
+  def view
+  def builder
+
+  def saveAsActionClosure = {evt = null -&gt;
+    def file = selectFileForSave()
+    if (!file)
+      return
+    ImageIO.write(view.destination.icon.image, "png", file)
+    model.labelText = "Saved as $file.name..."
+  }
+
+  def mirrorYActionClosure = {evt = null -&gt;
+    doOutside {
+      def img = toBufferedImage(model.destinationImage.image)
+      AffineTransform transform = AffineTransform.getScaleInstance(1, -1)
+      transform.translate(0, -img.height)
+      AffineTransformOp op = new AffineTransformOp(transform, AffineTransformOp.TYPE_BILINEAR)
+      img = op.filter(img, null)
+      edt {
+        model.destinationImage = new ImageIcon(img)
+      }
+    }
+  }
+
+  def exit = {evt = null -&gt;
+    app.shutdown()
+  }
+
+[...elided...]
+}
+</pre>
+          <p>Things worthy of notice here include: the injection of the builder, model and view components (note that views get the builder implicitly), the action closures (that are referenced from the actions shown earlier) and the 'exit' closure
+          that directly references the implictly available 'app' instance.</p>
+          <p>It is also worth noting the assignment to the bound property 'model.labelText.'</p>
+          <p>Of particular note is the way that Griffon eases the burden of managing threading. Swing threading is (sadly!) probably the most misunderstood and mis-applied aspect of the whole of Java. Unfortunately, it is also the area that has the
+          most effect on making an application 'feel' good. Bob's rule for Swing GUIs is: "GUI updates have to be on the Event Dispatch Thread (EDT), but you must never do any long-running non-GUI-related task on the EDT." Each action is executed on
+          the EDT, in true Swing fashion. Griffon makes it easy to follow Bob's rule by providing the doOutside method that allows the single Swing GUI thread to remain 'live' while the actual work is done in another (background) thread. Griffon
+          also supplies the edt method for when things (like GUI updates) simply have to be done on the EDT, and doLater which allows Swing to decide when it is free enough to handle a long-running GUI-updating activity.</p>
+          <p>There's more on Griffon and threading <a href="http://www.jroller.com/aalmiray/entry/revisiting_the_hidden_threading_rule">here</a>.</p>
+          <p><strong>Other</strong><br>
+          There's a lot more Good Stuff that Griffon gives you. For example, the Griffon <a href="http://docs.groovy-lang.org/latest/html/Griffon+Quick+Start">Quick Start</a> says:</p>
+          <blockquote>
+            <p>The run-app script implies the execution of the package script. The package script creates file artifacts suitable for a Java application, a WebStart application, and an Applet, with code signed by a self-signed certificate</p>
+          </blockquote>
+          <p>That's a significant piece of added value just there!</p>
+          <p>Griffon's plugins scheme is also a Real Good Idea and there are an ever-growing number of plugins to be had, from the SwingXBuilder plugin that I have used here, through to things like a standard "splash screen" facility and various
+          testing/code coverage tools.</p>
+          <p>Don't forget the i18n support and standardized resource handling!</p>
+          <p>And don't forget testing…although I haven't actually used it in for this application (bad boy, Bob!), Griffon generates placeholders for integration/unit testing.</p>
+          <p>Griffon also creates an ant script (not <a href="http://gant.codehaus.org">Gant</a>, shame!) for the project.</p>
+          <p>I may end up eating my words in future (wouldn't be the first time!) as Flash/Flex and Silverlight fade into obscurity, but I feel fairly safe saying that IMHO, Griffon beats the ill-conceived (and probably ill-fated) <a href=
+          "http://javafx.com/">JavaFX</a> technology hands-down. Even though JavaFX is technologically quite good, I'm not betting my house on it. In any case, the use of one doesn't preclude the use of the other, as <a href=
+          "http://www.jroller.com/aalmiray/entry/some_javafx_java_groovy_examples">this posting</a> (to take but one simple example) shows.</p>
+          <p>Despite all protestations to the contrary, the <a href="http://jcp.org/en/jsr/detail?id=296">JSR 269</a> Swing <a href="https://appframework.dev.java.net/">AppFramework</a> work seems stillborn.</p>
+          <p>Griffon seems to me to have a much rosier future ahead of it than either JavaFX or AppFramework. If you haven't already done so, ride the Griffon, you won't be sorry!</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Grails, Griffon, Groovy, Programming</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">The Bumper List Of Windows 7 Secrets</h1>
+        <div class="entry-content">
+          <p>I learned a few useful tidbits from <a href="http://blogs.msdn.com/tims/archive/2009/01/12/the-bumper-list-of-windows-7-secrets.aspx">this MSDN Blog posting</a>.</p>
+          <p>Check out numbers 3,4,6,7,19 and 20…</p>
+          <p>While I'm on the Windows 7 track: <a href="http://blogs.msdn.com/mikekol/archive/2009/05/14/the-virtualization-nation-podcast-episode-3-want-to-boot-a-physical-computer-from-a-vhd.aspx">this posting</a> showed me how to mount a VHD
+          file. Useful!</p>
+        </div><!--/entry-content-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Keep Taking The Valium, Guys</h1>
+        <div class="entry-content">
+          <p>Just finished reading <a href="http://www.apress.com/book/view/9781590590966">Extreme Programming Refactored: The Case Against XP</a>:</p>
+          <p><img src="wp-content/uploads/2009/06/extreme-programming-refactored.jpg"></p>
+          <p>And I thought <em>I</em> was a master of ranting! Compared to these guys, I am nothing! <em>Nothing</em>, I tell you!</p>
+          <p>There's actually some truth in the message here. There is a lot of thought-provoking material (the "XP From the Trenches" stuff tends to be quite interesting), and the book really <em>does</em> bear reading.</p>
+          <p>Getting to the end was hard though, not because I disagree with the what the authors are saying, but the way they say it rather destroys their credibility.</p>
+          <p>Shorts rants can be effective, but a book-sized rant is wearisome.</p>
+          <p>The authors come across as having massive chips on their shoulders…their dislike for pair programming seems boundless, and their disdain for XP's prediliction for "oral documention"…well:</p>
+          <p><img src="wp-content/uploads/2009/06/xp-moronic.jpg"><br>
+          (snapshot taken from <a href="http://www.amazon.com/Extreme-Programming-Refactored-Case-Against/dp/1590590961#">amazon.com</a>'s "look inside" book review feature)</p>
+          <p>It's not often that one finds the phrase "What a load of crap!" in a technical book. Sadly.</p>
+          <p>I hope that the royalties from my purchase can gainfully contribute to the authors' pharmaceutical needs. Or rehab. Whichever is most beneficial.</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Books</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Oh The Pain!</h1>
+        <div class="entry-content">
+          <p>To quote the legendary <a href="http://en.wikipedia.org/wiki/Lost_in_Space">Dr. Zachary Smith</a>.</p>
+          <p>Recently had a meeting with a colleague, talking about a customer's requirements and how best to fulfil them.</p>
+          <p>Both he and I are veteran Java-heads.</p>
+          <p>Imagine our pain when we pretty much settled on <a href="http://www.joomla.org">Joomla!</a></p>
+          <p>Neither <a href="http://www.liferay.com/web/guest/home">Liferay</a> nor <a href="http://www.dotcms.org/">dotCMS</a> quite scratched the itch…</p>
+          <p>I feel unclean :-)</p>
+          <p>OTOH, looking for any positives that might be hanging around: it'll be good to see life on the <a href="http://www.thefarside.com/">other side</a> of the tracks…</p>
+        </div><!--/entry-content-->
+      </div><!-- .post -->
+      <div class="pagination">
+        <span class="next"><a href="21/21.htm">Next »</a></span> <span class="previous"><a href="../19/19.htm">« Previous</a></span>
+      </div>
+    </div>
+  </div><!--#page-->
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script> 
+  <script src="js/site.js"></script>
+</body>
+</html>

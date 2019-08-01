@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <title>Transentia - transentia pty. ltd.; development, consulting, training at the leading-edge of technology</title>
+  <link rel="stylesheet" type="text/css" media="screen, print, handheld" href="wp-content/themes/transentia/css/site.css">
+</head>
+<body>
+  <div id="page">
+    <div id="header">
+      <p><a href="../index.htm"><img src="wp-content/uploads/widgets/transentia-logo-red-glow.gif" border="0"></a></p>
+      <p class="old-content">transentia's old content; click on the logo to return to the new content</p>
+      <p id="blog-description">transentia pty. ltd.; development, consulting, training at the leading-edge of technology</p>
+    </div><!-- #header -->
+    <div id="content">
+      <div class="pagination">
+        <span class="next"><a href="DUMMY">Next »</a></span> <span class="previous"><a href="DUMMY">« Previous</a></span>
+      </div>
+      <div class="post hentry">
+        <h1 class="entry-title">Commenting XML</h1>
+        <div class="entry-content">
+          <p>Another <a href="http://groovy.329449.n5.nabble.com/How-to-comment-uncomment-XML-nodes-td5716682.html">mailing list question</a>.</p>
+          <p>Not proud of this answer, but couldn't come up with anything better…</p>
+          <p>Here's the 'commenting out' part:</p>
+          <pre>
+import groovy.xml.*
+import groovy.xml.dom.DOMCategory
+
+final CAR_RECORDS = '''
+    &lt;records&gt;
+      &lt;car name='HSV Maloo' make='Holden' year='2006'&gt;
+        &lt;country&gt;Australia&lt;/country&gt;
+        &lt;record type='speed'&gt;Production Pickup Truck with speed of 271kph&lt;/record&gt;
+      &lt;/car&gt;
+    &lt;/records&gt;
+  '''
+
+def reader = new StringReader(CAR_RECORDS)
+def doc = DOMBuilder.parse(reader)
+def records = doc.documentElement
+
+use (DOMCategory) {
+
+  def maloo = records.'car'[0]
+  assert maloo.'@name' == 'HSV Maloo'
+
+  maloo.replaceNode {
+    'comment' XmlUtil.serialize(maloo)['&lt;?xml version="1.0" encoding="UTF-8"?&gt;'.size()..-1]
+  }
+
+  println XmlUtil.serialize(records).replaceAll('&lt;comment&gt;', '&lt;!--').replaceAll('&lt;/comment&gt;', '--&gt;')
+}
+</pre>
+          <p>This gives:</p>
+          <pre>
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;&lt;records&gt;
+      &lt;!--&amp;lt;car make="Holden" name="HSV Maloo" year="2006"&amp;gt;&amp;#13;
+        &amp;lt;country&amp;gt;Australia&amp;lt;/country&amp;gt;&amp;#13;
+        &amp;lt;record type="speed"&amp;gt;Production Pickup Truck with speed of 271kph&amp;lt;/record&amp;gt;&amp;#13;
+      &amp;lt;/car&amp;gt;&amp;#13;
+--&gt;
+    &lt;/records&gt;
+</pre>
+          <p>This is SO yukky! If I really had to do this, I'd probably drop back to plain Java-style DOM manipulation (and even then it would STILL be very yukky).</p>
+          <p>(I gave up on the uncomment part…)</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Groovy, Programming</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Updating Namespaced Attributes With Groovy's XmlSlurper</h1>
+        <div class="entry-content">
+          <p><a href="http://groovy.329449.n5.nabble.com/Update-Xlink-Element-td5716939.html">A recent question on the Groovy mailing list</a> asked</p>
+          <blockquote>
+            <p>I need to update the "xlink:title" attribute in:</p>
+            <p>&lt;gmi:instrument xlink:title="$INSTRUMENT"/&gt;</p>
+          </blockquote>
+          <p>Here's what I came up with:</p>
+          <pre>
+import groovy.xml.*
+
+def xmlSource = '''
+&lt;bob:root xmlns:bob="stuff"
+  xmlns:gmi="http://www.isotc211.org/2005/gmi"
+  xmlns:xlink="http://www.w3.org/1999/xlink"&gt;
+  &lt;gmi:instrument xlink:title="$INSTRUMENT"/&gt;
+&lt;/bob:root&gt;
+'''
+
+def bobRoot = new XmlSlurper(false,true).
+                parseText(xmlSource).
+                declareNamespace(bob: 'stuff',
+                                 ns2: 'http://www.example.org/NS2',
+                                 gmi: "http://www.isotc211.org/2005/gmi")
+
+def instrument = bobRoot.'gmi:instrument'
+
+// NB: does NOT work: instrument[0].attributes().remove('xlink:title')
+// NB: works, but YUK: instrument[0].attributes().remove('{http://www.w3.org/1999/xlink}title')
+
+// NB: leads to duplicate attribute: instrument.'@xlink:title' = 'XXX'
+instrument.'@{http://www.w3.org/1999/xlink}title' = 'XXX'
+
+println new StreamingMarkupBuilder().bind {
+  mkp.yield instrument
+}.toString()
+
+'OK'
+</pre>
+          <p>The key here is finding out that you need to use the full namespaced name, not the shorter name.</p>
+          <p>IMHO, this is a bug and I have created <a href="https://issues.apache.org/jira/browse/GROOVY-6356">GROOVY-6356</a> using this code.</p>
+          <p>I'm also wondering why I needed to use 'instrument[0]' to get at the attributes.</p>
+          <p>All this is more obscure and convoluted than it probably needs to be so keep watching the Jira.</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Groovy, Programming</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">AWSomeDay</h1>
+        <div class="entry-content">
+          <p>Well!</p>
+          <p>Just went along to a free day on "Introduction to Amazon Web Services." Thank you, Amazon.</p>
+          <p>I even got the certificate to prove it…</p>
+          <p><img src="wp-content/uploads/2013/09/ASWomeDay.jpg" alt="" title="ASWomeDay" width="760" height="515"></p>
+          <p>…along with the other 300+ people in the room, of course.</p>
+          <p>Many, many attendees are already using AWS, it appears.</p>
+          <p>The degree of sophistication now is startling. LOTS more 'stuff' available than first meets the/my eye.</p>
+          <p>Loadbalancers, DNS, caches, NAT boxes, clusters, networking ACLs, SSO, etc. All "straight out of the box." All quickly provisioned and at ridiculously low prices, to boot.</p>
+          <p>The presenter continually kept hammering home: "no need for server engineers, network engineers, database engineers, etc., etc."</p>
+          <p>Actually, it doesn't matter what he or anyone says…just tell the bean counters: "this is opex, not capex" and they will go for it like a dog after a bone.</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Cloud, Tools</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Java And Windows</h1>
+        <div class="entry-content">
+          <p>I can't believe that Java is now 19 years old and people are <em>still</em> asking about how to deal with path-like structures and spaces in Java.</p>
+          <p>It is really very simple: avoid using spaces :-)</p>
+          <p>You can do "dir /x" in a command prompt window, find out what the short pathname for a directory is and just use that version wherever needed. Viz.:</p>
+          <p><img src="wp-content/uploads/2013/08/dir-x.png" alt="" title="dir-x" width="677" height="343"></p>
+          <p>You will usually (UNLESS you have been tweaking <a href="http://support.microsoft.com/kb/121007">one of NTFS's more esoteric parameters</a>, in which case…stop tweaking) find that "Program Files" is 'PROGRA~1′. This form can be used
+          anywhere with no problems.</p>
+          <p>For example:</p>
+          <pre>
+set JAVA_HOME=R:\PROGRA~1\Java\jdk1.7.0_25
+PATH %JAVA_HOME%\BIN;%PATH%
+</pre>
+          <p>Etc.</p>
+          <p>Simple. There's no need to avoid the nice human-readable paths usually used in Windows.</p>
+          <p>Seriously, it isn't a problem, guys!</p>
+          <p>It hasn't been a problem since at least NT4.0 (which is as far back as I go, anyway).</p>
+          <p>For reference: <a href="http://www.microsoft.com/resources/documentation/windows/xp/all/proddocs/en-us/dir.mspx?mfr=true">DIR</a>.</p>
+          <p>BOB<br>
+          <em>Update:</em> This of course applies to any JVM-based language/system, including Groovy.</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Groovy, Java, Programming</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Data-Driven Documents In The Browser</h1>
+        <div class="entry-content">
+          <p>Just came across <a href="http://d3js.org/">D3.js</a>:</p>
+          <blockquote>
+            <p>a JavaScript library for manipulating documents based on data. D3 helps you bring data to life using HTML, SVG and CSS. D3's emphasis on web standards gives you the full capabilities of modern browsers without tying yourself to a
+            proprietary framework, combining powerful visualization components and a data-driven approach to DOM manipulation.</p>
+          </blockquote>
+          <p>Lots of nice, interactive graphs and visualisations.</p>
+          <p>then there is <a href="http://dimplejs.org/">Dimple</a>:</p>
+          <blockquote>
+            <p>The aim of dimple is to open up the power and flexibility of d3 to analysts. It aims to give a gentle learning curve and minimal code to achieve something productive. It also exposes the d3 objects so you can pick them up and run to
+            create some really cool stuff.</p>
+          </blockquote>
+          <p>Both sites have more beautiful and impressive examples than you can shake a stick at!</p>
+          <p>There's just <em>so much</em> good stuff happening in the browser at the moment…</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Javascript, Programming</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Geb Runner For LoadUI</h1>
+        <div class="entry-content">
+          <p>Following on from the previous post, here is the <a href="http://www.loadui.org/Custom-Components/geb-runner.html">Geb Runner</a> for <a href="http://www.loadui.org/">LoadUI</a>.</p>
+          <p>Here's a pretty picture (copied for the LoadUI website):</p>
+          <p><img src="wp-content/uploads/2013/08/gebRunner_large2.png" alt="" title="gebRunner_large2" width="552" height="223"></p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Geb, Groovy, Programming, Tools</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Recipes For Testing Grails</h1>
+        <div class="entry-content">
+          <p>An <em>excellent</em> collection of <a href="https://github.com/tomaslin/grails-test-recipes/blob/master/README.md">practical tips and tricks</a>.</p>
+          <p>Many thanks to Tomás Lin for his work.</p>
+          <p>This is sure to become a useful reference.</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Grails, Groovy, Programming, Tools</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Disaster!</h1>
+        <div class="entry-content">
+          <p>Well!</p>
+          <p>I <em>was</em> scheduled to present Groovy and the other Gr8 technologies to the <a href="http://www.hkjug.org">Hong Kong Java User Group</a> on Thursday 9 May, 2013.</p>
+          <p>Unfortunately, I just (Tuesday 7 May, 2013) spent a rather uncomfortable night in Tai Po's <a href="http://www.ha.org.hk/hesd/nsapi/?MIval=ha_view_content&amp;c_id=100171">Alice Ho Miu Ling Nethersole Hospital</a> and am now under
+          strict {Doctor's, Wife's} orders not to exert myself for the next few days.</p>
+          <p>This means that I have had to cancel the presentation.</p>
+          <p>Apologies to any HKJUG member that was planning to come along.</p>
+          <p>Since there will be no chance to reschedule (at least for <em>this</em> year), I am putting the slide pack up anyway.</p>
+          <p>So: please enjoy <a href='wp-content/uploads/2013/05/The-Future-Is-Gr8.pdf'>The Future Is Gr8</a>.</p>
+          <p>Once again, I apologise to the HKJUG for any inconvenience this causes.</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Grails, Groovy, Programming</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Microsoft Simplifies IE Testing</h1>
+        <div class="entry-content">
+          <p>Subtitle: Free Windows/IE VMs for testing purposes…<br>
+          Sub-subtitle: …and other useful things to help IE and cross-browser site testing.</p>
+          <p>Part of the <a href="http://www.modern.ie/en-us/virtualization-tools">Modern.ie</a> site.</p>
+          <p>Worth remembering.</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Programming, Tools</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="post hentry">
+        <h1 class="entry-title">Prepending A Node With Groovy's XmlParser</h1>
+        <div class="entry-content">
+          <p>A recent question on the <a href="http://groovy.329449.n5.nabble.com/Modifying-xml-how-to-prepend-node-td5713584.html">Groovy mailing list</a>: <em>how to update an XML document by prepending an element before another</em>?</p>
+          <p>Not as completely trivial as it might sound.</p>
+          <p>Groovy's <a href="http://docs.groovy-lang.org/latest/html/Reading+XML+using+Groovy%27s+XmlSlurper">XMLSlurper</a> only allows for appending a node to a given node's list of children and so one needs the services of <a href=
+          "http://docs.groovy-lang.org/latest/html/Reading+XML+using+Groovy%27s+XmlParser">XMLParser</a>.</p>
+          <p>A teensy bit of fiddling is required, thusly:</p>
+          <pre>def xml = """&lt;x name="fred"&gt;
+                &lt;y name="bill"&gt;
+                    &lt;z&gt;
+                        &lt;a index="0" size="10"/&gt;
+                    &lt;/z&gt;
+                &lt;/y&gt;
+                &lt;y name="harry"&gt;
+                    &lt;z&gt;
+                        &lt;a index="0" size="200"/&gt;
+                        &lt;a index="1" size="500"/&gt;
+                    &lt;/z&gt;
+                &lt;/y&gt;
+             &lt;/x&gt;"""
+
+def x = new XmlParser().parseText(xml)
+
+x.y.each { y -&gt;
+    int numA = 0
+    int totalASize = 0
+    y.z.a.each { a -&gt;
+        numA ++
+        totalASize += a.@size.toInteger()
+    }
+    // add a new node as the 0th child, ie: before &lt;z&gt;
+    y.children().add(0, new Node(null, 'summary', [numA:numA,totalASize:totalASize]))
+} 
+
+new XmlNodePrinter().print(x)
+</pre>
+          <p>And the beautiful resultant XML is:</p>
+          <pre>
+&lt;x name="fred"&gt;
+  &lt;y name="bill"&gt;
+    &lt;summary numA="1" totalASize="10"/&gt;
+    &lt;z&gt;
+      &lt;a index="0" size="10"/&gt;
+    &lt;/z&gt;
+  &lt;/y&gt;
+  &lt;y name="harry"&gt;
+    &lt;summary numA="2" totalASize="700"/&gt;
+    &lt;z&gt;
+      &lt;a index="0" size="200"/&gt;
+      &lt;a index="1" size="500"/&gt;
+    &lt;/z&gt;
+  &lt;/y&gt;
+&lt;/x&gt;
+</pre>
+          <p>Not sure if it's generally a good idea to depend on the specific ordering of elements in a document but it's common (Apple's [nasty] <a href=
+          "https://developer.apple.com/library/mac/#documentation/Cocoa/Conceptual/PropertyLists/Introduction/Introduction.html">XML Property List</a> format is one example that pops to mind) and-as I've shown above-can be done with XMLParser.</p>
+        </div><!--/entry-content-->
+        <p class="filed tags">Tags: Groovy, Programming</p><!--/filed-->
+      </div><!-- .post -->
+      <div class="pagination">
+        <span class="next"><a href="DUMMY">Next »</a></span> <span class="previous"><a href="DUMMY">« Previous</a></span>
+      </div>
+    </div>
+  </div><!--#page-->
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script> 
+  <script src="js/site.js"></script>
+</body>
+</html>

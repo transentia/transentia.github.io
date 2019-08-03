@@ -378,7 +378,7 @@ class BetamaxMockingBirdSpecification extends GebSpec {
           <p>Betamax uses a JUnit @Rule annotation attached to an instance of its Recorder class to allow the Recorder to hook into the lifecycle of the test and to start/shutdown Betamax's "tape recorder" proxy (which is actually an embedded
           instance of Jetty). If you haven't seen it before, an @Rule is effectively a JUnit 4.7+ extension mechanism that provides access to the JUnit lifecycle (@Rules were initially called '@Interceptors'-a name which still seems clearer to
           me).</p>
-          <p>The @Betamax annotation defines a 'tape' to use; Betamax will store the data arising from each request/response interaction into a tape (for the demo project the file src\test\resources\betamax\tapes\ToKillAMockingBird_tape.yaml).
+          <p>The @Betamax annotation defines a 'tape' to use; Betamax will store the data arising from each request/response interaction into a tape (for the demo project the file src\test\resources\betamax\tapes\ ToKillAMockingBird_tape.yaml).
           Betamax provides a number of other options (unneeded for this article) that can be set via the @Betamax annotation or on the Recorder instance itself. These include the ability to store only requests that match (part of) a given URI or
           header field values, setting a tape mode to READ_ONLY and setting a pass-through list of hosts that won't be proxied.</p>
           <p>It is worth noting that Betamax can also configure itself from external files. As the documentation says: "If you have a file called BetamaxConfig.groovy or betamax.properties somewhere in your classpath it will be picked up by the

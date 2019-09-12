@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sitemapindex xmlns="http://www.google.com/schemas/sitemap/0.84">
+    <sitemap>
+        <loc>https://transentia.github.io/sitemap_TOP.xml</loc>
+        <lastmod>2019-09-12T16:30:00+10:00</lastmod>
+    </sitemap>
+    <sitemap>
+        <loc>https://transentia.github.io/sitemap_NEW.xml</loc>
+        <lastmod>2019-09-12T16:30:00+10:00</lastmod>
+    </sitemap>
+    <sitemap>
+        <loc>https://transentia.github.io/sitemap_OLD.xml</loc>
+        <lastmod>2019-09-12T16:30:00+10:00</lastmod>
+    </sitemap>
+    <sitemap>
+        <loc>https://transentia.github.io/sitemap_OLDER.xml</loc>
+        <lastmod>2019-09-12T16:30:00+10:00</lastmod>
+    </sitemap>
+</sitemapindex>

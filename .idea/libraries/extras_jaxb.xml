@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="extras-jaxb">
+    <CLASSES>
+      <root url="jar://C:/DEVTOOLS/groovy-3.0.0-beta-3/lib/extras-jaxb/activation-1.1.1.jar!/" />
+      <root url="jar://C:/DEVTOOLS/groovy-3.0.0-beta-3/lib/extras-jaxb/jaxb-api-2.3.0.jar!/" />
+      <root url="jar://C:/DEVTOOLS/groovy-3.0.0-beta-3/lib/extras-jaxb/jaxb-core-2.3.0.1.jar!/" />
+      <root url="jar://C:/DEVTOOLS/groovy-3.0.0-beta-3/lib/extras-jaxb/jaxb-impl-2.3.0.1.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

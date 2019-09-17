@@ -5,6 +5,11 @@
         xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
             http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
     <url>
+        <loc>https://transentia.github.io/helloworlds/index.html</loc>
+        <lastmod>2019-09-12T16:30:00+10:00</lastmod>
+        <priority>0.75</priority>
+    </url>
+    <url>
         <loc>https://transentia.github.io/helloworlds/html/ALensmanDies.html</loc>
         <lastmod>2019-09-12T16:30:00+10:00</lastmod>
         <priority>0.75</priority>
